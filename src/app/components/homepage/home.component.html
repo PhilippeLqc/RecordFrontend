@@ -1,0 +1,10 @@
+<app-authentification [hidden]="hidden"></app-authentification>
+<app-register [hidden]="!hidden"></app-register>
+<div class="buttongroup">
+  <button mat-raised-button type="submit" class="flat" (click)="showLogin()">
+    Login
+  </button>
+  <button mat-raised-button type="submit" class="flat" (click)="showRegister()">
+    Register
+  </button>
+</div>

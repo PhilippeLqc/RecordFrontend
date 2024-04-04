@@ -1,0 +1,48 @@
+<div>
+  <div class="chat-container">
+    <div class="chat-header">
+      <h2>Chat</h2>
+    </div>
+    <div class="chat-body">
+      <div class="chat-messages">
+        <ul class="messages">
+          <li
+            class="message right"
+            *ngFor="let item of historyMessages"
+            [ngClass]="{
+              right: item.message_side === 'receiver',
+              left: item.message_side === 'sender'
+            }"
+          >
+            <div class="avatar"></div>
+            <div class="text_wrapper">
+              <div class="text">{{ item.message }}</div>
+            </div>
+          </li>
+          <li
+            class="message right"
+            *ngFor="let item of messageList"
+            [ngClass]="{
+              right: item.message_side === 'receiver',
+              left: item.message_side === 'sender'
+            }"
+          >
+            <div class="avatar"></div>
+            <div class="text_wrapper">
+              <div class="text">{{ item.message }}</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="chat-footer">
+      <input
+        type="text"
+        [(ngModel)]="userMessage"
+        placeholder="Type your message here..."
+        (keyup.enter)="sendMessage()"
+      />
+      <button (click)="sendMessage()">Send</button>
+    </div>
+  </div>
+</div>

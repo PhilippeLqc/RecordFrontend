@@ -1,0 +1,48 @@
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <mat-form-field appearance="outline">
+      <mat-label>Enter your first name</mat-label>
+      <input matInput placeholder="John" formControlName="username" required />
+    </mat-form-field>
+  </div>
+  <div class="form-group">
+    <mat-form-field appearance="outline">
+      <mat-label>Enter your email</mat-label>
+      <input
+        matInput
+        placeholder="pat@example.com"
+        formControlName="email"
+        (blur)="updateErrorMail()"
+        required
+      />
+      <mat-hint align="end">exemple : john&#64;doe.com</mat-hint>
+      @if (email.invalid) {
+      <mat-error>{{ errorMessage }}</mat-error>
+      }
+    </mat-form-field>
+  </div>
+  <div class="form-group">
+    <mat-form-field appearance="outline">
+      <mat-label>Enter your password</mat-label>
+      <input
+        matInput
+        [type]="hide ? 'password' : 'text'"
+        formControlName="password"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="hide = !hide"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide"
+      >
+        <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+  <div class="buttongroup">
+    <button mat-raised-button type="submit" class="flat">
+      Créer son compte
+    </button>
+  </div>
+</form>

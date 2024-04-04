@@ -1,0 +1,26 @@
+button.flat {
+    display: table-cell;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0px 50px 0px 50px;
+    background-color: #E0B645;
+  }
+
+.buttongroup {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0px 50px 0px 50px;
+  }
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    padding: 0px 50px 0px 50px;
+}
