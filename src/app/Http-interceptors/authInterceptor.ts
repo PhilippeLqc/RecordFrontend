@@ -14,7 +14,7 @@ export class AuthInterceptor implements HttpInterceptor {
     //verify if the token is still valid before sending the request
     if (this.auth.isTokenExpired()) {
       //refresh the token if it is expired
-      this.auth.refreshToken(this.auth.getRefreshToken()).subscribe();
+       this.auth.refreshToken(this.auth.getRefreshToken()).subscribe();
 
       // make a new request with the new token
       const authReq = req.clone({

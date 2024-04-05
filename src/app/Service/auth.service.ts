@@ -16,7 +16,6 @@ import { role } from "../enumTypes/role";
 
 export class AuthService {
     constructor(private http : HttpClient, private chat: ChatService, private router: Router){ 
-        
         this.currentUser = {
             id: 0,
             username: '',
@@ -26,6 +25,11 @@ export class AuthService {
             projectIds: [],
             messageIds: []
         }
+
+        this.Securitytoken = {
+            token: '',
+            refreshToken: ''
+        }
     }
 
     serviceURL = 'http://localhost:8081/api/auth';
@@ -33,7 +37,7 @@ export class AuthService {
 
     connected : boolean = false;
     currentUser : UserDto;
-    private Securitytoken !: AuthResponseDto;
+    private Securitytoken : AuthResponseDto;
 
     // register user using UserDto
     register(user: UserRegisterDto) {
@@ -44,11 +48,18 @@ export class AuthService {
     // login user using logsDto
     login(user: LogsDto) {
         return this.http.post<AuthResponseDto>(this.serviceURL + '/login', user).pipe(
+            catchError(error => {
+                console.error('Error during login request:', error);
+                return throwError(error);
+              }),
           switchMap((responseLogin) => {
+            console.log( "response login", responseLogin);
             this.Securitytoken = responseLogin;
             this.connected = true;
             this.chat.initConnection();
             this.chat.joinRoom('1100');
+
+            console.log("enter the login", this.Securitytoken);
             // Get the user by email
             return this.http.get<UserDto>(this.userServiceURL + '/email/' + user.email);
           }),

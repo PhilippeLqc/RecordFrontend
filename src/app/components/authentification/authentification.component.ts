@@ -37,19 +37,23 @@ export class AuthentificationComponent {
   errorMessage = '';
   hide = true;
 
-  public connectionFrom = this.formBuilder.group({
+  public connectionForm = this.formBuilder.group({
     email: this.email,
     password: this.password
   });
 
   onSubmit() {
+    console.log('onSubmit was called');
     let user : LogsDto = {
-      email: this.connectionFrom.value.email!,
-      password: this.connectionFrom.value.password!
+      email: this.connectionForm.value.email!,
+      password: this.connectionForm.value.password!
     }
-
+    console.log(user);
+    
     this.auth.login(user).subscribe({
-      next: () => {},
+      next: () => {
+        console.log('auth.login was called');
+      },
       error: (errorMessage) => {
         this.errorMessage = errorMessage;
       }
