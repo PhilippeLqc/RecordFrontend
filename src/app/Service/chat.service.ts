@@ -43,7 +43,7 @@ export class ChatService {
       this.stompClient.subscribe(`/topic/${roomId}`, (message: any) => {
 
         // Parse the message and add it to the messages array
-        const messageContent = JSON.parse(message.body);
+        const messageContent = JSON.parse(message.body).body;
         messageContent.sender = messageContent.userId;
         delete messageContent.userId;
 

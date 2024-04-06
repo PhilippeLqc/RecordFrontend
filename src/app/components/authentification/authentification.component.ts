@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../Service/auth.service';
 import { LogsDto } from '../../model/logsDto';
-import { Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';

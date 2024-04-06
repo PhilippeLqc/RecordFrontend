@@ -5,7 +5,6 @@ export interface Project {
     title: string;
     description: string;
     status: Status;
-    boardList: [];
-    task: [];
-    user: [];
+    boardlistIds: [];
+    userIds: [];
 }

@@ -1,1 +1,31 @@
-<p>project works!</p>
+<form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="title">Title</label>
+    <input
+      type="text"
+      id="title"
+      class="form-control"
+      formControlName="title"
+      required
+    />
+    <div
+      *ngIf="title.invalid && (title.dirty || title.touched)"
+      class="alert alert-danger"
+    >
+      <div *ngIf="title.errors?.['required']">Title is required.</div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea
+      id="description"
+      class="form-control"
+      formControlName="description"
+    ></textarea>
+  </div>
+
+  <button type="submit" class="btn btn-primary" [disabled]="!projectForm.valid">
+    Create Project
+  </button>
+</form>

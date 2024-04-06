@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { LogsDto } from "../model/logsDto";
 import { UserDto } from "../model/userDto";
 import { Observable, catchError, of, switchMap, tap, throwError } from "rxjs";
@@ -15,6 +15,7 @@ import { role } from "../enumTypes/role";
 
 
 export class AuthService {
+
     constructor(private http : HttpClient, private chat: ChatService, private router: Router){ 
         this.currentUser = {
             id: 0,
@@ -69,7 +70,7 @@ export class AuthService {
           }),
           tap(() => {
             if (this.connected) {
-              this.router.navigate([`chat/${this.currentUser?.id}`]);
+              this.router.navigate([`project`]);
             } else {
                 return console.error('email or mdp invalid');
             }
@@ -84,17 +85,24 @@ export class AuthService {
         );
       }
 
-    // refresh token using securityToken.refreshToken
-    refreshToken(refreshJwt: string) {
-        return this.http.post<AuthResponseDto>(this.serviceURL + '/refreshToken', refreshJwt).pipe(
-            tap((response) => {
-                this.Securitytoken = response;
-            })
-        );
+    // verify if the token is expired
+    isTokenExpired(): Observable<boolean> {
+        const token = { token : this.Securitytoken.token }
+        return this.http.post<boolean>(this.serviceURL + '/validationToken', token);
     }
 
-    isTokenExpired(): boolean {
-        return this.Securitytoken ? true : false;
+    // refresh the token
+    refreshToken(): Observable<AuthResponseDto> {
+        const headers = new HttpHeaders().set('Content-Type', 'application/json');
+        const body = {
+          token: this.Securitytoken.refreshToken
+        };
+
+    return this.http.post<AuthResponseDto>(this.serviceURL + '/refresh', body, { headers }).pipe(
+        tap((response) => {
+            this.Securitytoken = response;
+        })
+    );
     }
 
     getToken(): string {
@@ -104,6 +112,7 @@ export class AuthService {
     getRefreshToken(): string {
         return this.Securitytoken.refreshToken;
     }
+
 
     getCurrentUser(): UserDto {
         return this.currentUser;

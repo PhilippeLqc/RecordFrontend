@@ -1,36 +1,46 @@
 import { Injectable } from '@angular/core';
-import { HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { AuthService } from '../Service/auth.service';
+import { Observable, catchError, of, switchMap, throwError } from 'rxjs';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
   constructor(private auth : AuthService) {}
-
-  intercept(req: HttpRequest<any>, next: HttpHandler) {
-    // Get the auth token from the service.
+  
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+      // Exclude refresh token request
+  if (req.url.includes('/refresh')) {
+    return next.handle(req);
+  }
     const authToken = this.auth.getToken();
-
-    //verify if the token is still valid before sending the request
-    if (this.auth.isTokenExpired()) {
-      //refresh the token if it is expired
-       this.auth.refreshToken(this.auth.getRefreshToken()).subscribe();
-
-      // make a new request with the new token
-      const authReq = req.clone({
-        headers: req.headers.set('Authorization', 'Bearer ' + authToken)
-      });
-
-      // send cloned request with header to the next handler.
-      return next.handle(authReq);
-    }
-
-    //put bearer token in the header
+  
     const authReq = req.clone({
       headers: req.headers.set('Authorization', 'Bearer ' + authToken)
     });
-
-    // send cloned request with header to the next handler.
-    return next.handle(authReq);
+  
+    return next.handle(authReq).pipe(
+      catchError((error: HttpErrorResponse) => {
+        // If the request returns a 401, refresh the token
+        if (error.status === 401) {
+          console.log('Token is expired');
+          return this.auth.refreshToken().pipe(
+            switchMap(() => {
+              const newAuthToken = this.auth.getToken();
+              console.log('New token:', newAuthToken);
+      
+              const authReq = req.clone({
+                headers: req.headers.set('Authorization', 'Bearer ' + newAuthToken)
+              });
+      
+              return next.handle(authReq) as Observable<HttpEvent<any>>; // Explicitly cast the return type
+            })
+          );
+        }
+  
+        // If the error is not a 401, rethrow the error
+        return throwError(() => new Error('test'));
+      })
+    );
   }
 }

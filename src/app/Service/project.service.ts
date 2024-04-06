@@ -17,17 +17,19 @@ export class ProjectService {
       title: '',
       description: '',
       status: 'ACTIVE' as Status,
+      boardlistIds: [],
+      userIds: []
     }
   }
 
   projectServiceUrl = 'http://localhost:8081/api/project';
   currentProjectDto: ProjectDto;
-  currentProject?: Project;
+  currentProject?: ProjectDto;
   userProjects: ProjectDto[] = [];
 
   //create a project
   createProject(project: ProjectDto): Observable<ProjectDto> {
-    return this.http.post<Project>(this.projectServiceUrl + '/create', project).pipe(
+    return this.http.post<ProjectDto>(this.projectServiceUrl + '/create', project).pipe(
       tap((response) => {
         this.currentProject = response;
       })

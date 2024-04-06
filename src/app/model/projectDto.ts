@@ -5,5 +5,7 @@ export interface ProjectDto {
     id: number;
     title: string;
     description: string;
-    status: Status
+    status: Status,
+    boardlistIds: number[],
+    userIds: number[]
 }
