@@ -51,7 +51,7 @@ export class AuthService {
         return this.http.post<AuthResponseDto>(this.serviceURL + '/login', user).pipe(
             catchError(error => {
                 console.error('Error during login request:', error);
-                return throwError(error);
+                return throwError(() => new Error('Error during login request'));
               }),
           switchMap((responseLogin) => {
             console.log( "response login", responseLogin);
