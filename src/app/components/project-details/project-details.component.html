@@ -1,0 +1,9 @@
+<div>
+  <!-- implements data from projectDetails -->
+  <h1>{{ projectDetails.title }}</h1>
+  <p>{{ projectDetails.description }}</p>
+  <div *ngFor="let boardlist of projectDetails.boardlistIds">
+    <!-- implements data from boardlist via boarlist component-->
+    <p>{{ boardlist }}</p>
+  </div>
+</div>

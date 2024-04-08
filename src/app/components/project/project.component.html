@@ -29,3 +29,14 @@
     Create Project
   </button>
 </form>
+
+<mat-card>
+  <mat-card-content>Simple card</mat-card-content>
+  <mat-card-actions>
+    <div *ngFor="let project of project.userProjects">
+      <button (click)="gotoProject(project.id)">
+        Go to project {{ project.title }}
+      </button>
+    </div>
+  </mat-card-actions>
+</mat-card>
