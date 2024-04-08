@@ -44,10 +44,9 @@ export class ProjectComponent implements OnInit{
       //usefull ?
       localStorage.setItem('userProjects', JSON.stringify(this.project.userProjects));
     });
-
     this.userProjects = JSON.parse(localStorage.getItem('userProjects') || '{}');
   }
-  
+
   userProjects: ProjectDto[] = [];
   projectServiceUrl = 'http://localhost:8081/api/project';
   title = new FormControl('', Validators.required);
