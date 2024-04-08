@@ -11,6 +11,7 @@ import { Status } from '../../enumTypes/status';
 import { CommonModule } from '@angular/common';
 import {MatCardModule} from '@angular/material/card';
 import { Router } from '@angular/router';
+import { ProjectDto } from '../../model/projectDto';
 
 @Component({
   selector: 'app-project',
@@ -40,9 +41,14 @@ export class ProjectComponent implements OnInit{
   ngOnInit(): void {
     this.project.getProjectsByUserId().subscribe(() => {
       console.log(this.project.userProjects);
+      localStorage.setItem('userProjects', JSON.stringify(this.project.userProjects));
     });
+
+    this.userProjects = JSON.parse(localStorage.getItem('userProjects') || '{}');
   }
   
+  userProjects: ProjectDto[] = [];
+
   projectServiceUrl = 'http://localhost:8081/api/project';
 
   title = new FormControl('', Validators.required);
@@ -71,8 +77,9 @@ export class ProjectComponent implements OnInit{
     }
     console.log(project);
     
-    this.project.createProject(project).subscribe(() => {
-      console.log(this.project.currentProject);
+    this.project.createProject(project).subscribe((newProject) => {
+      this.userProjects.push(newProject);
+      localStorage.setItem('userProjects', JSON.stringify(this.userProjects));
     });
   }
 

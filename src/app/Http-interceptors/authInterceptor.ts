@@ -13,7 +13,8 @@ export class AuthInterceptor implements HttpInterceptor {
   if (req.url.includes('/refresh') || req.url.includes('/login') || req.url.includes('/register')) {
     return next.handle(req);
   }
-    const authToken = this.auth.getToken();
+
+    const authToken = JSON.parse(localStorage.getItem('SecurityToken') || '{}').token;
   
     const authReq = req.clone({
       headers: req.headers.set('Authorization', 'Bearer ' + authToken)

@@ -30,13 +30,16 @@
   </button>
 </form>
 
-<mat-card>
-  <mat-card-content>Simple card</mat-card-content>
-  <mat-card-actions>
-    <div *ngFor="let project of project.userProjects">
+<object *ngFor="let project of userProjects">
+  <mat-card>
+    <mat-card-content>
+      <p>{{ project.title }}</p>
+      <p>{{ project.description }}</p>
+    </mat-card-content>
+    <mat-card-actions>
       <button (click)="gotoProject(project.id)">
         Go to project {{ project.title }}
       </button>
-    </div>
-  </mat-card-actions>
-</mat-card>
+    </mat-card-actions>
+  </mat-card>
+</object>
