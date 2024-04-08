@@ -3,6 +3,7 @@ import { AuthentificationComponent } from './components/authentification/authent
 import { ChatComponent } from './components/chat/chat.component';
 import { HomeComponent } from './components/homepage/home.component';
 import { ProjectComponent } from './components/project/project.component';
+import { ProjectDetailsComponent } from './components/project-details/project-details.component';
 
 export const routes: Routes = [
     {path: 'authentification', component: AuthentificationComponent},
@@ -10,5 +11,6 @@ export const routes: Routes = [
     {path: 'chat/:userIdchat', component: ChatComponent},
     {path: 'chat/:roomId', component: ChatComponent},
     {path: 'project', component: ProjectComponent},
+    {path: 'project/:projectId', component: ProjectDetailsComponent},
     {path: '', redirectTo: '/home', pathMatch: 'full'}
 ];

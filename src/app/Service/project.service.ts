@@ -57,6 +57,15 @@ export class ProjectService {
     return this.http.get<ProjectDto[]>(this.projectServiceUrl + '/status/' + status + '/user/' + userId);
   }
 
+  //get project by id
+  getProjectById(projectId: number): Observable<ProjectDto> {
+    return this.http.get<ProjectDto>(this.projectServiceUrl + '/' + projectId).pipe(
+      tap((response) => {
+        this.currentProject = response;
+      })
+    );
+  }
+
   //update current project
   updateCurrentProject(project: Project): Observable<Project> {
     const ProjectId = this.currentProjectDto.id

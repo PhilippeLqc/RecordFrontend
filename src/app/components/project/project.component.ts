@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ProjectService } from '../../Service/project.service';
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,6 +9,8 @@ import { merge } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Status } from '../../enumTypes/status';
 import { CommonModule } from '@angular/common';
+import {MatCardModule} from '@angular/material/card';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-project',
@@ -19,19 +21,27 @@ import { CommonModule } from '@angular/common';
     MatFormFieldModule, 
     MatInputModule,
     MatButtonModule,
-    MatIconModule],
+    MatIconModule,
+    MatCardModule],
   templateUrl: './project.component.html',
   styleUrl: './project.component.css'
 })
-export class ProjectComponent {
+export class ProjectComponent implements OnInit{
   
   constructor(
-    private project: ProjectService,
-    private formBuilder: FormBuilder) {
+    public project: ProjectService,
+    private formBuilder: FormBuilder,
+    private router: Router) {
       merge(this.title.statusChanges, this.title.valueChanges)
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.updateErrorTitle());
      }
+
+  ngOnInit(): void {
+    this.project.getProjectsByUserId().subscribe(() => {
+      console.log(this.project.userProjects);
+    });
+  }
   
   projectServiceUrl = 'http://localhost:8081/api/project';
 
@@ -64,6 +74,10 @@ export class ProjectComponent {
     this.project.createProject(project).subscribe(() => {
       console.log(this.project.currentProject);
     });
+  }
+
+  gotoProject(projectId: number) {
+    this.router.navigate(['/project', projectId]);
   }
 
 }
