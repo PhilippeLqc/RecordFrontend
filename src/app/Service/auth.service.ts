@@ -31,6 +31,12 @@ export class AuthService {
             token: '',
             refreshToken: ''
         }
+
+        const storedToken = localStorage.getItem('SecurityToken');
+        if (storedToken) {
+            this.Securitytoken = JSON.parse(storedToken);
+            this.connected = true;
+        }
     }
 
     serviceURL = 'http://localhost:8081/api/auth';
@@ -39,6 +45,8 @@ export class AuthService {
     connected : boolean = false;
     currentUser : UserDto;
     private Securitytoken : AuthResponseDto;
+
+
 
     // register user using UserDto
     register(user: UserRegisterDto) {
@@ -50,17 +58,21 @@ export class AuthService {
     login(user: LogsDto) {
         return this.http.post<AuthResponseDto>(this.serviceURL + '/login', user).pipe(
             catchError(error => {
-                console.error('Error during login request:', error);
-                return throwError(() => new Error('Error during login request'));
+                return throwError(() => new Error('Error during login request', error));
               }),
           switchMap((responseLogin) => {
             console.log( "response login", responseLogin);
+            //store token in local storage & context
             this.Securitytoken = responseLogin;
+            localStorage.setItem('SecurityToken', JSON.stringify(this.Securitytoken));
+
+            // set connected to true
             this.connected = true;
+
+            // Connect to the chat
             this.chat.initConnection();
             this.chat.joinRoom('1100');
 
-            console.log("enter the login", this.Securitytoken);
             // Get the user by email
             return this.http.get<UserDto>(this.userServiceURL + '/email/' + user.email);
           }),
@@ -69,6 +81,7 @@ export class AuthService {
             this.currentUser = user as UserDto;
           }),
           tap(() => {
+            // Redirect to the project page
             if (this.connected) {
               this.router.navigate([`project`]);
             } else {
@@ -87,7 +100,7 @@ export class AuthService {
 
     // verify if the token is expired
     isTokenExpired(): Observable<boolean> {
-        const token = { token : this.Securitytoken.token }
+        const token = { token : JSON.parse(localStorage.getItem('SecurityToken') || '{}').token };
         return this.http.post<boolean>(this.serviceURL + '/validationToken', token);
     }
 
@@ -95,12 +108,13 @@ export class AuthService {
     refreshToken(): Observable<AuthResponseDto> {
         const headers = new HttpHeaders().set('Content-Type', 'application/json');
         const body = {
-          token: this.Securitytoken.refreshToken
+          token: JSON.parse(localStorage.getItem('SecurityToken') || '{}').refreshToken
         };
 
     return this.http.post<AuthResponseDto>(this.serviceURL + '/refresh', body, { headers }).pipe(
         tap((response) => {
             this.Securitytoken = response;
+            localStorage.setItem('SecurityToken', JSON.stringify(this.Securitytoken));
         })
     );
     }

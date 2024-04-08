@@ -2,7 +2,7 @@ import {  HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ProjectDto } from '../model/projectDto';
 import { Status } from '../enumTypes/status';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { AuthService } from './auth.service';
 import { Project } from '../model/project';
 
@@ -16,15 +16,24 @@ export class ProjectService {
       id: 0,
       title: '',
       description: '',
-      status: 'ACTIVE' as Status,
+      status: '' as Status,
       boardlistIds: [],
       userIds: []
+    }
+
+    const storedProjects = localStorage.getItem('userProjects');
+    if (storedProjects) {
+      this.userProjects = JSON.parse(storedProjects);
+      this.userProjectsSubject.next(this.userProjects);
     }
   }
 
   projectServiceUrl = 'http://localhost:8081/api/project';
+
+  private userProjectsSubject = new BehaviorSubject<ProjectDto[]>([]);
   currentProjectDto: ProjectDto;
   currentProject?: ProjectDto;
+  userProjects$ = this.userProjectsSubject.asObservable();
   userProjects: ProjectDto[] = [];
 
   //create a project
@@ -32,6 +41,9 @@ export class ProjectService {
     return this.http.post<ProjectDto>(this.projectServiceUrl + '/create', project).pipe(
       tap((response) => {
         this.currentProject = response;
+        this.userProjects.push(response);
+        this.userProjectsSubject.next(this.userProjects);
+        localStorage.setItem('userProjects', JSON.stringify(this.userProjects));
       })
     );
   }
@@ -40,8 +52,9 @@ export class ProjectService {
   getProjectsByUserId(): Observable<ProjectDto[]> {
     return this.http.get<ProjectDto[]>(this.projectServiceUrl + '/allProjects').pipe(
       tap((response) => {
-        console.log(response);
+        console.log( "REPONSE DATA DE GETPROJECTBYUSERID", response);
         this.userProjects = response;
+        this.userProjectsSubject.next(this.userProjects);
       })
     );
   }
