@@ -30,5 +30,15 @@ export class BoardlistService {
         );
     }
 
+    //get all boardlists by project id
+    getBoardlistsByProjectId(): Observable<BoardListDto[]> {
+        return this.http.get<BoardListDto[]>(this.boardlistServiceUrl + '/all/project' + id).pipe(
+            tap((response) => {
+                console.log(response);
+                this.userBoardlists = response;
+            })
+        );
+    }
+
 }
 
