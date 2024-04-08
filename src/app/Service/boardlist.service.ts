@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AuthService } from "./auth.service";
 import { BoardListDto } from "../model/boardListDto";
-import { Observable } from "rxjs";
+import { Observable, tap } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
@@ -23,7 +23,11 @@ export class BoardlistService {
 
     //create a boardlist
     createBoardlist(boardlist: BoardListDto): Observable<BoardListDto> {
-        return this.http.post<BoardListDto>(this.boardlistServiceUrl + '/create', boardlist);
+        return this.http.post<BoardListDto>(this.boardlistServiceUrl + '/create', boardlist).pipe(
+            tap((response) => {
+                this.currentBoardlist = response
+            })
+        );
     }
 
 }
