@@ -48,7 +48,7 @@ export class ProjectComponent implements OnInit{
   }
 
   userProjects: ProjectDto[] = [];
-  projectServiceUrl = 'http://localhost:8081/api/project';
+
   title = new FormControl('', Validators.required);
   errorMessage = '';
 
