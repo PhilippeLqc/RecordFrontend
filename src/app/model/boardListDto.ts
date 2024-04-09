@@ -1,4 +1,4 @@
 export interface BoardListDto {
-    name: string;
-    projectId: number;
+    name: String;
+    projectId: Number;
 }

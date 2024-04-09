@@ -1,1 +1,5 @@
-<p>boardlist works!</p>
+<div>
+    @for (boardlist of boardlistsProject; track boardlist.name) {
+        <p>{{boardlist.name}}</p>
+    }
+</div>
