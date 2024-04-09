@@ -6,11 +6,12 @@ import { Project } from '../../model/project';
 import { Status } from '../../enumTypes/status';
 import { ProjectDto } from '../../model/projectDto';
 import { CommonModule } from '@angular/common';
+import { BoardlistComponent } from '../boardlist/boardlist.component';
 
 @Component({
   selector: 'app-project-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, BoardlistComponent],
   templateUrl: './project-details.component.html',
   styleUrl: './project-details.component.css'
 })
