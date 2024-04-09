@@ -41,6 +41,7 @@ export class ProjectComponent implements OnInit{
   ngOnInit(): void {
     this.project.getProjectsByUserId().subscribe(() => {
       console.log(this.project.userProjects);
+      //usefull ?
       localStorage.setItem('userProjects', JSON.stringify(this.project.userProjects));
     });
 
@@ -48,9 +49,6 @@ export class ProjectComponent implements OnInit{
   }
   
   userProjects: ProjectDto[] = [];
-
-  projectServiceUrl = 'http://localhost:8081/api/project';
-
   title = new FormControl('', Validators.required);
   errorMessage = '';
 
