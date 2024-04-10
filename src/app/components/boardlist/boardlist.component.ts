@@ -56,7 +56,7 @@ export class BoardlistComponent implements OnInit {
       projectId: projectId,
     };
     this.boardlistS
-      .createBoardlist(boardlist, projectId)
+      .createBoardlist(boardlist)
       .subscribe((newBoardlist) => {
         this.boardlistsProject.push(newBoardlist);
       });
