@@ -15,19 +15,21 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { TaskComponent } from "../task/task.component";
 
 @Component({
-  selector: 'app-boardlist',
-  standalone: true,
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-  ],
-  templateUrl: './boardlist.component.html',
-  styleUrl: './boardlist.component.css',
+    selector: 'app-boardlist',
+    standalone: true,
+    templateUrl: './boardlist.component.html',
+    styleUrl: './boardlist.component.css',
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        TaskComponent
+    ]
 })
 
 export class BoardlistComponent implements OnInit {
