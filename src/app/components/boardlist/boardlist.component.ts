@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { BoardlistService } from '../../Service/boardlist.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BoardListDto } from '../../model/boardListDto';
@@ -9,18 +16,32 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-boardlist',
   standalone: true,
-  imports: [],
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+  ],
   templateUrl: './boardlist.component.html',
   styleUrl: './boardlist.component.css',
 })
 
 export class BoardlistComponent implements OnInit {
+
+  // Variables
+  boardlistsProject: BoardListDto[] = [];
+  projectId: Number = Number(this.route.snapshot.paramMap.get('projectId'));
+  registerForm: FormGroup = new FormGroup({});
+  nameBoardlist = new FormControl('', Validators.required);
+
+  // Constructor
   constructor(
     public boardlistS: BoardlistService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute
   ) {
-    merge(this.name.statusChanges)
+    merge(this.nameBoardlist.statusChanges)
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.updateErrorName());
   }
@@ -28,37 +49,42 @@ export class BoardlistComponent implements OnInit {
   // In BoardlistComponent
   ngOnInit(): void {
     const projectId = Number(this.route.snapshot.paramMap.get('projectId'));
+
     this.boardlistS.getBoardlistsByProjectId(projectId).subscribe(() => {
       this.boardlistsProject = this.boardlistS.allBoardlistsOfProject;
     });
+
+    this.registerForm = this.formBuilder.group({
+      boardlistName: ['', Validators.required]
+    });
+
   }
 
-  boardlistsProject: BoardListDto[] = [];
-  name = new FormControl('', Validators.required);
-  errorMessage = '';
-  projectId: Number = Number(this.route.snapshot.paramMap.get('projectId'));
-
-  public boardlistForm = this.formBuilder.group({
-    name: [''],
-    projectId: this.projectId,
-  });
-
   updateErrorName(): void {
-    if (this.name.hasError('required')) {
-      this.errorMessage = 'You must enter a name';
+    if (this.nameBoardlist.hasError('required')) {
+      console.log('You must enter a name');
     }
   }
 
-  onSubmit() {
-    const projectId = Number(this.route.snapshot.paramMap.get('projectId'));
+  onSubmitBoardlist() {
+    if (this.registerForm.invalid) {
+      return;
+    }
+
+    // Get the boardlist name from the form
+    const boardlistName = this.registerForm.controls['boardlistName'].value;
+    console.log('enter on submit');
+
     let boardlist = {
-      name: this.boardlistForm.value.name!,
-      projectId: projectId,
+      name: boardlistName!,
+      projectId: this.projectId!,
     };
-    this.boardlistS
-      .createBoardlist(boardlist)
-      .subscribe((newBoardlist) => {
-        this.boardlistsProject.push(newBoardlist);
-      });
+    console.log('after form ', boardlist);
+
+    // Do something with the boardlist name
+    this.boardlistS.createBoardlist(boardlist).subscribe((newBoardlist) => {
+      this.boardlistsProject.push(newBoardlist);
+    });
+    console.log('end service ');
   }
 }

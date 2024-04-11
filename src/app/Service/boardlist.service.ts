@@ -36,8 +36,6 @@
 
         //get all boardlists by project id
         getBoardlistsByProjectId(projectId: number): Observable<BoardListDto[]> {
-            console.log(this.boardlistServiceUrl + '/project/' + this.projectId);
-
             return this.http.get<BoardListDto[]>(`${this.boardlistServiceUrl}/project/${projectId}`).pipe(
                 tap((response) => {
                     console.log("REPONSE DATA DE CREATEBOARDLIST");
