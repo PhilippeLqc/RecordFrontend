@@ -43,8 +43,8 @@ export class ProjectComponent implements OnInit{
       console.log(this.project.userProjects);
       //usefull ?
       localStorage.setItem('userProjects', JSON.stringify(this.project.userProjects));
+      this.userProjects = JSON.parse(localStorage.getItem('userProjects') || '{}');
     });
-    this.userProjects = JSON.parse(localStorage.getItem('userProjects') || '{}');
   }
 
   userProjects: ProjectDto[] = [];
@@ -77,7 +77,6 @@ export class ProjectComponent implements OnInit{
     
     this.project.createProject(project).subscribe((newProject) => {
       this.userProjects.push(newProject);
-      localStorage.setItem('userProjects', JSON.stringify(this.userProjects));
     });
   }
 
