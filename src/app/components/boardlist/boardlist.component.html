@@ -1,14 +1,22 @@
 <div>
-    <button
-        type="submit"
-        (click)="onSubmit()"
-    >
-    Create new boardlist
-    </button>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmitBoardlist()">
+        <div class="form-group">
+            <mat-form-field appearance="outline">
+                <mat-label>Enter the boardlist name</mat-label>
+                <input matInput placeholder="Name of Boardlist" formControlName="boardlistName" required />
+            </mat-form-field>
+          </div>
+
+          <div class="buttongroup">
+            <button mat-raised-button type="submit" class="flat">
+                Create new boardlist
+            </button>
+          </div>
+    </form>
 
     @for (boardlist of boardlistsProject; track boardlist.name) {
-        <div>
-            <h2>{{boardlist.name}}</h2>
-        </div>
+    <div>
+        <h2>{{boardlist.name}}</h2>
+    </div>
     }
 </div>

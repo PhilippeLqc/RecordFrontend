@@ -8,10 +8,13 @@ import {
   Validators,
 } from '@angular/forms';
 import { BoardlistService } from '../../Service/boardlist.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { BoardListDto } from '../../model/boardListDto';
 import { merge } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-boardlist',
@@ -46,7 +49,7 @@ export class BoardlistComponent implements OnInit {
       .subscribe(() => this.updateErrorName());
   }
 
-  // In BoardlistComponent
+  // On Init
   ngOnInit(): void {
     const projectId = Number(this.route.snapshot.paramMap.get('projectId'));
 
@@ -78,7 +81,7 @@ export class BoardlistComponent implements OnInit {
 
     let boardlist = {
       name: boardlistName!,
-      projectId: this.projectId!,
+      projectId: Number(this.projectId),
     };
     console.log('after form ', boardlist);
 
