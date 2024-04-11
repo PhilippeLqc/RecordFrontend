@@ -39,11 +39,8 @@ export class ProjectComponent implements OnInit{
      }
 
   ngOnInit(): void {
-    this.project.getProjectsByUserId().subscribe(() => {
-      console.log(this.project.userProjects);
-      //usefull ?
-      localStorage.setItem('userProjects', JSON.stringify(this.project.userProjects));
-      this.userProjects = JSON.parse(localStorage.getItem('userProjects') || '{}');
+    this.project.getProjectsByUserId().subscribe((userProject) => {
+      this.userProjects  = userProject;
     });
   }
 

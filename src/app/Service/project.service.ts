@@ -41,9 +41,7 @@ export class ProjectService {
     return this.http.post<ProjectDto>(this.projectServiceUrl + '/create', project).pipe(
       tap((response) => {
         this.currentProject = response;
-        this.userProjects.push(response);
         this.userProjectsSubject.next(this.userProjects);
-        localStorage.setItem('userProjects', JSON.stringify(this.userProjects));
       })
     );
   }
