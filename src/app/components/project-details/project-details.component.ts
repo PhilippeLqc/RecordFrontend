@@ -1,22 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjectService } from '../../Service/project.service';
-import { UserService } from '../../Service/user.service';
 import { ActivatedRoute } from '@angular/router';
-import { Project } from '../../model/project';
 import { Status } from '../../enumTypes/status';
 import { ProjectDto } from '../../model/projectDto';
 import { CommonModule } from '@angular/common';
+import { BoardlistComponent } from '../boardlist/boardlist.component';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-project-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, BoardlistComponent],
   templateUrl: './project-details.component.html',
   styleUrl: './project-details.component.css'
 })
 export class ProjectDetailsComponent implements OnInit{
 
-  constructor(public project: ProjectService, private userDetails: UserService, private route: ActivatedRoute) {
+  constructor(public project: ProjectService, private route: ActivatedRoute) {
     this.projectDetails = {
       id: 0,
       title: '',
@@ -25,8 +25,8 @@ export class ProjectDetailsComponent implements OnInit{
       boardlistIds: [],
       userIds: []
     }
-   }
-
+  }
+  
   projectDetails: ProjectDto;
 
   ngOnInit(): void {

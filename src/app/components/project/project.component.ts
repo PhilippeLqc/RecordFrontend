@@ -39,16 +39,13 @@ export class ProjectComponent implements OnInit{
      }
 
   ngOnInit(): void {
-    this.project.getProjectsByUserId().subscribe(() => {
-      console.log(this.project.userProjects);
-      //usefull ?
-      localStorage.setItem('userProjects', JSON.stringify(this.project.userProjects));
+    this.project.getProjectsByUserId().subscribe((userProject) => {
+      this.userProjects  = userProject;
     });
-
-    this.userProjects = JSON.parse(localStorage.getItem('userProjects') || '{}');
   }
-  
+
   userProjects: ProjectDto[] = [];
+
   title = new FormControl('', Validators.required);
   errorMessage = '';
 
@@ -77,7 +74,6 @@ export class ProjectComponent implements OnInit{
     
     this.project.createProject(project).subscribe((newProject) => {
       this.userProjects.push(newProject);
-      localStorage.setItem('userProjects', JSON.stringify(this.userProjects));
     });
   }
 
