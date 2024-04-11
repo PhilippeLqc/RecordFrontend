@@ -68,6 +68,7 @@ export class BoardlistComponent implements OnInit {
 
   onSubmitBoardlist() {
     if (this.registerForm.invalid) {
+      this.updateErrorName();
       return;
     }
 
