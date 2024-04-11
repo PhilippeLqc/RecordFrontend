@@ -43,7 +43,6 @@
                     console.log(response);
                     this.allBoardlistsOfProject = response;
                     console.log("END DATA DE getBOARDLIST");
-
                 })
             );
         }
