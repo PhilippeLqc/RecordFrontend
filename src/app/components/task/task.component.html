@@ -5,15 +5,20 @@
         <div class="form-group">
             <mat-form-field appearance="outline">
                 <mat-label>Enter the task name</mat-label>
-                <input matInput placeholder="Name of task" formControlName="taskName" required />
+                <input matInput placeholder="Name of task" formControlName="title" required />
             </mat-form-field>
-          </div>
+        </div>
+        <div class="form-group">
+            <mat-form-field appearance="outline">
+                <mat-label>Enter the task description</mat-label>
+                <input matInput placeholder="Description of task" formControlName="description" />
+            </mat-form-field>
+        </div>
 
-          <div class="buttongroup">
+        <div class="buttongroup">
             <button mat-raised-button type="submit" class="flat">
                 Create new task
             </button>
-          </div>
+        </div>
     </form>
 </div>
-

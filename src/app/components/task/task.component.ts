@@ -37,27 +37,28 @@ export class TaskComponent {
   ) {}
 
   public taskForm = this.formBuilder.group({
-    taskId: [],
-    taskName: [], // Add this line
-    title: [],
-    description: [],
-    expirationDate: [],
-    status: [],
-    hierarchy: [],
-    listUserId: [],
-    boardlistId: []
+    taskId: [''],
+    title: [''],
+    description: [''],
+    expirationDate: [''],
+    status: [''],
+    hierarchy: [''],
+    listUserId: [''],
+    boardlistId: ['']
   });
 
 
   onSubmitCreateTask() {
 
-    const taskName = this.taskForm.controls['taskName'].value;
+    const taskName = this.taskForm.controls['title'].value;
+    const taskDescription = this.taskForm.controls['description'].value;
+
 
     let task: TaskDto = {
       taskId: 0,
       title: taskName!,
-      description: 'This is a sample task description',
-      expirationDate: new Date(), // December 31, 2022
+      description: taskDescription! || 'Task description',
+      expirationDate: new Date(),
       status: Status.ACTIVE,
       hierarchy: Hierarchy.IMPORTANT,
       listUserId: [2, 1],
