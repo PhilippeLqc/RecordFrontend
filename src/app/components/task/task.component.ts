@@ -14,6 +14,8 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import {MatSelectModule} from '@angular/material/select';
+
 
 @Component({
   selector: 'app-task',
@@ -24,12 +26,14 @@ import { MatButtonModule } from '@angular/material/button';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatSelectModule,
   ],
   templateUrl: './task.component.html',
   styleUrl: './task.component.css',
 })
 export class TaskComponent {
   taskName = new FormControl('', Validators.required);
+  statusList: string[]= Object.values(Status);
 
   constructor(
     private taskS: TaskService,
@@ -53,14 +57,13 @@ export class TaskComponent {
     const taskName = this.taskForm.controls['title'].value;
     const taskDescription = this.taskForm.controls['description'].value;
 
-
     let task: TaskDto = {
       taskId: 0,
       title: taskName!,
       description: taskDescription! || 'Task description',
       expirationDate: new Date(),
       status: Status.ACTIVE,
-      hierarchy: Hierarchy.IMPORTANT,
+      hierarchy: Hierarchy.MOYENNE,
       listUserId: [2, 1],
       boardlistId: 202,
     };

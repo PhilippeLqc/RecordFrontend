@@ -14,6 +14,16 @@
                 <input matInput placeholder="Description of task" formControlName="description" />
             </mat-form-field>
         </div>
+        <div class="form-group">
+            <mat-form-field>
+                <mat-label>Status</mat-label>
+                <mat-select>
+                  @for (status of statusList; track status) {
+                    <mat-option [value]="statusList" formControlName="status">{{status}}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+        </div>
 
         <div class="buttongroup">
             <button mat-raised-button type="submit" class="flat">
