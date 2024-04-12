@@ -37,7 +37,7 @@ export class BoardlistComponent implements OnInit {
   // Variables
   boardlistsProject: BoardListDto[] = [];
   projectId: Number = Number(this.route.snapshot.paramMap.get('projectId'));
-  registerForm: FormGroup = new FormGroup({});
+  boardlistForm: FormGroup = new FormGroup({});
   nameBoardlist = new FormControl('', Validators.required);
 
   // Constructor
@@ -59,7 +59,7 @@ export class BoardlistComponent implements OnInit {
       this.boardlistsProject = this.boardlistS.allBoardlistsOfProject;
     });
 
-    this.registerForm = this.formBuilder.group({
+    this.boardlistForm = this.formBuilder.group({
       boardlistName: ['', Validators.required]
     });
 
@@ -72,13 +72,13 @@ export class BoardlistComponent implements OnInit {
   }
 
   onSubmitBoardlist() {
-    if (this.registerForm.invalid) {
+    if (this.boardlistForm.invalid) {
       this.updateErrorName();
       return;
     }
 
     // Get the boardlist name from the form
-    const boardlistName = this.registerForm.controls['boardlistName'].value;
+    const boardlistName = this.boardlistForm.controls['boardlistName'].value;
     console.log('enter on submit');
 
     let boardlist = {

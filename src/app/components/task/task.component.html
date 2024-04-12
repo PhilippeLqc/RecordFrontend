@@ -1,4 +1,19 @@
 <div>
-    <button (click)="onSubmitCreateTask()">Create a new task</button>
+    <!-- <button (click)="onSubmitCreateTask()">Create a new task</button> -->
+
+    <form [formGroup]="taskForm" (ngSubmit)="onSubmitCreateTask()">
+        <div class="form-group">
+            <mat-form-field appearance="outline">
+                <mat-label>Enter the task name</mat-label>
+                <input matInput placeholder="Name of task" formControlName="taskName" required />
+            </mat-form-field>
+          </div>
+
+          <div class="buttongroup">
+            <button mat-raised-button type="submit" class="flat">
+                Create new task
+            </button>
+          </div>
+    </form>
 </div>
 
