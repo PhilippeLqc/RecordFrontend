@@ -26,8 +26,8 @@ export class TaskComponent {
       expirationDate: new Date(), // December 31, 2022
       status: Status.ACTIVE,
       hierarchy: Hierarchy.IMPORTANT,
-      userId: [4652],
-      boardlistId: 206
+      listUserId: [2],
+      boardlistId: 202
     };
     console.log(task);
     this.taskS.createTask(task).subscribe((newTask) => {

@@ -8,6 +8,6 @@ export interface TaskDto {
     expirationDate: Date;
     status: Status;
     hierarchy: Hierarchy;
-    userId: number[];
+    listUserId: number[];
     boardlistId: number;
 }
