@@ -82,6 +82,7 @@ export class BoardlistComponent implements OnInit {
     console.log('enter on submit');
 
     let boardlist = {
+      id: 
       name: boardlistName!,
       projectId: Number(this.projectId),
     };

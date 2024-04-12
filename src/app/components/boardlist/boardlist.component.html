@@ -14,9 +14,10 @@
           </div>
     </form>
 
-    @for (boardlist of boardlistsProject; track boardlist.name) {
+    @for (boardlist of boardlistsProject; track boardlist.id) {
     <div>
         <h2>{{boardlist.name}}</h2>
+        <!-- @for() -->
         <app-task></app-task>
     </div>
     }
