@@ -10,14 +10,10 @@
 
     export class BoardlistService {
         constructor(private http: HttpClient, private route: ActivatedRoute) {
-            this.currentBoardlistDto = {
-                name: '',
-                projectId: this.projectId
-            }
         }
 
         boardlistServiceUrl = 'http://localhost:8081/api/boardlist';
-        currentBoardlistDto: BoardListDto;
+        currentBoardlistDto!: BoardListDto;
         currentBoardlist?: BoardListDto;
         allBoardlistsOfProject: BoardListDto[] = [];
         projectId: number = Number(this.route.snapshot.paramMap.get('projectId'));

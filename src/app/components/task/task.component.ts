@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { TaskService } from '../../Service/task.service';
 import { Status } from '../../enumTypes/status';
 import { Hierarchy } from '../../enumTypes/hierarchy';
@@ -32,9 +32,12 @@ import { AuthService } from '../../Service/auth.service';
   styleUrl: './task.component.css',
 })
 export class TaskComponent implements OnInit{
+
+  @Input() boardlistId!: number;
+  @Input() tasks!: TaskDto[];
   taskName = new FormControl('', Validators.required);
   statusList: string[]= Object.values(Status);
-  userId = this.auth.currentUser?.id as number;
+  userId = this.auth.currentUser.id as number;
 
   constructor(
     private taskS: TaskService,
@@ -43,8 +46,7 @@ export class TaskComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    this.userId = this.auth.currentUser?.id as number;
-  }
+   }
 
   public taskForm = this.formBuilder.group({
     taskId: [''],
@@ -65,16 +67,18 @@ export class TaskComponent implements OnInit{
     let task: TaskDto = {
       taskId: 0,
       title: taskName!,
-      description: taskDescription! || 'Task description',
+      description: taskDescription || '',
       expirationDate: new Date(),
       status: Status.ACTIVE,
       hierarchy: Hierarchy.MOYENNE,
       listUserId: [this.userId],
-      boardlistId: 202,
+      boardlistId: this.boardlistId,
     };
+    console.log("boardlistId: ", this.boardlistId);
     console.log(task);
     this.taskS.createTask(task).subscribe((newTask) => {
       console.log('Task created: ', newTask);
+      this.tasks.push(newTask);
     });
   }
 }

@@ -17,21 +17,6 @@ import { role } from "../enumTypes/role";
 export class AuthService {
 
     constructor(private http : HttpClient, private chat: ChatService, private router: Router){ 
-        this.currentUser = {
-            id: 0,
-            username: '',
-            email: '',
-            role: 'USER' as role,
-            taskIds: [],
-            projectIds: [],
-            messageIds: []
-        }
-
-        this.Securitytoken = {
-            token: '',
-            refreshToken: ''
-        }
-
         const storedToken = localStorage.getItem('SecurityToken');
         if (storedToken) {
             this.Securitytoken = JSON.parse(storedToken);
@@ -43,14 +28,13 @@ export class AuthService {
     userServiceURL = 'http://localhost:8081/api/user';
 
     connected : boolean = false;
-    currentUser : UserDto;
-    private Securitytoken : AuthResponseDto;
+    currentUser !: UserDto;
+    private Securitytoken !: AuthResponseDto;
 
 
 
     // register user using UserDto
     register(user: UserRegisterDto) {
-        console.log(user)
         return this.http.post<UserRegisterDto>(this.serviceURL + '/register', user).subscribe()
     }
 
@@ -61,7 +45,6 @@ export class AuthService {
                 return throwError(() => new Error('Error during login request', error));
               }),
           switchMap((responseLogin) => {
-            console.log( "response login", responseLogin);
             //store token in local storage & context
             this.Securitytoken = responseLogin;
             localStorage.setItem('SecurityToken', JSON.stringify(this.Securitytoken));
@@ -79,6 +62,7 @@ export class AuthService {
           tap((user: Object) => {
             // Save the user in the currentUser object
             this.currentUser = user as UserDto;
+            console.log("current user", this.currentUser);
           }),
           tap(() => {
             // Redirect to the project page

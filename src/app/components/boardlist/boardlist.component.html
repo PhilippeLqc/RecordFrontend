@@ -1,24 +1,46 @@
 <div>
-    <form [formGroup]="boardlistForm" (ngSubmit)="onSubmitBoardlist()">
-        <div class="form-group">
-            <mat-form-field appearance="outline">
-                <mat-label>Enter the boardlist name</mat-label>
-                <input matInput placeholder="Name of Boardlist" formControlName="boardlistName" required />
-            </mat-form-field>
-          </div>
+  <form [formGroup]="boardlistForm" (ngSubmit)="onSubmitBoardlist()">
+    <div class="form-group">
+      <mat-form-field appearance="outline">
+        <mat-label>Enter the boardlist name</mat-label>
+        <input
+          matInput
+          placeholder="Name of Boardlist"
+          formControlName="boardlistName"
+          required
+        />
+      </mat-form-field>
+    </div>
 
-          <div class="buttongroup">
-            <button mat-raised-button type="submit" class="flat">
-                Create new boardlist
-            </button>
-          </div>
-    </form>
+    <div class="buttongroup">
+      <button mat-raised-button type="submit" class="flat">
+        Create new boardlist
+      </button>
+    </div>
+  </form>
 
-    @for (boardlist of boardlistsProject; track boardlist.id) {
+  <div class="boardlist-container" cdkDropListGroup>
+    @for (boardlist of boardlistsProject; track boardlist) {
     <div>
-        <h2>{{boardlist.name}}</h2>
-        <!-- @for() -->
-        <app-task></app-task>
+      <div
+        class="boardlist"
+        cdkDropList
+        [cdkDropListData]="tasks[boardlist.id]"
+        (cdkDropListDropped)="drop($event)"
+      >
+        <h2>{{ boardlist.name }}</h2>
+        @for ( task of tasks[boardlist.id]; track task) {
+        <div cdkDrag>
+          <h3>{{ task.title }}</h3>
+          <p>{{ task.description }}</p>
+        </div>
+        }
+        <app-task
+          [boardlistId]="boardlist.id"
+          [tasks]="tasks[boardlist.id]"
+        ></app-task>
+      </div>
     </div>
     }
+  </div>
 </div>

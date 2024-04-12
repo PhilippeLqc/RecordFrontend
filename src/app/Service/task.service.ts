@@ -24,4 +24,15 @@ export class TaskService {
           })
       );
   }
+
+  getTasksByBoardlistId(boardlistId: number): Observable<TaskDto[]> {
+      return this.http.get<TaskDto[]>(`${this.taskUrl}/boardlist/${boardlistId}`).pipe(
+          tap((response) => {
+              console.log("REPONSE DATA DE getTASK");
+              console.log(response);
+              this.allTasksOfBoardlist = response;
+              console.log("END DATA DE getTASK");
+          })
+      );
+  }
 }
