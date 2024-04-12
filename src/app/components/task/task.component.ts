@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TaskService } from '../../Service/task.service';
 import { Status } from '../../enumTypes/status';
 import { Hierarchy } from '../../enumTypes/hierarchy';
 import { TaskDto } from '../../model/taskDto';
 import {
-  FormGroup,
   FormControl,
   FormsModule,
   ReactiveFormsModule,
@@ -15,6 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
+import { AuthService } from '../../Service/auth.service';
 
 
 @Component({
@@ -31,14 +31,20 @@ import {MatSelectModule} from '@angular/material/select';
   templateUrl: './task.component.html',
   styleUrl: './task.component.css',
 })
-export class TaskComponent {
+export class TaskComponent implements OnInit{
   taskName = new FormControl('', Validators.required);
   statusList: string[]= Object.values(Status);
+  userId = this.auth.currentUser?.id as number;
 
   constructor(
     private taskS: TaskService,
     private formBuilder: FormBuilder,
+    private auth: AuthService,
   ) {}
+
+  ngOnInit(): void {
+    this.userId = this.auth.currentUser?.id as number;
+  }
 
   public taskForm = this.formBuilder.group({
     taskId: [''],
@@ -53,7 +59,6 @@ export class TaskComponent {
 
 
   onSubmitCreateTask() {
-
     const taskName = this.taskForm.controls['title'].value;
     const taskDescription = this.taskForm.controls['description'].value;
 
@@ -64,7 +69,7 @@ export class TaskComponent {
       expirationDate: new Date(),
       status: Status.ACTIVE,
       hierarchy: Hierarchy.MOYENNE,
-      listUserId: [2, 1],
+      listUserId: [this.userId],
       boardlistId: 202,
     };
     console.log(task);
