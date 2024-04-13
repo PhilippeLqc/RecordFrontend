@@ -17,21 +17,24 @@ export class TaskService {
   createTask(task: TaskDto): Observable<TaskDto> {
       return this.http.post<TaskDto>(`${this.taskUrl}/create`, task).pipe(
           tap((response) => {
-              console.log("REPONSE DATA DE CREATETASK");
-              console.log(response);
               this.currentTask = response;
-              console.log("END DATA DE CREATETASK");
           })
       );
   }
 
+    updateTask(task: TaskDto): Observable<TaskDto> {
+        return this.http.put<TaskDto>(`${this.taskUrl}/update/${task.taskId}`, task).pipe(
+            tap((response) => {
+                this.currentTask = response;
+            })
+        );
+    }
+
   getTasksByBoardlistId(boardlistId: number): Observable<TaskDto[]> {
       return this.http.get<TaskDto[]>(`${this.taskUrl}/boardlist/${boardlistId}`).pipe(
           tap((response) => {
-              console.log("REPONSE DATA DE getTASK");
-              console.log(response);
               this.allTasksOfBoardlist = response;
-              console.log("END DATA DE getTASK");
+
           })
       );
   }

@@ -5,6 +5,7 @@ export interface TaskDto {
     taskId: number;
     title: string;
     description: string;
+    position: number;
     expirationDate: Date;
     status: Status;
     hierarchy: Hierarchy;

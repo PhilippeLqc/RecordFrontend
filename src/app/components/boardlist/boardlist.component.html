@@ -25,6 +25,7 @@
       <div
         class="boardlist"
         cdkDropList
+        [id]="boardlist.id.toString()"
         [cdkDropListData]="tasks[boardlist.id]"
         (cdkDropListDropped)="drop($event)"
       >

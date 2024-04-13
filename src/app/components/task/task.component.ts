@@ -68,16 +68,14 @@ export class TaskComponent implements OnInit{
       taskId: 0,
       title: taskName!,
       description: taskDescription || '',
+      position: 0,
       expirationDate: new Date(),
       status: Status.ACTIVE,
       hierarchy: Hierarchy.MOYENNE,
       listUserId: [this.userId],
       boardlistId: this.boardlistId,
     };
-    console.log("boardlistId: ", this.boardlistId);
-    console.log(task);
     this.taskS.createTask(task).subscribe((newTask) => {
-      console.log('Task created: ', newTask);
       this.tasks.push(newTask);
     });
   }

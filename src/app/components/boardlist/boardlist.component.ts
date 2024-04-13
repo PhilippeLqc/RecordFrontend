@@ -50,9 +50,13 @@ import { CommonModule } from '@angular/common';
 export class BoardlistComponent implements OnInit {
 
 drop(event: CdkDragDrop<any>) {
+  const initialPositions = event.previousContainer.data.map((task: TaskDto) => task.position);
+  const initialPosition = event.previousIndex;
+  const initialListId = Number(event.previousContainer.id);
+
   if (event.previousContainer === event.container) {
     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    console.log('moveItemInArray', event.container.data);
+    console.log("moveItemInArray", event.container.data);
   } else {
     transferArrayItem(
       event.previousContainer.data,
@@ -60,7 +64,15 @@ drop(event: CdkDragDrop<any>) {
       event.previousIndex,
       event.currentIndex,
     );
-    console.log('transferArrayItem', event.container.data);
+    console.log("transferArrayItem", event.container.data);
+  }
+  for (let i = 0; i < event.container.data.length; i++) {
+    const task = event.container.data[i];
+    task.position = i;
+    task.boardlistId = Number(event.container.id);
+
+      this.taskService.updateTask(task).subscribe();
+
   }
 }
 
@@ -91,8 +103,7 @@ drop(event: CdkDragDrop<any>) {
       this.boardlistsProject = boardlists;
       boardlists.forEach(boardlist => {
         this.taskService.getTasksByBoardlistId(boardlist.id).subscribe(tasks => {
-          this.tasks[boardlist.id] = tasks;
-          console.log('boardlist task array', this.tasks);
+          this.tasks[boardlist.id] = tasks.sort((a, b) => a.position - b.position);
         });
       });
     });
@@ -115,21 +126,16 @@ drop(event: CdkDragDrop<any>) {
       return;
     }
 
-    // Get the boardlist name from the form
-    console.log('enter on submit');
-
     let boardlist = {
       id: 0,
       name: this.boardlistForm.controls['boardlistName'].value!,
       projectId: Number(this.projectId),
     };
-    console.log('after form ', boardlist);
 
     // Do something with the boardlist name
     this.boardlistS.createBoardlist(boardlist).subscribe((newBoardlist) => {
       this.boardlistsProject.push(newBoardlist);
     });
-    console.log('end service ');
   }
 }
 

@@ -22,10 +22,7 @@
         createBoardlist(boardlist: BoardListDto): Observable<BoardListDto> {
             return this.http.post<BoardListDto>(`${this.boardlistServiceUrl}/create`, boardlist).pipe(
                 tap((response) => {
-                    console.log("REPONSE DATA DE CREATEBOARDLIST");
-                    console.log(response);
                     this.currentBoardlist = response
-                    console.log("END DATA DE CREATEBOARDLIST");
                 })
             );
         }
@@ -34,11 +31,7 @@
         getBoardlistsByProjectId(projectId: number): Observable<BoardListDto[]> {
             return this.http.get<BoardListDto[]>(`${this.boardlistServiceUrl}/project/${projectId}`).pipe(
                 tap((response) => {
-                    console.log("REPONSE DATA DE getBOARDLIST");
-
-                    console.log(response);
                     this.allBoardlistsOfProject = response;
-                    console.log("END DATA DE getBOARDLIST");
                 })
             );
         }
