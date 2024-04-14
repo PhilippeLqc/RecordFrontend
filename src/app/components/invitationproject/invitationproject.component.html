@@ -1,0 +1,6 @@
+<p>invitationproject works!</p>
+<form [formGroup]="inviteForm" (ngSubmit)="inviteUserToProject()">
+  <label for="email">Email:</label>
+  <input id="email" type="email" formControlName="email" />
+  <button type="submit">Envoyer l'invitation</button>
+</form>

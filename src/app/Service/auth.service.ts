@@ -54,7 +54,6 @@ export class AuthService {
 
             // Connect to the chat
             this.chat.initConnection();
-            this.chat.joinRoom('1100');
 
             // Get the user by email
             return this.http.get<UserDto>(this.userServiceURL + '/email/' + user.email);

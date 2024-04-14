@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MessageDto } from '../../model/messageDto';
 import { AuthService } from '../../Service/auth.service';
-import { Observable, map } from 'rxjs';
 
 @Component({
   selector: 'app-chat',
@@ -18,34 +17,33 @@ export class ChatComponent implements OnInit {
   userId = this.auth.currentUser?.id as number;
   messageList: any[] = [];
   historyMessages: any[] = [];
-  userMessage: string = ''; // Propriété pour stocker la valeur de l'entrée de texte
+  userMessage: string = '';
+  projectId = this.route.snapshot.paramMap.get('projectId')!;
   
   constructor(
     private chatService: ChatService,  
     private route: ActivatedRoute,
-    private auth: AuthService) {
+    private auth: AuthService,) {
     }
     
     ngOnInit(): void {
       this.userId = this.route.snapshot.params["userIdchat"];
-      this.chatService.joinRoom('1100'); // TODO: get the project id from the route when project component is created
+      this.chatService.joinRoom(this.projectId);
+      this.chatService.getHistory(this.projectId)
       this.listenerMessages();
       this.archiveMessages();
-      this.chatService.getHistory('1100') // TODO get the project id from the route when project component is created
     }
     
     sendMessage() {
       const messageDto: MessageDto = {
         id: 0,
         message: this.userMessage,
-        projectId: 1100,
+        projectId: Number(this.projectId),
         userId: this.userId
     }
     this.chatService.sendMessage(messageDto.projectId, messageDto);
     this.userMessage = '';
   }
-  
-  
   
   listenerMessages() {
     this.chatService.getMessages().subscribe((messages: any) => {
@@ -57,7 +55,7 @@ export class ChatComponent implements OnInit {
   }
   
   archiveMessages() {
-    this.chatService.getHistory('1100').subscribe((messages: MessageDto[]) => {
+    this.chatService.getHistory(this.projectId).subscribe((messages: MessageDto[]) => {
       this.historyMessages = messages.map((message: any) => ({
         ...message,
         message_side: message.userId === Number(this.userId) ? 'sender': 'receiver'

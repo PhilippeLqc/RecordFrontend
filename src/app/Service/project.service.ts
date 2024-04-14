@@ -10,16 +10,8 @@ import { Project } from '../model/project';
   providedIn: 'root',
 })
 export class ProjectService {
+  
   constructor(private http: HttpClient, private auth: AuthService) {
-    this.currentProjectDto = {
-      id: 0,
-      title: '',
-      description: '',
-      status: '' as Status,
-      boardlistIds: [],
-      userIds: [],
-    };
-
     const storedProjects = localStorage.getItem('userProjects');
     if (storedProjects) {
       this.userProjects = JSON.parse(storedProjects);
@@ -30,7 +22,7 @@ export class ProjectService {
   projectServiceUrl = 'http://localhost:8081/api/project';
 
   private userProjectsSubject = new BehaviorSubject<ProjectDto[]>([]);
-  currentProjectDto: ProjectDto;
+  currentProjectDto!: ProjectDto;
   currentProject?: ProjectDto;
   userProjects$ = this.userProjectsSubject.asObservable();
   userProjects: ProjectDto[] = [];
