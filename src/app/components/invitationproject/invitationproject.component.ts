@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { InvitationProjectService } from '../../Service/invitation-project.service';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { NotificationService } from '../../Service/notification.service';
 
 @Component({
   selector: 'app-invitationproject',
@@ -14,7 +15,7 @@ export class InvitationprojectComponent implements OnInit{
 inviteForm!: FormGroup;
 currentProjectId!: number; 
 
-  constructor(private invitationService: InvitationProjectService, private route: ActivatedRoute) { }
+  constructor(private invitationService: InvitationProjectService, private route: ActivatedRoute, private notificationService: NotificationService) { }
 
   ngOnInit(): void {
     this.inviteForm = new FormGroup({
@@ -30,6 +31,7 @@ currentProjectId!: number;
       const email = emailControl.value;
       this.invitationService.invite(this.currentProjectId, email).subscribe((response) => {
         console.log(response);
+        this.notificationService.sendNotification(response);
       });
     }
   }
