@@ -22,16 +22,12 @@ export class InvitationProjectService implements OnInit {
   }
 
   inviteUserToProject(projectId: number, email: string) {
-
     return this.http.post(this.invitationProjectServiceUrl + '/invite/' + projectId, {email: email}).pipe(
       tap(() => {
         console.log('appel de this.stomp.publish');
-        this.stompClient.publish({ destination: '/app/notification', body: JSON.stringify({ sender: 'test', type: 'JOIN' })});
       })
     );
   }
-
-
       invite(projectId: number, email: string) {
         return this.userService.getUserByEmail(email).pipe(
       catchError((error) => {
