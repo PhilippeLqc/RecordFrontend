@@ -23,18 +23,20 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class AuthentificationComponent {
 
-  constructor(
-    public auth: AuthService, 
-    public formBuilder: FormBuilder ) { 
-      merge(this.email.statusChanges, this.email.valueChanges)
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => this.updateErrorMail());
-    }
-
   email = new FormControl('', [Validators.required, Validators.email]);
   password = new FormControl('', Validators.required);
   errorMessage = '';
   hide = true;
+
+  constructor(
+    public auth: AuthService, 
+    public formBuilder: FormBuilder ) { 
+      
+      merge(this.email.statusChanges, this.email.valueChanges)
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.updateErrorMail());
+      
+  }
 
   public connectionForm = this.formBuilder.group({
     email: this.email,
@@ -42,21 +44,12 @@ export class AuthentificationComponent {
   });
 
   onSubmit() {
-    console.log('onSubmit was called');
+    // console.log('onSubmit was called');
     let user : LogsDto = {
       email: this.connectionForm.value.email!,
       password: this.connectionForm.value.password!
     }
-    console.log(user);
-    
-    this.auth.login(user).subscribe({
-      next: () => {
-        console.log('auth.login was called');
-      },
-      error: (errorMessage) => {
-        this.errorMessage = errorMessage;
-      }
-    });
+    this.auth.login(user).subscribe();
   }
 
   updateErrorMail() {

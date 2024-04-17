@@ -23,6 +23,7 @@
     "@stomp/stompjs": "^7.0.0",
     "@types/socket.io": "^3.0.2",
     "ngx-socket-io": "^4.6.1",
+    "nodemon": "^3.1.0",
     "rxjs": "~7.8.0",
     "socket.io-client": "^4.7.5",
     "sockjs": "^0.3.24",

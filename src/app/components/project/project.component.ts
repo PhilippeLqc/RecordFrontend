@@ -29,8 +29,12 @@ import { ProjectDto } from '../../model/projectDto';
 })
 export class ProjectComponent implements OnInit{
   
+  userProjects: ProjectDto[] = [];
+  title = new FormControl('', Validators.required);
+  errorMessage = '';
+
   constructor(
-    public project: ProjectService,
+    private project: ProjectService,
     private formBuilder: FormBuilder,
     private router: Router) {
       merge(this.title.statusChanges, this.title.valueChanges)
@@ -44,23 +48,19 @@ export class ProjectComponent implements OnInit{
     });
   }
 
-  userProjects: ProjectDto[] = [];
-
-  title = new FormControl('', Validators.required);
-  errorMessage = '';
 
   public projectForm = this.formBuilder.group({
     title: [''],
     description: [''],
   });
 
-  updateErrorTitle() {
+  updateErrorTitle(): void {
     if (this.title.hasError('required')) {
       this.errorMessage = 'You must enter a title';
     }
   }
 
-  onSubmit() {
+  onSubmit(): void {
     console.log('onSubmit was called');
     let project = {
       id: 0,
@@ -73,12 +73,13 @@ export class ProjectComponent implements OnInit{
     console.log(project);
     
     this.project.createProject(project).subscribe((newProject) => {
-      this.userProjects.push(newProject);
+      this.userProjects = [...this.userProjects, newProject];
     });
   }
 
-  gotoProject(projectId: number) {
-    this.router.navigate(['/project', projectId]);
+  gotoProject(projectId: ProjectDto): void {
+    this.project.changeCurrentProject(projectId);
+    this.router.navigate(['/project', projectId.id]);
   }
 
 }

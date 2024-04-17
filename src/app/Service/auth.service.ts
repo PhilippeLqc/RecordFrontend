@@ -8,6 +8,7 @@ import { UserRegisterDto } from "../model/userRegisterDto";
 import { ChatService } from "./chat.service";
 import { Router } from "@angular/router";
 import { role } from "../enumTypes/role";
+import { NotificationService } from "./notification.service";
 
 @Injectable({
     providedIn: "root"
@@ -16,12 +17,14 @@ import { role } from "../enumTypes/role";
 
 export class AuthService {
 
-    constructor(private http : HttpClient, private chat: ChatService, private router: Router){ 
+    constructor(private http : HttpClient, private chat: ChatService, private router: Router, private notification: NotificationService){ 
         const storedToken = localStorage.getItem('SecurityToken');
         if (storedToken) {
             this.Securitytoken = JSON.parse(storedToken);
             this.connected = true;
         }
+
+        const currentUser = localStorage.getItem('currentUser');
     }
 
     serviceURL = 'http://localhost:8081/api/auth';
@@ -44,7 +47,7 @@ export class AuthService {
             catchError(error => {
                 return throwError(() => new Error('Error during login request', error));
               }),
-          switchMap((responseLogin) => {
+          switchMap((responseLogin: AuthResponseDto) => {
             //store token in local storage & context
             this.Securitytoken = responseLogin;
             localStorage.setItem('SecurityToken', JSON.stringify(this.Securitytoken));
@@ -53,16 +56,16 @@ export class AuthService {
             this.connected = true;
 
             // Connect to the chat
-            this.chat.initConnection();
-            this.chat.joinRoom('1100');
+            // this.chat.initConnection();
+            // this.notification.initNotificationConnection();
 
             // Get the user by email
             return this.http.get<UserDto>(this.userServiceURL + '/email/' + user.email);
           }),
-          tap((user: Object) => {
+          tap((user: UserDto) => {
             // Save the user in the currentUser object
-            this.currentUser = user as UserDto;
-            console.log("current user", this.currentUser);
+            this.currentUser = user;
+            localStorage.setItem('currentUser', JSON.stringify(this.currentUser))
           }),
           tap(() => {
             // Redirect to the project page
@@ -74,9 +77,9 @@ export class AuthService {
           }),
           catchError((error) => {
             if (error.status === 403) {
-              return of ({ error : 'email ou mot de passe invalide' });
+                return of ({ error : 'email ou mot de passe invalide' });
             } else {
-                return of( { error : ' bug dans la matrice ' });
+                return of ( { error : ' bug dans la matrice ' });
             }
             })
         );
@@ -120,12 +123,10 @@ export class AuthService {
     isConnected(): boolean {
         if (this.Securitytoken != null) {
             this.connected = true
-            
             return true;
         } else {
             this.connected = false
             return false;
         }
-    
     }
 }

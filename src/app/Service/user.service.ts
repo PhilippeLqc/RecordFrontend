@@ -14,4 +14,9 @@ export class UserService {
 
     userServiceURL = 'http://localhost:8081/api/user';
 
+    // get user by email
+    getUserByEmail(email: string): Observable<UserDto> {
+        return this.http.get<UserDto>(this.userServiceURL + '/email/' + email);
+    }
+
 }
