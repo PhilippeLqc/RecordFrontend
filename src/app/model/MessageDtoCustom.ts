@@ -3,5 +3,5 @@ export interface MessageDtoCustom {
     message: string;
     projectId: number;
     userId: number;
-    message_side: number;
+    message_side: string;
 }
