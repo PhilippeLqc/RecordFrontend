@@ -62,7 +62,6 @@ export class BoardlistComponent implements OnInit {
   showModal = false;
   showCreateListModal = false;
 
-
 drop(event: CdkDragDrop<any>) {
 
   if (event.previousContainer === event.container) {
