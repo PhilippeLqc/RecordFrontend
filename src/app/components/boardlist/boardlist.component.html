@@ -3,12 +3,7 @@
     <div class="form-group">
       <mat-form-field appearance="outline">
         <mat-label>Enter the boardlist name</mat-label>
-        <input
-          matInput
-          placeholder="Name of Boardlist"
-          formControlName="boardlistName"
-          required
-        />
+        <input matInput placeholder="Name of Boardlist" formControlName="boardlistName" required />
       </mat-form-field>
     </div>
 
@@ -22,24 +17,23 @@
   <div class="boardlist-container" cdkDropListGroup>
     @for (boardlist of boardlistsProject; track boardlist) {
     <div>
-      <div
-        class="boardlist"
-        cdkDropList
-        [id]="boardlist.id.toString()"
-        [cdkDropListData]="tasks[boardlist.id]"
-        (cdkDropListDropped)="drop($event)"
-      >
-        <h2 (click)="showBoardlistNameFormFn()">{{ boardlist.name }}</h2>
+      <div class="boardlist" cdkDropList [id]="boardlist.id.toString()" [cdkDropListData]="tasks[boardlist.id]"
+        (cdkDropListDropped)="drop($event)">
+        @if (boardlistIdFormName != boardlist.id) {
+          <h2 (click)="showBoardlistNameFormFn(boardlist.id)">{{ boardlist.name }}</h2>
+        }
+        @if (boardlistIdFormName == boardlist.id) {
+          <input  #boardlistNameInput [value]="boardlist.name"
+          (blur)="updateBoardlistName(boardlist, boardlistNameInput.value, boardlist.id)"
+          (keyup.enter)="updateBoardlistName(boardlist, boardlistNameInput.value, boardlist.id)" />
+        }
         @for ( task of tasks[boardlist.id]; track task) {
         <div cdkDrag>
           <h3>{{ task.title }}</h3>
           <p>{{ task.description }}</p>
         </div>
         }
-        <app-task
-          [boardlistId]="boardlist.id"
-          [tasks]="tasks[boardlist.id]"
-        ></app-task>
+        <app-task [boardlistId]="boardlist.id" [tasks]="tasks[boardlist.id]"></app-task>
       </div>
     </div>
     }

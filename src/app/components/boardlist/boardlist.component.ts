@@ -55,7 +55,7 @@ export class BoardlistComponent implements OnInit {
   boardlistForm: FormGroup = new FormGroup({});
   nameBoardlist = new FormControl('', Validators.required);
   tasks: { [boardlistId: number]: TaskDto[] } = {};
-  showBoardlistNameForm = false;
+  boardlistIdFormName!: Number;
 
 drop(event: CdkDragDrop<any>) {
 
@@ -155,9 +155,14 @@ drop(event: CdkDragDrop<any>) {
     });
   }
 
-  showBoardlistNameFormFn() {
-    console.log('showBoardlistNameFormFn');
-    this.showBoardlistNameForm = !this.showBoardlistNameForm;
+  showBoardlistNameFormFn(boardlistId: Number) {
+    this.boardlistIdFormName = boardlistId;
+  }
+
+  updateBoardlistName(boardlist: BoardListDto, boardlistName: string, boardlistId: Number) {
+    boardlist.name = boardlistName;
+    this.boardlistS.updateBoardlistName(boardlist, boardlistId).subscribe();
+    this.boardlistIdFormName = -1;
   }
 }
 

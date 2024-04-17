@@ -37,15 +37,14 @@
         }
 
         // Update boardlist name
-        // updateBoardlistName(boardlist: BoardListDto): Observable<BoardListDto> {
-        //     return this.http.put<BoardListDto>(`${this.boardlistServiceUrl}/update`, boardlist).pipe(
-        //         tap((response) => {
-        //             this.currentBoardlist = response
-        //         })
-        //     );
-        // }
+        updateBoardlistName(boardlist: BoardListDto, boardlistId: Number): Observable<BoardListDto> {
+            return this.http.put<BoardListDto>(`${this.boardlistServiceUrl}/update/${boardlistId}`, boardlist).pipe(
+                tap((response) => {
+                    this.currentBoardlist = response
+                })
+            );
+        }
 
-        
 
     }
 
