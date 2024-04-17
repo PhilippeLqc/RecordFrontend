@@ -4,8 +4,6 @@ import { Stomp } from '@stomp/stompjs';
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { MessageDto } from '../model/messageDto';
-import { ActivatedRoute } from '@angular/router';
-import { Client } from 'stompjs';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +16,7 @@ export class ChatService {
   messages: MessageDto[] = [];
 
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) { 
+  constructor(private http: HttpClient) { 
 }
   
   serviceURL = 'http://localhost:8081/api/websocket';

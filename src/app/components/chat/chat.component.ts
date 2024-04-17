@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { MessageDto } from '../../model/messageDto';
 import { ProjectDto } from '../../model/projectDto';
 import { ProjectService } from '../../Service/project.service';
+import { MessageDtoCustom } from '../../model/MessageDtoCustom';
 
 @Component({
   selector: 'app-chat',
@@ -17,8 +18,8 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   userId = JSON.parse(localStorage.getItem('currentUser')!).id;
   currentProject: ProjectDto = {} as  ProjectDto
-  messageList: any[] = [];
-  historyMessages: any[] = [];
+  messageList: MessageDtoCustom[] = [];
+  historyMessages: MessageDtoCustom[] = [];
   userMessage: string = ''; // Propriété pour stocker la valeur de l'entrée de texte
   
   constructor(
