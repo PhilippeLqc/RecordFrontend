@@ -17,8 +17,8 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   userId = JSON.parse(localStorage.getItem('currentUser')!).id;
   currentProject: ProjectDto = {} as  ProjectDto
-  messageList: MessageDto[] = [];
-  historyMessages: MessageDto[] = [];
+  messageList: any[] = [];
+  historyMessages: any[] = [];
   userMessage: string = ''; // Propriété pour stocker la valeur de l'entrée de texte
   
   constructor(
