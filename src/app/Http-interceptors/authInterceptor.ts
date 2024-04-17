@@ -39,7 +39,7 @@ export class AuthInterceptor implements HttpInterceptor {
           );
         }
   
-        // If the error is not a 401, rethrow the error
+        // If the error is not a 401, throw a erroer with status 404 and a message that said interceptor error
         return throwError(() => new Error('test'));
       })
     );

@@ -10,7 +10,7 @@ import {
 import { BoardlistService } from '../../Service/boardlist.service';
 import { ActivatedRoute } from '@angular/router';
 import { BoardListDto } from '../../model/boardListDto';
-import { merge } from 'rxjs';
+import { concatMap, filter, from, map, merge, mergeMap, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -49,14 +49,22 @@ import { CommonModule } from '@angular/common';
 
 export class BoardlistComponent implements OnInit {
 
+  // Variables
+  boardlistsProject: BoardListDto[] = [];
+  projectId: Number = Number(this.route.snapshot.paramMap.get('projectId'));
+  boardlistForm: FormGroup = new FormGroup({});
+  nameBoardlist = new FormControl('', Validators.required);
+  tasks: { [boardlistId: number]: TaskDto[] } = {};
+  showBoardlistNameForm = false;
+
 drop(event: CdkDragDrop<any>) {
-  const initialPositions = event.previousContainer.data.map((task: TaskDto) => task.position);
-  const initialPosition = event.previousIndex;
-  const initialListId = Number(event.previousContainer.id);
 
   if (event.previousContainer === event.container) {
-    moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    console.log("moveItemInArray", event.container.data);
+    moveItemInArray(
+      event.container.data, 
+      event.previousIndex, 
+      event.currentIndex);
+    // console.log("moveItemInArray", event.container.data);
   } else {
     transferArrayItem(
       event.previousContainer.data,
@@ -64,7 +72,7 @@ drop(event: CdkDragDrop<any>) {
       event.previousIndex,
       event.currentIndex,
     );
-    console.log("transferArrayItem", event.container.data);
+    // console.log("transferArrayItem", event.container.data);
   }
   for (let i = 0; i < event.container.data.length; i++) {
     const task = event.container.data[i];
@@ -76,15 +84,6 @@ drop(event: CdkDragDrop<any>) {
   }
 }
 
-  // Variables
-  boardlistsProject: BoardListDto[] = [];
-  projectId: Number = Number(this.route.snapshot.paramMap.get('projectId'));
-  boardlistForm: FormGroup = new FormGroup({});
-  nameBoardlist = new FormControl('', Validators.required);
-  tasks: { [boardlistId: number]: TaskDto[] } = {};
-  showBoardlistNameForm = false;
-
-  
   // Constructor
   constructor(
     public boardlistS: BoardlistService,
@@ -92,21 +91,41 @@ drop(event: CdkDragDrop<any>) {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute
   ) {
+
     merge(this.nameBoardlist.statusChanges)
     .pipe(takeUntilDestroyed())
     .subscribe(() => this.updateErrorName());
+
   }
   
-  // On Init
   ngOnInit(): void {
+    this.taskService.currentTask$.subscribe(task => {
+      const tasksForBoardlist = this.tasks[task.boardlistId] || [];
+      const taskIndex = tasksForBoardlist.findIndex(t => t.taskId === task.taskId);
+      if (taskIndex > -1) {
+        // Task already exists, update it
+        tasksForBoardlist[taskIndex] = task;
+      } else {
+        // Task does not exist, add it
+        this.tasks[task.boardlistId] = [...tasksForBoardlist, task];
+      }
+      this.tasks[task.boardlistId] = tasksForBoardlist;
+    });
+    
     const projectId = Number(this.route.snapshot.paramMap.get('projectId'));
-    this.boardlistS.getBoardlistsByProjectId(projectId).subscribe(boardlists => {
-      this.boardlistsProject = boardlists;
-      boardlists.forEach(boardlist => {
-        this.taskService.getTasksByBoardlistId(boardlist.id).subscribe(tasks => {
-          this.tasks[boardlist.id] = tasks.sort((a, b) => a.position - b.position);
-        });
-      });
+    this.boardlistS.getBoardlistsByProjectId(projectId).pipe(
+      switchMap(boardlists => {
+        this.boardlistsProject = boardlists;
+        return from(boardlists);
+      }),
+      mergeMap(boardlist => 
+        this.taskService.getTasksByBoardlistId(boardlist.id).pipe(
+          tap(tasks => console.log('tasks for boardlist', boardlist.id, tasks)),
+          map(tasks => ({ boardlist, tasks: tasks.sort((a, b) => a.position - b.position) }))
+        )
+      )
+    ).subscribe(({ boardlist, tasks }) => {
+      this.tasks[boardlist.id] = tasks;
     });
     
     this.boardlistForm = this.formBuilder.group({
@@ -126,14 +145,11 @@ drop(event: CdkDragDrop<any>) {
       this.updateErrorName();
       return;
     }
-
     let boardlist = {
       id: 0,
       name: this.boardlistForm.controls['boardlistName'].value!,
       projectId: Number(this.projectId),
     };
-
-    // Do something with the boardlist name
     this.boardlistS.createBoardlist(boardlist).subscribe((newBoardlist) => {
       this.boardlistsProject.push(newBoardlist);
     });

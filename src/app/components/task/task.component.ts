@@ -15,6 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
 import { AuthService } from '../../Service/auth.service';
+import { BehaviorSubject } from 'rxjs';
 
 
 @Component({
@@ -35,15 +36,18 @@ export class TaskComponent implements OnInit{
 
   @Input() boardlistId!: number;
   @Input() tasks!: TaskDto[];
+  private tasksSubject:  BehaviorSubject<TaskDto[]> = new BehaviorSubject<TaskDto[]>([]);
+  tasks$ = this.tasksSubject.asObservable();
   taskName = new FormControl('', Validators.required);
   statusList: string[]= Object.values(Status);
-  userId = this.auth.currentUser.id as number;
+  userId = JSON.parse(localStorage.getItem('currentUser')!).id;
+  tasksList: TaskDto[] = [];
 
   constructor(
-    private taskS: TaskService,
+    private task: TaskService,
     private formBuilder: FormBuilder,
-    private auth: AuthService,
-  ) {}
+  ) {
+}
 
   ngOnInit(): void {
    }
@@ -64,7 +68,7 @@ export class TaskComponent implements OnInit{
     const taskName = this.taskForm.controls['title'].value;
     const taskDescription = this.taskForm.controls['description'].value;
 
-    let task: TaskDto = {
+    let newTask: TaskDto = {
       taskId: 0,
       title: taskName!,
       description: taskDescription || '',
@@ -75,8 +79,19 @@ export class TaskComponent implements OnInit{
       listUserId: [this.userId],
       boardlistId: this.boardlistId,
     };
-    this.taskS.createTask(task).subscribe((newTask) => {
-      this.tasks.push(newTask);
+    this.task.createTask(newTask).subscribe((newTaskResponse) => {
+      const currentTasks = this.tasksSubject.getValue();
+      this.tasksSubject.next([...currentTasks, newTaskResponse]);
+    });
+  }
+
+  onSubmitUpdateTask(updatedTask: TaskDto) {
+    this.task.updateTask(updatedTask).subscribe((updatedTaskResponse) => {
+      const currentTasks = this.tasksSubject.getValue();
+      const updatedTasks = currentTasks.map((task) => 
+        task.taskId === updatedTaskResponse.taskId ? updatedTaskResponse : task
+      );
+      this.tasksSubject.next(updatedTasks);
     });
   }
 }
