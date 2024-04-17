@@ -10,7 +10,7 @@ import {
 import { BoardlistService } from '../../Service/boardlist.service';
 import { ActivatedRoute } from '@angular/router';
 import { BoardListDto } from '../../model/boardListDto';
-import { from, map, merge, switchMap } from 'rxjs';
+import { concatMap, filter, from, map, merge, mergeMap, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -96,14 +96,28 @@ drop(event: CdkDragDrop<any>) {
   }
   
   ngOnInit(): void {
+    this.taskService.currentTask$.subscribe(task => {
+      const tasksForBoardlist = this.tasks[task.boardlistId] || [];
+      const taskIndex = tasksForBoardlist.findIndex(t => t.taskId === task.taskId);
+      if (taskIndex > -1) {
+        // Task already exists, update it
+        tasksForBoardlist[taskIndex] = task;
+      } else {
+        // Task does not exist, add it
+        tasksForBoardlist.push(task);
+      }
+      this.tasks[task.boardlistId] = tasksForBoardlist;
+    });
+    
     const projectId = Number(this.route.snapshot.paramMap.get('projectId'));
     this.boardlistS.getBoardlistsByProjectId(projectId).pipe(
       switchMap(boardlists => {
         this.boardlistsProject = boardlists;
         return from(boardlists);
       }),
-      switchMap(boardlist => 
+      mergeMap(boardlist => 
         this.taskService.getTasksByBoardlistId(boardlist.id).pipe(
+          tap(tasks => console.log('tasks for boardlist', boardlist.id, tasks)),
           map(tasks => ({ boardlist, tasks: tasks.sort((a, b) => a.position - b.position) }))
         )
       )

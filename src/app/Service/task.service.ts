@@ -11,7 +11,7 @@ export class TaskService {
   taskUrl = 'http://localhost:8081/api/task';
 
   private currentTaskSubject: BehaviorSubject<TaskDto> = new BehaviorSubject<TaskDto>({} as TaskDto);
-  currentTask = this.currentTaskSubject.asObservable();
+  currentTask$ = this.currentTaskSubject.asObservable();
   allTasksOfBoardlist: TaskDto[] = [];
 
   constructor(private http: HttpClient) {}
