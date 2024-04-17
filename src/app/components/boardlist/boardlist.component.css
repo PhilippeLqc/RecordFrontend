@@ -1,4 +1,3 @@
-
 .boardlist-container {
     display: flex;
     justify-content: space-between;
@@ -19,4 +18,8 @@
   
   .task {
     margin: 10px 0;
+  }
+
+  .boardlist-main {
+    display: flex;
   }

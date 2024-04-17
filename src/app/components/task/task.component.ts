@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TaskService } from '../../Service/task.service';
 import { Status } from '../../enumTypes/status';
 import { Hierarchy } from '../../enumTypes/hierarchy';
@@ -36,6 +36,7 @@ export class TaskComponent implements OnInit{
 
   @Input() boardlistId!: number;
   @Input() tasks!: TaskDto[];
+  @Output() taskCreated = new EventEmitter<void>();
   private tasksSubject:  BehaviorSubject<TaskDto[]> = new BehaviorSubject<TaskDto[]>([]);
   tasks$ = this.tasksSubject.asObservable();
   taskName = new FormControl('', Validators.required);
@@ -93,5 +94,9 @@ export class TaskComponent implements OnInit{
       );
       this.tasksSubject.next(updatedTasks);
     });
+  }
+
+  closeModal(): void {
+    this.taskCreated.emit();
   }
 }
