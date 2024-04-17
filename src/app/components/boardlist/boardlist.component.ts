@@ -104,7 +104,7 @@ drop(event: CdkDragDrop<any>) {
         tasksForBoardlist[taskIndex] = task;
       } else {
         // Task does not exist, add it
-        tasksForBoardlist.push(task);
+        this.tasks[task.boardlistId] = [...tasksForBoardlist, task];
       }
       this.tasks[task.boardlistId] = tasksForBoardlist;
     });
