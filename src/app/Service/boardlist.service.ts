@@ -9,14 +9,14 @@
     })
 
     export class BoardlistService {
-        constructor(private http: HttpClient, private route: ActivatedRoute) {
-        }
 
         boardlistServiceUrl = 'http://localhost:8081/api/boardlist';
-        currentBoardlistDto!: BoardListDto;
         currentBoardlist?: BoardListDto;
         allBoardlistsOfProject: BoardListDto[] = [];
-        projectId: number = Number(this.route.snapshot.paramMap.get('projectId'));
+
+
+        constructor(private http: HttpClient, private route: ActivatedRoute) {
+        }
 
         //create a boardlist
         createBoardlist(boardlist: BoardListDto): Observable<BoardListDto> {

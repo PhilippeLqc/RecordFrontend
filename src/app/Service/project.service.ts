@@ -5,21 +5,13 @@ import { Status } from '../enumTypes/status';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { AuthService } from './auth.service';
 import { Project } from '../model/project';
+import { ProjectInvitationDto } from '../model/projectInvitationDto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectService {
   constructor(private http: HttpClient, private auth: AuthService) {
-    this.currentProjectDto = {
-      id: 0,
-      title: '',
-      description: '',
-      status: '' as Status,
-      boardlistIds: [],
-      userIds: [],
-    };
-
     const storedProjects = localStorage.getItem('userProjects');
     if (storedProjects) {
       this.userProjects = JSON.parse(storedProjects);
@@ -30,8 +22,9 @@ export class ProjectService {
   projectServiceUrl = 'http://localhost:8081/api/project';
 
   private userProjectsSubject = new BehaviorSubject<ProjectDto[]>([]);
-  currentProjectDto: ProjectDto;
-  currentProject?: ProjectDto;
+  private currentProjectSubject = new BehaviorSubject<ProjectDto>({} as ProjectDto);
+  currentProject$ = this.currentProjectSubject.asObservable();
+  currentProject!: ProjectDto;
   userProjects$ = this.userProjectsSubject.asObservable();
   userProjects: ProjectDto[] = [];
 
@@ -53,7 +46,6 @@ export class ProjectService {
       .get<ProjectDto[]>(this.projectServiceUrl + '/allProjects')
       .pipe(
         tap((response) => {
-          console.log('REPONSE DATA DE GETPROJECTBYUSERID', response);
           this.userProjects = response;
           this.userProjectsSubject.next(this.userProjects);
         })
@@ -88,7 +80,7 @@ export class ProjectService {
 
   //update current project
   updateCurrentProject(project: Project): Observable<Project> {
-    const ProjectId = this.currentProjectDto.id;
+    const ProjectId = this.currentProject.id;
     return this.http
       .put<Project>(this.projectServiceUrl + '/update/' + ProjectId, project)
       .pipe(
@@ -99,13 +91,15 @@ export class ProjectService {
   }
 
   // invite user to project by ProjectId and searching by mail
-  inviteUserToProject(email: string, projectId: number): Observable<Project> {
-    return this.http
-      .post<Project>(this.projectServiceUrl + '/invite/' + projectId, email)
-      .pipe(
-        tap((response) => {
-          this.currentProject = response;
-        })
-      );
+  inviteUserToProject(email: string, projectId: number): Observable<ProjectInvitationDto> {
+    const headers = { 'Content-Type': 'application/json' };
+    return this.http.post<ProjectInvitationDto>(this.projectServiceUrl + '/invite/' + projectId, { email: email }, { headers });
   }
+
+  changeCurrentProject(project: ProjectDto) {
+    console.log('changeCurrentProject', project);
+    this.currentProject = project;
+    this.currentProjectSubject.next(project);
+  }
+
 }

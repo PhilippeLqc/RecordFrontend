@@ -24,19 +24,21 @@ import { role } from '../../enumTypes/role';
 })
 export class RegisterComponent {
 
+  username = new FormControl("", Validators.required);
+  email = new FormControl("", [Validators.required, Validators.email]);
+  password = new FormControl("", Validators.required);
+  errorMessage = '';
+  hide = true;
+
 constructor(
   public auth : AuthService,
   public formBuilder : FormBuilder) { 
+
     merge(this.email.statusChanges, this.email.valueChanges)
     .pipe(takeUntilDestroyed())
     .subscribe(() => this.updateErrorMail());
   }
 
-username = new FormControl("", Validators.required);
-email = new FormControl("", [Validators.required, Validators.email]);
-password = new FormControl("", Validators.required);
-errorMessage = '';
-hide = true;
 
 updateErrorMail() {
   if (this.email.hasError('required')) {
@@ -55,6 +57,7 @@ public registerForm = this.formBuilder.group({
 });
 
 onSubmit() {
+  
   let user : UserRegisterDto = {
     username: this.registerForm.value.username!,
     email: this.registerForm.value.email!,
