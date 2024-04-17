@@ -10,7 +10,7 @@ import {
 import { BoardlistService } from '../../Service/boardlist.service';
 import { ActivatedRoute } from '@angular/router';
 import { BoardListDto } from '../../model/boardListDto';
-import { concatMap, filter, from, map, merge, mergeMap, switchMap, tap } from 'rxjs';
+import { from, map, merge, mergeMap, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -27,6 +27,7 @@ import {
   CdkDropList,
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
+import { ModalComponent } from '../../lib/modal/modal.component';
 
 @Component({
     selector: 'app-boardlist',
@@ -34,7 +35,9 @@ import { CommonModule } from '@angular/common';
     templateUrl: './boardlist.component.html',
     styleUrl: './boardlist.component.css',
     imports: [
-      CommonModule,
+        ModalComponent,
+        TaskComponent,
+        CommonModule,
         FormsModule,
         ReactiveFormsModule,
         MatFormFieldModule,
@@ -43,7 +46,6 @@ import { CommonModule } from '@angular/common';
         DragDropModule,
         CdkDrag,
         CdkDropList,
-        TaskComponent
     ]
 })
 
@@ -51,11 +53,14 @@ export class BoardlistComponent implements OnInit {
 
   // Variables
   boardlistsProject: BoardListDto[] = [];
+  selectedBoardlistId!: number;
   projectId: Number = Number(this.route.snapshot.paramMap.get('projectId'));
   boardlistForm: FormGroup = new FormGroup({});
   nameBoardlist = new FormControl('', Validators.required);
   tasks: { [boardlistId: number]: TaskDto[] } = {};
   boardlistIdFormName!: Number;
+  showModal = false;
+  showCreateListModal = false;
 
 drop(event: CdkDragDrop<any>) {
 
@@ -109,7 +114,6 @@ drop(event: CdkDragDrop<any>) {
         // Task does not exist, add it
         this.tasks[task.boardlistId] = [...tasksForBoardlist, task];
       }
-      this.tasks[task.boardlistId] = tasksForBoardlist;
     });
     
     const projectId = Number(this.route.snapshot.paramMap.get('projectId'));
@@ -140,7 +144,9 @@ drop(event: CdkDragDrop<any>) {
     }
   }
 
-  onSubmitBoardlist() {
+  onSubmitBoardlist(event: Event) {
+    event.preventDefault();
+
     if (this.boardlistForm.invalid) {
       this.updateErrorName();
       return;
@@ -151,8 +157,26 @@ drop(event: CdkDragDrop<any>) {
       projectId: Number(this.projectId),
     };
     this.boardlistS.createBoardlist(boardlist).subscribe((newBoardlist) => {
+      console.log('', newBoardlist);
       this.boardlistsProject.push(newBoardlist);
     });
+
+    this.boardlistForm.reset();
+  }
+
+  openModal(boardlistId: number): void {
+    console.log('openModal was called');
+    this.selectedBoardlistId = boardlistId;
+    this.showModal = true;
+  }
+
+  closeModal(): void {
+    console.log('closeModal was called');
+    this.showModal = false;
+  }
+
+  openCreateListModal(): void {
+    this.showCreateListModal = !this.showCreateListModal;
   }
 
   showBoardlistNameFormFn(boardlistId: Number) {

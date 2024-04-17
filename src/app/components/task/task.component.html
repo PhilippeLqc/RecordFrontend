@@ -23,7 +23,12 @@
     </div>
 
     <div class="buttongroup">
-      <button mat-raised-button type="submit" class="flat">
+      <button
+        mat-raised-button
+        type="submit"
+        class="flat"
+        (click)="closeModal()"
+      >
         Create new task
       </button>
     </div>

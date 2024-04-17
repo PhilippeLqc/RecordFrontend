@@ -1,19 +1,29 @@
-<div>
-  <form [formGroup]="boardlistForm" (ngSubmit)="onSubmitBoardlist()">
+<div class="boardlist-main">
+  <button (click)="openCreateListModal()" [hidden]="showCreateListModal">
+    + Créer une nouvelle liste
+  </button>
+  <form
+    [formGroup]="boardlistForm"
+    (ngSubmit)="onSubmitBoardlist($event)"
+    [hidden]="!showCreateListModal"
+  >
     <div class="form-group">
       <mat-form-field appearance="outline">
         <mat-label>Enter the boardlist name</mat-label>
         <input matInput placeholder="Name of Boardlist" formControlName="boardlistName" required />
       </mat-form-field>
     </div>
-
     <div class="buttongroup">
-      <button mat-raised-button type="submit" class="flat">
+      <button
+        mat-raised-button
+        type="submit"
+        class="flat"
+        (click)="openCreateListModal()"
+      >
         Create new boardlist
       </button>
     </div>
   </form>
-
   <div class="boardlist-container" cdkDropListGroup>
     @for (boardlist of boardlistsProject; track boardlist) {
     <div>
@@ -33,7 +43,14 @@
           <p>{{ task.description }}</p>
         </div>
         }
-        <app-task [boardlistId]="boardlist.id" [tasks]="tasks[boardlist.id]"></app-task>
+        <button (click)="openModal(boardlist.id)">créer une tâche</button>
+        <app-modal [show]="showModal" (closeEvent)="closeModal()">
+          <app-task
+            [boardlistId]="selectedBoardlistId"
+            [tasks]="tasks[selectedBoardlistId]"
+            (taskCreated)="closeModal()"
+          ></app-task>
+        </app-modal>
       </div>
     </div>
     }

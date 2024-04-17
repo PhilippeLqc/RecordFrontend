@@ -12,11 +12,13 @@ import { CommonModule } from '@angular/common';
 import {MatCardModule} from '@angular/material/card';
 import { Router } from '@angular/router';
 import { ProjectDto } from '../../model/projectDto';
+import { ModalComponent } from '../../lib/modal/modal.component';
 
 @Component({
   selector: 'app-project',
   standalone: true,
-  imports: [FormsModule,
+  imports: [ModalComponent,
+    FormsModule,
     CommonModule, 
     ReactiveFormsModule, 
     MatFormFieldModule, 
@@ -32,6 +34,7 @@ export class ProjectComponent implements OnInit{
   userProjects: ProjectDto[] = [];
   title = new FormControl('', Validators.required);
   errorMessage = '';
+  showModal = false;
 
   constructor(
     private project: ProjectService,
@@ -82,4 +85,13 @@ export class ProjectComponent implements OnInit{
     this.router.navigate(['/project', projectId.id]);
   }
 
+  openModal(): void {
+    console.log('openModal was called');
+    this.showModal = true;
+  }
+
+  closeModal(): void {
+    console.log('closeModal was called');
+    this.showModal = false;
+  }
 }
