@@ -82,6 +82,7 @@ drop(event: CdkDragDrop<any>) {
   boardlistForm: FormGroup = new FormGroup({});
   nameBoardlist = new FormControl('', Validators.required);
   tasks: { [boardlistId: number]: TaskDto[] } = {};
+  showBoardlistNameForm = false;
 
   
   // Constructor
@@ -136,6 +137,11 @@ drop(event: CdkDragDrop<any>) {
     this.boardlistS.createBoardlist(boardlist).subscribe((newBoardlist) => {
       this.boardlistsProject.push(newBoardlist);
     });
+  }
+
+  showBoardlistNameFormFn() {
+    console.log('showBoardlistNameFormFn');
+    this.showBoardlistNameForm = !this.showBoardlistNameForm;
   }
 }
 

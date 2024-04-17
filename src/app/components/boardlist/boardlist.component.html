@@ -29,7 +29,7 @@
         [cdkDropListData]="tasks[boardlist.id]"
         (cdkDropListDropped)="drop($event)"
       >
-        <h2>{{ boardlist.name }}</h2>
+        <h2 (click)="showBoardlistNameFormFn()">{{ boardlist.name }}</h2>
         @for ( task of tasks[boardlist.id]; track task) {
         <div cdkDrag>
           <h3>{{ task.title }}</h3>

@@ -36,5 +36,16 @@
             );
         }
 
+        // Update boardlist name
+        // updateBoardlistName(boardlist: BoardListDto): Observable<BoardListDto> {
+        //     return this.http.put<BoardListDto>(`${this.boardlistServiceUrl}/update`, boardlist).pipe(
+        //         tap((response) => {
+        //             this.currentBoardlist = response
+        //         })
+        //     );
+        // }
+
+        
+
     }
 
