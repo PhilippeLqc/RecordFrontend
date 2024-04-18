@@ -46,6 +46,7 @@ export class TaskUpdateComponent implements OnInit {
   statusList: string[] = Object.values(Status);
   hierarchyList: string[] = Object.values(Hierarchy);
   userId = JSON.parse(localStorage.getItem('currentUser')!).id;
+  position!: number;
 
   constructor(private task: TaskService, private formBuilder: FormBuilder) {}
 
@@ -87,6 +88,11 @@ export class TaskUpdateComponent implements OnInit {
 
   logChange(value: any) {
     console.log(value);
+  }
+
+  logChanges(event: Event) {
+    const target = event.target as HTMLInputElement;
+    console.log(target.value);
   }
 
   onSubmitUpdateTask() {
