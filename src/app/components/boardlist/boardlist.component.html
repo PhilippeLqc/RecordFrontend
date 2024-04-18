@@ -10,21 +10,11 @@
     <div class="form-group">
       <mat-form-field appearance="outline">
         <mat-label>Enter the boardlist name</mat-label>
-        <input
-          matInput
-          placeholder="Name of Boardlist"
-          formControlName="boardlistName"
-          required
-        />
+        <input matInput placeholder="Name of Boardlist" formControlName="boardlistName" required />
       </mat-form-field>
     </div>
     <div class="buttongroup">
-      <button
-        mat-raised-button
-        type="submit"
-        class="flat"
-        (click)="openCreateListModal()"
-      >
+      <button mat-raised-button type="submit" class="flat" (click)="openCreateListModal()">
         Create new boardlist
       </button>
     </div>
@@ -45,6 +35,7 @@
         (cdkDropListDropped)="dropTasks($event)"
       >
         <h2>{{ boardlist.name }}</h2>
+
         @for ( task of tasks[boardlist.id]; track task) {
         <div cdkDrag>
           <h3>{{ task.title }}</h3>
@@ -53,11 +44,8 @@
         }
         <button (click)="openModal(boardlist.id)">créer une tâche</button>
         <app-modal [show]="showModal" (closeEvent)="closeModal()">
-          <app-task
-            [boardlistId]="selectedBoardlistId"
-            [tasks]="tasks[selectedBoardlistId]"
-            (taskCreated)="closeModal()"
-          ></app-task>
+          <app-task [boardlistId]="selectedBoardlistId" [tasks]="tasks[selectedBoardlistId]"
+            (taskCreated)="closeModal()"></app-task>
         </app-modal>
       </div>
       }
