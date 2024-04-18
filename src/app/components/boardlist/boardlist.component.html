@@ -30,7 +30,7 @@
             (blur)="updateBoardlistName(boardlist, boardlistNameInput.value, boardlist.id)"
             (keyup.enter)="updateBoardlistName(boardlist, boardlistNameInput.value, boardlist.id)" autofocus />
           }
-          <div >Menu</div>
+          <div (click)="deleteBoardlist(boardlist.id)">Menu</div>
         </div>
         @for ( task of tasks[boardlist.id]; track task) {
         <div cdkDrag>

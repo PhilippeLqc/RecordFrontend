@@ -104,17 +104,26 @@ drop(event: CdkDragDrop<any>) {
   }
   
   ngOnInit(): void {
-    this.taskService.currentTask$.subscribe(task => {
-      const tasksForBoardlist = this.tasks[task.boardlistId] || [];
-      const taskIndex = tasksForBoardlist.findIndex(t => t.taskId === task.taskId);
-      if (taskIndex > -1) {
-        // Task already exists, update it
-        tasksForBoardlist[taskIndex] = task;
-      } else {
-        // Task does not exist, add it
-        this.tasks[task.boardlistId] = [...tasksForBoardlist, task];
-      }
-    });
+    merge(
+      this.taskService.currentTask$.pipe(
+        tap(task => {
+          const tasksForBoardlist = this.tasks[task.boardlistId] || [];
+          const taskIndex = tasksForBoardlist.findIndex(t => t.taskId === task.taskId);
+          if (taskIndex > -1) {
+            // Task already exists, update it
+            tasksForBoardlist[taskIndex] = task;
+          } else {
+            // Task does not exist, add it
+            this.tasks[task.boardlistId] = [...tasksForBoardlist, task];
+          }
+        })
+      ),
+      this.boardlistS.allBoardlistsOfProject$.pipe(
+        tap(boardlists => {
+          this.boardlistsProject = boardlists;
+        })
+      )
+    ).subscribe();
     
     const projectId = Number(this.route.snapshot.paramMap.get('projectId'));
     this.boardlistS.getBoardlistsByProjectId(projectId).pipe(
@@ -157,7 +166,6 @@ drop(event: CdkDragDrop<any>) {
       projectId: Number(this.projectId),
     };
     this.boardlistS.createBoardlist(boardlist).subscribe((newBoardlist) => {
-      console.log('', newBoardlist);
       this.boardlistsProject.push(newBoardlist);
     });
 
@@ -165,13 +173,11 @@ drop(event: CdkDragDrop<any>) {
   }
 
   openModal(boardlistId: number): void {
-    console.log('openModal was called');
     this.selectedBoardlistId = boardlistId;
     this.showModal = true;
   }
 
   closeModal(): void {
-    console.log('closeModal was called');
     this.showModal = false;
   }
 
@@ -187,6 +193,10 @@ drop(event: CdkDragDrop<any>) {
     boardlist.name = boardlistName;
     this.boardlistS.updateBoardlistName(boardlist, boardlistId).subscribe();
     this.boardlistIdFormName = -1;
+  }
+
+  deleteBoardlist(boardlistId: Number) {
+    this.boardlistS.deleteBoardlist(boardlistId);
   }
 }
 
