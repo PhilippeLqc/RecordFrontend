@@ -1,48 +1,46 @@
-<div>
-  <div class="chat-container">
-    <div class="chat-header">
-      <h2>Chat</h2>
-    </div>
-    <div class="chat-body">
-      <div class="chat-messages">
-        <ul class="messages">
-          <li
-            class="message right"
-            *ngFor="let item of historyMessages"
-            [ngClass]="{
-              right: item.message_side === 'receiver',
-              left: item.message_side === 'sender'
-            }"
-          >
-            <div class="avatar"></div>
-            <div class="text_wrapper">
-              <div class="text">{{ item.message }}</div>
-            </div>
-          </li>
-          <li
-            class="message right"
-            *ngFor="let item of messageList"
-            [ngClass]="{
-              right: item.message_side === 'receiver',
-              left: item.message_side === 'sender'
-            }"
-          >
-            <div class="avatar"></div>
-            <div class="text_wrapper">
-              <div class="text">{{ item.message }}</div>
-            </div>
-          </li>
-        </ul>
+<div class="w-full h-full flex flex-col bg-white shadow-md rounded-md">
+  <div class="p-2 bg-blue-500 text-white">
+    <h2 class="font-bold text-lg">Chat</h2>
+  </div>
+  <div class="chat-body flex-grow overflow-auto p-4 space-y-4">
+    <div
+      *ngFor="let message of historyMessages"
+      [ngClass]="{
+        'flex justify-end': message.message_side === 'sender',
+        'flex justify-start': message.message_side !== 'receiver'
+      }"
+    >
+      <div class="max-w-xs bg-blue-100 text-blue-800 p-2 rounded-lg">
+        {{ message.message }}
       </div>
     </div>
-    <div class="chat-footer">
+    <div
+      *ngFor="let message of messageList"
+      [ngClass]="{
+        'flex justify-end': message.message_side === 'sender',
+        'flex justify-start': message.message_side !== 'receiver'
+      }"
+    >
+      <div class="max-w-xs bg-blue-100 text-blue-800 p-2 rounded-lg">
+        {{ message.message }}
+      </div>
+    </div>
+  </div>
+  <div class="chat-footer p-4 bg-blue-500">
+    <div class="flex space-x-4">
       <input
         type="text"
         [(ngModel)]="userMessage"
         placeholder="Type your message here..."
         (keyup.enter)="sendMessage()"
+        class="w-full p-2 border rounded"
       />
-      <button (click)="sendMessage()">Send</button>
+      <button
+        (click)="sendMessage()"
+        class="p-2 bg-white text-blue-500 rounded"
+      >
+        Send
+      </button>
     </div>
   </div>
 </div>

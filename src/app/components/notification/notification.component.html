@@ -1,17 +1,21 @@
-<div class="notification-component">
-  <div class="input-group">
-    <label for="email">Email:</label>
-    <input type="email" id="email" [(ngModel)]="email" />
+<div class="notification-component p-6 rounded-lg">
+  <div class="input-group flex flex-col mb-4">
+    <label for="email" class="mb-2 font-bold text-lg text-gray-900"
+      >Email:</label
+    >
+    <input
+      type="email"
+      id="email"
+      [(ngModel)]="email"
+      class="border-2 border-gray-200 p-2 rounded-lg focus:outline-none focus:border-blue-500 transition duration-500"
+    />
   </div>
-
-  @for( notification of notification; track notification) {
-  <div class="notification">
-    <p>{{ notification.id }}</p>
-    <p>{{ notification.userId }}</p>
-    <p>{{ notification.projectId }}</p>
-  </div>
-  }
-  <button (click)="sendNotification(email)">Send Notification</button>
+  <button
+    (click)="sendNotification(email)"
+    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded"
+  >
+    Send Notification
+  </button>
 
   <!-- Le message de la barre de notification sera affiché par MatSnackBar -->
 </div>

@@ -78,6 +78,7 @@ export class ChatService {
       this.subscription[projectId].unsubscribe();
       delete this.subscription[projectId];
     }
+    this.messagesSubject = new BehaviorSubject<MessageDto[]>([]);
   }
 
 }

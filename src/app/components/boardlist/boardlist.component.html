@@ -2,7 +2,11 @@
   <button (click)="openCreateListModal()" [hidden]="showCreateListModal">
     + Créer une nouvelle liste
   </button>
-  <form [formGroup]="boardlistForm" (ngSubmit)="onSubmitBoardlist($event)" [hidden]="!showCreateListModal">
+  <form
+    [formGroup]="boardlistForm"
+    (ngSubmit)="onSubmitBoardlist()"
+    [hidden]="!showCreateListModal"
+  >
     <div class="form-group">
       <mat-form-field appearance="outline">
         <mat-label>Enter the boardlist name</mat-label>
@@ -15,35 +19,23 @@
       </button>
     </div>
   </form>
-  <div class="boardlist-container" cdkDropListGroup>
-    @for (boardlist of boardlistsProject; track boardlist) {
-    <div>
-      <div class="boardlist" cdkDropList [id]="boardlist.id.toString()" [cdkDropListData]="tasks[boardlist.id]"
-        (cdkDropListDropped)="drop($event)">
+  <div
+    cdkDropList
+    cdkDropListOrientation="horizontal"
+    (cdkDropListDropped)="dropList($event)"
+  >
+    <div class="boardlist-container" cdkDropListGroup>
+      @for (boardlist of boardlistsProject; track boardlist) {
+      <div
+        cdkDrag
+        class="boardlist"
+        cdkDropList
+        [id]="boardlist.id.toString()"
+        [cdkDropListData]="tasks[boardlist.id]"
+        (cdkDropListDropped)="dropTasks($event)"
+      >
+        <h2>{{ boardlist.name }}</h2>
 
-        <div class="boardlist-title">
-          @if (boardlistIdFormName != boardlist.id) {
-          <h2 (click)="showBoardlistNameFormFn(boardlist.id)">{{ boardlist.name }}</h2>
-          }
-          @if (boardlistIdFormName == boardlist.id) {
-          <input #boardlistNameInput [value]="boardlist.name"
-            (blur)="updateBoardlistName(boardlist, boardlistNameInput.value, boardlist.id)"
-            (keyup.enter)="updateBoardlistName(boardlist, boardlistNameInput.value, boardlist.id)" autofocus />
-          }
-          <div class="relative">
-            @if (showBoardlistMenu != boardlist.id) {
-            <button (click)="showEditBoardlistMenu(boardlist.id)">Show Menu</button>
-            }
-            @if (showBoardlistMenu == boardlist.id) {
-              <button (click)="showBoardlistMenu = -1">Show Menu</button>
-
-              <div class="absolute bg-white border rounded shadow p-2 mt-2">
-                <button (click)="editFromBoardlistMenu(boardlist.id)">Edit</button>
-                <button (click)="deleteFromBoardlistMenu(boardlist.id)">Delete</button>
-              </div>
-            }
-          </div>
-        </div>
         @for ( task of tasks[boardlist.id]; track task) {
         <div cdkDrag>
           <h3 (click)="openUpdateModal(task.taskId, task.boardlistId)">{{ task.title }}</h3>
@@ -69,7 +61,7 @@
         }
 
       </div>
+      }
     </div>
-    }
   </div>
 </div>
