@@ -61,6 +61,8 @@ export class BoardlistComponent implements OnInit {
   boardlistIdFormName!: Number;
   showModal = false;
   showCreateListModal = false;
+  showBoardlistMenu = false;
+
 
 drop(event: CdkDragDrop<any>) {
 
@@ -102,6 +104,8 @@ drop(event: CdkDragDrop<any>) {
     .subscribe(() => this.updateErrorName());
 
   }
+
+  // OnInit
   
   ngOnInit(): void {
     merge(
@@ -144,8 +148,9 @@ drop(event: CdkDragDrop<any>) {
     this.boardlistForm = this.formBuilder.group({
       boardlistName: ['', Validators.required]
     });
-
   }
+
+  // Method Form Boardlist
 
   updateErrorName(): void {
     if (this.nameBoardlist.hasError('required')) {
@@ -172,6 +177,8 @@ drop(event: CdkDragDrop<any>) {
     this.boardlistForm.reset();
   }
 
+  // Modal
+
   openModal(boardlistId: number): void {
     this.selectedBoardlistId = boardlistId;
     this.showModal = true;
@@ -185,6 +192,9 @@ drop(event: CdkDragDrop<any>) {
     this.showCreateListModal = !this.showCreateListModal;
   }
 
+
+  // Edit or Delete Boardlist
+
   showBoardlistNameFormFn(boardlistId: Number) {
     this.boardlistIdFormName = boardlistId;
   }
@@ -197,6 +207,17 @@ drop(event: CdkDragDrop<any>) {
 
   deleteBoardlist(boardlistId: Number) {
     this.boardlistS.deleteBoardlist(boardlistId);
+  }
+
+
+  // Boardlist menu
+
+  showEditBoardlistMenu() {
+    this.showBoardlistMenu = false; // Close the menu after action
+  }
+  
+  showDeleteBoardlistMenu() {
+    this.showBoardlistMenu = false; // Close the menu after action
   }
 }
 
