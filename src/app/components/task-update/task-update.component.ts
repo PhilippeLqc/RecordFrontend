@@ -40,9 +40,11 @@ export class TaskUpdateComponent implements OnInit {
   private tasksSubject: BehaviorSubject<TaskDto[]> = new BehaviorSubject<
     TaskDto[]
   >([]);
+
   tasks$ = this.tasksSubject.asObservable();
   taskName = new FormControl('', Validators.required);
   statusList: string[] = Object.values(Status);
+  hierarchyList: string[] = Object.values(Hierarchy);
   userId = JSON.parse(localStorage.getItem('currentUser')!).id;
 
   constructor(private task: TaskService, private formBuilder: FormBuilder) {}
@@ -83,27 +85,31 @@ export class TaskUpdateComponent implements OnInit {
     });
   }
 
+  logChange(value: any) {
+    console.log(value);
+  }
+
   onSubmitUpdateTask() {
 
-    let updatedTask: TaskDto = {
-      taskId: this.taskData.taskId,
-      title: this.taskForm.controls['title'].value!,
-      description: this.taskForm.controls['description'].value || '',
-      position: this.taskForm.controls['position'].value,
-      expirationDate: this.taskForm.controls['expirationDate'].value,
-      status: this.taskForm.controls['status'].value,
-      hierarchy: this.taskForm.controls['hierarchy'].value,
-      listUserId: [this.userId],
-      boardlistId: this.boardlistId,
-    };
+    // let updatedTask: TaskDto = {
+    //   taskId: this.taskData.taskId,
+    //   title: this.taskForm.controls['title'].value!,
+    //   description: this.taskForm.controls['description'].value || '',
+    //   position: this.taskForm.controls['position'].value,
+    //   expirationDate: this.taskForm.controls['expirationDate'].value,
+    //   status: this.taskForm.controls['status'].value,
+    //   hierarchy: this.taskForm.controls['hierarchy'].value,
+    //   listUserId: [this.userId],
+    //   boardlistId: this.boardlistId,
+    // };
 
-    this.task.updateTask(updatedTask).subscribe((updatedTaskResponse) => {
-      const currentTasks = this.tasksSubject.getValue();
-      const updatedTasks = currentTasks.map((task) =>
-        task.taskId === updatedTaskResponse.taskId ? updatedTaskResponse : task
-      );
-      this.tasksSubject.next(updatedTasks);
-    });
+    // this.task.updateTask(updatedTask).subscribe((updatedTaskResponse) => {
+    //   const currentTasks = this.tasksSubject.getValue();
+    //   const updatedTasks = currentTasks.map((task) =>
+    //     task.taskId === updatedTaskResponse.taskId ? updatedTaskResponse : task
+    //   );
+    //   this.tasksSubject.next(updatedTasks);
+    // });
   }
 
   closeModal(): void {

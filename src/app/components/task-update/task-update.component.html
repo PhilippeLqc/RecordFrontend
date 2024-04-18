@@ -1,48 +1,60 @@
 <div>
-    <form [formGroup]="taskForm" (ngSubmit)="onSubmitUpdateTask()">
-      <div class="form-group">
-        <mat-form-field appearance="outline">
-          <mat-label>Enter the task name</mat-label>
-          <input matInput placeholder="Name of task" formControlName="title" required [(ngModel)]="taskData.title"/>
-        </mat-form-field>
-      </div>
-      <div class="form-group">
-        <mat-form-field appearance="outline">
-          <mat-label>Enter the task description</mat-label>
-          <input matInput placeholder="Description of task" formControlName="description" [(ngModel)]="taskData.description" />
-        </mat-form-field>
-      </div>
-      <div class="form-group">
-        <mat-form-field appearance="outline">
-          <mat-label>Enter the task position</mat-label>
-          <input matInput placeholder="Position of task" formControlName="position" [(ngModel)]="taskData.position" />
-        </mat-form-field>
-      </div>
-      <div class="form-group">
-        <mat-form-field appearance="outline">
-          <mat-label>Choose a date</mat-label>
-<!--           TODO : Put here a calendar widget -->
-<!--           <input matInput placeholder="Position of task" formControlName="position" [(ngModel)]="taskData.position" /> -->
-        </mat-form-field>
-      </div>
-      <div class="form-group">
-        <mat-form-field appearance="outline">
-          <mat-label>Enter task status</mat-label>
-<!--           TODO : Put here a drop down select status -->
-<!--           <input matInput placeholder="Position of task" formControlName="position" [(ngModel)]="taskData.position" /> -->
-        </mat-form-field>
-      </div>
-      <div class="form-group">
-        <mat-form-field appearance="outline">
-          <mat-label>Enter task importance</mat-label>
-<!--           TODO : Put here a drop down select hierarchy -->
-<!--           <input matInput placeholder="Position of task" formControlName="position" [(ngModel)]="taskData.position" /> -->
-        </mat-form-field>
-      </div>
-      <div class="buttongroup">
-        <button mat-raised-button type="submit" class="flat" (click)="closeModal()">
-          Update this task
-        </button>
-      </div>
-    </form>
-  </div>
+  <form [formGroup]="taskForm" (ngSubmit)="onSubmitUpdateTask()">
+    <div class="form-group">
+      <mat-form-field appearance="outline">
+        <mat-label>Enter the task name</mat-label>
+        <input matInput placeholder="Name of task" formControlName="title" required [(ngModel)]="taskData.title" />
+      </mat-form-field>
+    </div>
+    <div class="form-group">
+      <mat-form-field appearance="outline">
+        <mat-label>Enter the task description</mat-label>
+        <input matInput placeholder="Description of task" formControlName="description"
+          [(ngModel)]="taskData.description" />
+      </mat-form-field>
+    </div>
+    <!-- <div class="form-group">
+      <mat-form-field appearance="outline">
+        <mat-label>Enter the task position</mat-label>
+        <input matInput placeholder="Position of task" formControlName="position" [(ngModel)]="taskData.position" />
+      </mat-form-field>
+    </div> -->
+    <!-- <div class="form-group">
+      <mat-form-field appearance="outline">
+        <mat-label>Choose a date</mat-label>
+                  TODO : Put here a calendar widget
+                  <input matInput placeholder="Position of task" formControlName="position" [(ngModel)]="taskData.position" />
+      </mat-form-field>
+    </div> -->
+
+
+
+    <div class="form-group">
+      <mat-form-field appearance="outline">
+        <mat-label>Enter task status</mat-label>
+        <mat-select formControlName="status" >
+          @for (status of statusList; track status) {
+            <mat-option [value]="status">{{ status }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="form-group">
+      <mat-form-field appearance="outline">
+        <mat-label>Enter task importance</mat-label>
+        <mat-select formControlName="hierarchy">
+          @for (hierarchy of hierarchyList; track hierarchy) {
+            <mat-option [value]="hierarchy">{{ hierarchy }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+    
+    <div class="buttongroup">
+      <button mat-raised-button type="submit" class="flat" (click)="closeModal()">
+        Update this task
+      </button>
+    </div>
+  </form>
+</div>
