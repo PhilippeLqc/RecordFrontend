@@ -61,7 +61,7 @@ export class BoardlistComponent implements OnInit {
   boardlistIdFormName!: Number;
   showModal = false;
   showCreateListModal = false;
-  showBoardlistMenu = false;
+  showBoardlistMenu!: Number;
 
 
 drop(event: CdkDragDrop<any>) {
@@ -212,12 +212,19 @@ drop(event: CdkDragDrop<any>) {
 
   // Boardlist menu
 
-  showEditBoardlistMenu() {
-    this.showBoardlistMenu = false; // Close the menu after action
+  showEditBoardlistMenu(boardlistId: Number) {
+    this.showBoardlistMenu = boardlistId;
   }
+
+  editFromBoardlistMenu(boardlistId: Number) {
+    this.boardlistIdFormName = boardlistId;
+    this.showBoardlistMenu = -1;
+  }
+
   
-  showDeleteBoardlistMenu() {
-    this.showBoardlistMenu = false; // Close the menu after action
+  deleteFromBoardlistMenu(boardlistId: Number) {
+    this.deleteBoardlist(boardlistId)
+    this.showBoardlistMenu = -1;
   }
 }
 

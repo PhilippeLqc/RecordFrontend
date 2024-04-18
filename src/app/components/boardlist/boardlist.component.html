@@ -30,7 +30,19 @@
             (blur)="updateBoardlistName(boardlist, boardlistNameInput.value, boardlist.id)"
             (keyup.enter)="updateBoardlistName(boardlist, boardlistNameInput.value, boardlist.id)" autofocus />
           }
-          <div (click)="deleteBoardlist(boardlist.id)">Menu</div>
+          <div class="relative">
+            @if (showBoardlistMenu != boardlist.id) {
+            <button (click)="showEditBoardlistMenu(boardlist.id)">Show Menu</button>
+            }
+            @if (showBoardlistMenu == boardlist.id) {
+              <button (click)="showBoardlistMenu = -1">Show Menu</button>
+
+              <div class="absolute bg-white border rounded shadow p-2 mt-2">
+                <button (click)="editFromBoardlistMenu(boardlist.id)">Edit</button>
+                <button (click)="deleteFromBoardlistMenu(boardlist.id)">Delete</button>
+              </div>
+            }
+          </div>
         </div>
         @for ( task of tasks[boardlist.id]; track task) {
         <div cdkDrag>
