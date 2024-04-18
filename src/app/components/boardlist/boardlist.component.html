@@ -53,13 +53,21 @@
         </div>
         }
         <button (click)="openModal(boardlist.id)">créer une tâche</button>
-        <app-modal [show]="showModal" (closeEvent)="closeModal()">
-          <app-task
-            [boardlistId]="selectedBoardlistId"
-            [tasks]="tasks[selectedBoardlistId]"
-            [taskIdFromBoardlist]="selectedTask"
-            (taskCreated)="closeModal()"></app-task>
-        </app-modal>
+        @if (!showUpdate) {
+          <app-modal [show]="showModal" (closeEvent)="closeModal()">
+            <app-task
+              [boardlistId]="selectedBoardlistId"
+              [tasks]="tasks[selectedBoardlistId]"
+              [taskIdFromBoardlist]="selectedTask"
+              (taskCreated)="closeModal()"></app-task>
+          </app-modal>
+        }
+        @if (showUpdate) {
+          <app-modal [show]="showModal" (closeEvent)="closeModal()">
+            <p>Hello</p>
+          </app-modal>
+        }
+
       </div>
     </div>
     }
