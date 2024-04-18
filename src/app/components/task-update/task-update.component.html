@@ -36,14 +36,15 @@
       <label for="date" class="block text-sm font-medium text-gray-700">
         Ends at
       </label>
-      <input type="date" id="date" name="date" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >
+      <input formControlName="expirationDate" type="date" id="date" name="date" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >
     </div>
 
     <!-- Task Status  -->
     <div class="form-group">
       <mat-form-field appearance="outline">
         <mat-label>Enter task status</mat-label>
-        <mat-select formControlName="status">
+        <mat-select formControlName="status"
+        (selectionChange)="onStatusChange($event.value)">
           @for (status of statusList; track status) {
           <mat-option [value]="status">{{ status }}</mat-option>
           }
@@ -65,7 +66,7 @@
 
     <!-- Submit Button  -->
     <div class="buttongroup">
-      <button mat-raised-button type="submit" class="flat" (click)="closeModal()">
+      <button mat-raised-button type="submit" class="flat">
         Update this task
       </button>
     </div>

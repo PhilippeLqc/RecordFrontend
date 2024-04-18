@@ -86,36 +86,46 @@ export class TaskUpdateComponent implements OnInit {
     });
   }
 
-  logChange(value: any) {
-    console.log(value);
-  }
+  onStatusChange(statusString: string) {
+    let status: Status = Status[statusString as keyof typeof Status];
+    console.log(status);
+    console.log(typeof status);
 
-  logChanges(event: Event) {
-    const target = event.target as HTMLInputElement;
-    console.log(target.value);
   }
 
   onSubmitUpdateTask() {
+    const expirationDateControl = this.taskForm.get('expirationDate');
+    let  dateValue = new Date();
+    if (expirationDateControl && expirationDateControl.value) {
+      dateValue = new Date(expirationDateControl.value);
+    }
 
-    // let updatedTask: TaskDto = {
-    //   taskId: this.taskData.taskId,
-    //   title: this.taskForm.controls['title'].value!,
-    //   description: this.taskForm.controls['description'].value || '',
-    //   position: this.taskForm.controls['position'].value,
-    //   expirationDate: this.taskForm.controls['expirationDate'].value,
-    //   status: this.taskForm.controls['status'].value,
-    //   hierarchy: this.taskForm.controls['hierarchy'].value,
-    //   listUserId: [this.userId],
-    //   boardlistId: this.boardlistId,
-    // };
+    let status: Status = Status[this.taskForm.controls['status'].value as keyof typeof Status];
+    let hierarchy: Hierarchy = Hierarchy[this.taskForm.controls['hierarchy'].value as keyof typeof Hierarchy];
 
-    // this.task.updateTask(updatedTask).subscribe((updatedTaskResponse) => {
-    //   const currentTasks = this.tasksSubject.getValue();
-    //   const updatedTasks = currentTasks.map((task) =>
-    //     task.taskId === updatedTaskResponse.taskId ? updatedTaskResponse : task
-    //   );
-    //   this.tasksSubject.next(updatedTasks);
-    // });
+    console.log( this.taskData.taskId);
+
+    let updatedTask: TaskDto = {
+      taskId: this.taskData.taskId,
+      title: this.taskForm.controls['title'].value!,
+      description: this.taskForm.controls['description'].value || '',
+      position: this.taskData.position,
+      expirationDate: dateValue,
+      status: status,
+      hierarchy: hierarchy,
+      listUserId: [this.userId],
+      boardlistId: this.boardlistId,
+    };
+
+    this.task.updateTask(updatedTask).subscribe((updatedTaskResponse) => {
+      const currentTasks = this.tasksSubject.getValue();
+      const updatedTasks = currentTasks.map((task) =>
+        task.taskId === updatedTaskResponse.taskId ? updatedTaskResponse : task
+      );
+      this.tasksSubject.next(updatedTasks);
+    }
+    );
+    this.closeModal();
   }
 
   closeModal(): void {
