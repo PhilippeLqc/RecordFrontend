@@ -1,5 +1,5 @@
 <div>
-    <form [formGroup]="taskForm" (ngSubmit)="onSubmitCreateTask()">
+    <form [formGroup]="taskForm" (ngSubmit)="onSubmitUpdateTask()">
       <div class="form-group">
         <mat-form-field appearance="outline">
           <mat-label>Enter the task name</mat-label>
@@ -9,7 +9,7 @@
       <div class="form-group">
         <mat-form-field appearance="outline">
           <mat-label>Enter the task description</mat-label>
-          <input matInput placeholder="Description of task" formControlName="description" />
+          <input matInput placeholder="Description of task" formControlName="description" [(ngModel)]="taskData.description" />
         </mat-form-field>
       </div>
   

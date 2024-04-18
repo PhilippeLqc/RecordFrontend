@@ -83,7 +83,20 @@ export class TaskUpdateComponent implements OnInit {
     });
   }
 
-  onSubmitUpdateTask(updatedTask: TaskDto) {
+  onSubmitUpdateTask() {
+
+    let updatedTask: TaskDto = {
+      taskId: 0,
+      title: this.taskForm.controls['title'].value!,
+      description: this.taskForm.controls['description'].value || '',
+      position: 0,
+      expirationDate: new Date(),
+      status: Status.ACTIVE,
+      hierarchy: Hierarchy.MOYENNE,
+      listUserId: [this.userId],
+      boardlistId: this.boardlistId,
+    };
+
     this.task.updateTask(updatedTask).subscribe((updatedTaskResponse) => {
       const currentTasks = this.tasksSubject.getValue();
       const updatedTasks = currentTasks.map((task) =>
