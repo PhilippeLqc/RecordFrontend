@@ -1,18 +1,10 @@
 <div class="notification-component">
-  <h2>Send Notification</h2>
-
   <div class="input-group">
     <label for="email">Email:</label>
     <input type="email" id="email" [(ngModel)]="email" />
   </div>
 
   @for( notification of notification; track notification) {
-  <div class="notification">
-    <p>{{ notification.id }}</p>
-    <p>{{ notification.userId }}</p>
-    <p>{{ notification.projectId }}</p>
-  </div>
-  } @for (notification of notificationList; track notification) {
   <div class="notification">
     <p>{{ notification.id }}</p>
     <p>{{ notification.userId }}</p>

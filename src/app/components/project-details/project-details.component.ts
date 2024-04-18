@@ -4,13 +4,13 @@ import { ActivatedRoute } from '@angular/router';
 import { ProjectDto } from '../../model/projectDto';
 import { CommonModule } from '@angular/common';
 import { BoardlistComponent } from '../boardlist/boardlist.component';
-import { NotificationComponent } from '../notification/notification.component';
-import { ChatComponent } from '../chat/chat.component';
+import { HeaderComponent } from '../layouts/header/header.component';
+import { FooterComponent } from '../layouts/footer/footer.component';
 
 @Component({
   selector: 'app-project-details',
   standalone: true,
-  imports: [CommonModule, BoardlistComponent, NotificationComponent, ChatComponent],
+  imports: [CommonModule, BoardlistComponent, HeaderComponent, FooterComponent],
   templateUrl: './project-details.component.html',
   styleUrl: './project-details.component.css'
 })

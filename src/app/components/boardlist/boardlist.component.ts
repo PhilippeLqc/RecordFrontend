@@ -51,14 +51,18 @@ import { ModalComponent } from '../../lib/modal/modal.component';
 
 export class BoardlistComponent implements OnInit {
 
+  // Variables
   boardlistsProject: BoardListDto[] = [];
   selectedBoardlistId!: number;
   projectId: Number = Number(this.route.snapshot.paramMap.get('projectId'));
   boardlistForm: FormGroup = new FormGroup({});
   nameBoardlist = new FormControl('', Validators.required);
   tasks: { [boardlistId: number]: TaskDto[] } = {};
+  boardlistIdFormName!: Number;
   showModal = false;
   showCreateListModal = false;
+  showBoardlistMenu!: Number;
+
 
 drop(event: CdkDragDrop<any>) {
 
@@ -87,6 +91,7 @@ drop(event: CdkDragDrop<any>) {
   }
 }
 
+  // Constructor
   constructor(
     public boardlistS: BoardlistService,
     private taskService: TaskService,
@@ -99,19 +104,30 @@ drop(event: CdkDragDrop<any>) {
     .subscribe(() => this.updateErrorName());
 
   }
+
+  // OnInit
   
   ngOnInit(): void {
-    this.taskService.currentTask$.subscribe(task => {
-      const tasksForBoardlist = this.tasks[task.boardlistId] || [];
-      const taskIndex = tasksForBoardlist.findIndex(t => t.taskId === task.taskId);
-      if (taskIndex > -1) {
-        // Task already exists, update it
-        tasksForBoardlist[taskIndex] = task;
-      } else {
-        // Task does not exist, add it
-        this.tasks[task.boardlistId] = [...tasksForBoardlist, task];
-      }
-    });
+    merge(
+      this.taskService.currentTask$.pipe(
+        tap(task => {
+          const tasksForBoardlist = this.tasks[task.boardlistId] || [];
+          const taskIndex = tasksForBoardlist.findIndex(t => t.taskId === task.taskId);
+          if (taskIndex > -1) {
+            // Task already exists, update it
+            tasksForBoardlist[taskIndex] = task;
+          } else {
+            // Task does not exist, add it
+            this.tasks[task.boardlistId] = [...tasksForBoardlist, task];
+          }
+        })
+      ),
+      this.boardlistS.allBoardlistsOfProject$.pipe(
+        tap(boardlists => {
+          this.boardlistsProject = boardlists;
+        })
+      )
+    ).subscribe();
     
     const projectId = Number(this.route.snapshot.paramMap.get('projectId'));
     this.boardlistS.getBoardlistsByProjectId(projectId).pipe(
@@ -132,8 +148,9 @@ drop(event: CdkDragDrop<any>) {
     this.boardlistForm = this.formBuilder.group({
       boardlistName: ['', Validators.required]
     });
-
   }
+
+  // Method Form Boardlist
 
   updateErrorName(): void {
     if (this.nameBoardlist.hasError('required')) {
@@ -154,26 +171,60 @@ drop(event: CdkDragDrop<any>) {
       projectId: Number(this.projectId),
     };
     this.boardlistS.createBoardlist(boardlist).subscribe((newBoardlist) => {
-      console.log('', newBoardlist);
       this.boardlistsProject.push(newBoardlist);
     });
 
     this.boardlistForm.reset();
   }
 
+  // Modal
+
   openModal(boardlistId: number): void {
-    console.log('openModal was called');
     this.selectedBoardlistId = boardlistId;
     this.showModal = true;
   }
 
   closeModal(): void {
-    console.log('closeModal was called');
     this.showModal = false;
   }
 
   openCreateListModal(): void {
     this.showCreateListModal = !this.showCreateListModal;
+  }
+
+
+  // Edit or Delete Boardlist
+
+  showBoardlistNameFormFn(boardlistId: Number) {
+    this.boardlistIdFormName = boardlistId;
+  }
+
+  updateBoardlistName(boardlist: BoardListDto, boardlistName: string, boardlistId: Number) {
+    boardlist.name = boardlistName;
+    this.boardlistS.updateBoardlistName(boardlist, boardlistId).subscribe();
+    this.boardlistIdFormName = -1;
+  }
+
+  deleteBoardlist(boardlistId: Number) {
+    this.boardlistS.deleteBoardlist(boardlistId);
+  }
+
+
+  // Boardlist menu
+
+  showEditBoardlistMenu(boardlistId: Number) {
+    this.showBoardlistMenu = boardlistId;
+  }
+
+  editFromBoardlistMenu(boardlistId: Number) {
+    this.boardlistIdFormName = boardlistId;
+    this.showBoardlistMenu = -1;
+  }
+
+  
+  deleteFromBoardlistMenu(boardlistId: Number) {
+    this.deleteBoardlist(boardlistId)
+    this.showBoardlistMenu = -1;
   }
 }
 
