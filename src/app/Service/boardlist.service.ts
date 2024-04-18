@@ -45,6 +45,13 @@
             );
         }
 
-
+        // Delete boardlist
+        deleteBoardlist(boardlistId: Number): Observable<BoardListDto> {
+            return this.http.delete<BoardListDto>(`${this.boardlistServiceUrl}/delete/${boardlistId}`).pipe(
+                tap((response) => {
+                    this.currentBoardlist = response
+                })
+            );
+        }
     }
 
