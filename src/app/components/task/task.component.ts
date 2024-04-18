@@ -36,6 +36,8 @@ export class TaskComponent implements OnInit{
 
   @Input() boardlistId!: number;
   @Input() tasks!: TaskDto[];
+  @Input() taskIdFromBoardlist!: number;
+
   @Output() taskCreated = new EventEmitter<void>();
   private tasksSubject:  BehaviorSubject<TaskDto[]> = new BehaviorSubject<TaskDto[]>([]);
   tasks$ = this.tasksSubject.asObservable();

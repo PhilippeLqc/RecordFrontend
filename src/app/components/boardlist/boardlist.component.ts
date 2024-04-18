@@ -54,6 +54,7 @@ export class BoardlistComponent implements OnInit {
   // Variables
   boardlistsProject: BoardListDto[] = [];
   selectedBoardlistId!: number;
+  selectedTask!: number;
   projectId: Number = Number(this.route.snapshot.paramMap.get('projectId'));
   boardlistForm: FormGroup = new FormGroup({});
   nameBoardlist = new FormControl('', Validators.required);
@@ -190,6 +191,12 @@ drop(event: CdkDragDrop<any>) {
 
   openCreateListModal(): void {
     this.showCreateListModal = !this.showCreateListModal;
+  }
+
+  openUpdateModal(taskId: number): void {
+    this.selectedTask = taskId;
+    this.showModal = true;
+    console.log('openUpdateModal', this.selectedTask);
   }
 
 

@@ -47,12 +47,17 @@
         @for ( task of tasks[boardlist.id]; track task) {
         <div cdkDrag>
           <h3>{{ task.title }}</h3>
-          <p>{{ task.description }}</p>
+          <!-- <p>{{ task.description }}</p> -->
+          <button (click)="openUpdateModal(task.taskId)">+</button>
+
         </div>
         }
         <button (click)="openModal(boardlist.id)">créer une tâche</button>
         <app-modal [show]="showModal" (closeEvent)="closeModal()">
-          <app-task [boardlistId]="selectedBoardlistId" [tasks]="tasks[selectedBoardlistId]"
+          <app-task
+            [boardlistId]="selectedBoardlistId"
+            [tasks]="tasks[selectedBoardlistId]"
+            [taskIdFromBoardlist]="selectedTask"
             (taskCreated)="closeModal()"></app-task>
         </app-modal>
       </div>
