@@ -28,6 +28,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../../lib/modal/modal.component';
+import { TaskUpdateComponent } from "../task-update/task-update.component";
 
 @Component({
     selector: 'app-boardlist',
@@ -46,6 +47,7 @@ import { ModalComponent } from '../../lib/modal/modal.component';
         DragDropModule,
         CdkDrag,
         CdkDropList,
+        TaskUpdateComponent
     ]
 })
 
@@ -60,10 +62,13 @@ export class BoardlistComponent implements OnInit {
   boardlistForm: FormGroup = new FormGroup({});
   nameBoardlist = new FormControl('', Validators.required);
   tasks: { [boardlistId: number]: TaskDto[] } = {};
+  task!: TaskDto;
   boardlistIdFormName!: Number;
   showModal = false;
   showCreateListModal = false;
   showBoardlistMenu!: Number;
+
+  selectedTaskData!: TaskDto; // Remplacez Task par le type de vos tâches
 
 
 drop(event: CdkDragDrop<any>) {
@@ -195,10 +200,19 @@ drop(event: CdkDragDrop<any>) {
     this.showCreateListModal = !this.showCreateListModal;
   }
 
-  openUpdateModal(taskId: number): void {
-    this.showUpdate = true;
-    this.selectedTask = taskId;
+  // openUpdateModal(taskId: number): void {
+  //   this.showUpdate = true;
+  //   this.selectedTask = taskId;
+  //   this.showModal = true;
+  // }
+
+  openUpdateModal(taskId: number, boardListId: number): void {
     this.showModal = true;
+    this.showUpdate = true;
+    const task = this.tasks[boardListId].find(t => t.taskId === taskId);
+    if (task) {
+      this.selectedTaskData = task;
+    }
   }
 
 
