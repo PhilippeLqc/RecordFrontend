@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -55,6 +55,7 @@ export class BoardlistComponent implements OnInit {
   boardlistsProject: BoardListDto[] = [];
   selectedBoardlistId!: number;
   selectedTask!: number;
+  showUpdate: boolean = false;
   projectId: Number = Number(this.route.snapshot.paramMap.get('projectId'));
   boardlistForm: FormGroup = new FormGroup({});
   nameBoardlist = new FormControl('', Validators.required);
@@ -187,6 +188,7 @@ drop(event: CdkDragDrop<any>) {
 
   closeModal(): void {
     this.showModal = false;
+    this.showUpdate = false;
   }
 
   openCreateListModal(): void {
@@ -194,9 +196,9 @@ drop(event: CdkDragDrop<any>) {
   }
 
   openUpdateModal(taskId: number): void {
+    this.showUpdate = true;
     this.selectedTask = taskId;
     this.showModal = true;
-    console.log('openUpdateModal', this.selectedTask);
   }
 
 
