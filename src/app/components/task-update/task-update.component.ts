@@ -86,13 +86,13 @@ export class TaskUpdateComponent implements OnInit {
   onSubmitUpdateTask() {
 
     let updatedTask: TaskDto = {
-      taskId: 0,
+      taskId: this.taskData.taskId,
       title: this.taskForm.controls['title'].value!,
       description: this.taskForm.controls['description'].value || '',
-      position: 0,
-      expirationDate: new Date(),
-      status: Status.ACTIVE,
-      hierarchy: Hierarchy.MOYENNE,
+      position: this.taskForm.controls['position'].value,
+      expirationDate: this.taskForm.controls['expirationDate'].value,
+      status: this.taskForm.controls['status'].value,
+      hierarchy: this.taskForm.controls['hierarchy'].value,
       listUserId: [this.userId],
       boardlistId: this.boardlistId,
     };
