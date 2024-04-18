@@ -20,7 +20,6 @@ export class NotificationComponent implements OnInit{
   currentProjectId!: number;
   email = ''
   notification: ProjectInvitationDto[] = [];
-  notificationList: ProjectInvitationDto[] = []
 
   constructor(
     private notificationService: NotificationService, 

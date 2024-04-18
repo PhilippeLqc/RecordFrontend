@@ -14,6 +14,7 @@ export class NotificationService {
   private StompClient: any;
   private subscription: {[userId: string]: any} = {};
   private notificationSubject: BehaviorSubject<ProjectInvitationDto[]> = new BehaviorSubject<ProjectInvitationDto[]>([]);
+  notifications$ = this.notificationSubject.asObservable();
 
   constructor(private http: HttpClient) { this.initNotificationConnection();}
 
@@ -53,11 +54,16 @@ export class NotificationService {
   }
 
   getNotifications() {
-    return this.notificationSubject.asObservable();
+    return this.notifications$;
   }
 
   getNotificationHistory(userId: string) {
-    return this.http.get<ProjectInvitationDto[]>(this.serviceURL + `/notificationhistory/${userId}`);
+      // Supposons que vous ayez une méthode pour récupérer les notifications
+      this.http.get<ProjectInvitationDto[]>(this.serviceURL + `/notificationhistory/${userId}`).subscribe(notifications => {
+        // Ensuite, vous pouvez émettre les notifications
+      this.notificationSubject.next(notifications);
+      });
+      return this.notifications$;
   }
 
   closeConnection() {

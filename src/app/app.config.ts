@@ -5,11 +5,12 @@ import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient } from '@angular
 import { importProvidersFrom } from '@angular/core';
 import { AuthInterceptor } from './Http-interceptors/authInterceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-
+import { LucideAngularModule, Bell } from 'lucide-angular';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideRouter(routes), 
   provideHttpClient(),
   importProvidersFrom(HttpClientModule),
+  importProvidersFrom(LucideAngularModule.pick({Bell})),
 {provide : HTTP_INTERCEPTORS, useClass : AuthInterceptor, multi : true}, provideAnimationsAsync()]
 };
