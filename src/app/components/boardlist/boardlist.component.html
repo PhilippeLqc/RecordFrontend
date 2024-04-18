@@ -4,7 +4,7 @@
   </button>
   <form
     [formGroup]="boardlistForm"
-    (ngSubmit)="onSubmitBoardlist($event)"
+    (ngSubmit)="onSubmitBoardlist()"
     [hidden]="!showCreateListModal"
   >
     <div class="form-group">
@@ -29,15 +29,20 @@
       </button>
     </div>
   </form>
-  <div class="boardlist-container" cdkDropListGroup>
-    @for (boardlist of boardlistsProject; track boardlist) {
-    <div>
+  <div
+    cdkDropList
+    cdkDropListOrientation="horizontal"
+    (cdkDropListDropped)="dropList($event)"
+  >
+    <div class="boardlist-container" cdkDropListGroup>
+      @for (boardlist of boardlistsProject; track boardlist) {
       <div
+        cdkDrag
         class="boardlist"
         cdkDropList
         [id]="boardlist.id.toString()"
         [cdkDropListData]="tasks[boardlist.id]"
-        (cdkDropListDropped)="drop($event)"
+        (cdkDropListDropped)="dropTasks($event)"
       >
         <h2>{{ boardlist.name }}</h2>
         @for ( task of tasks[boardlist.id]; track task) {
@@ -55,7 +60,7 @@
           ></app-task>
         </app-modal>
       </div>
+      }
     </div>
-    }
   </div>
 </div>

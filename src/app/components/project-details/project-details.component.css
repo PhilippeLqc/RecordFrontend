@@ -22,3 +22,8 @@
     overflow-y: auto;
     overflow-x: auto;
   }
+
+  .footer {
+    position: sticky;
+    bottom: 0;
+  }

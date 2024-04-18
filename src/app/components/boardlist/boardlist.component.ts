@@ -60,22 +60,30 @@ export class BoardlistComponent implements OnInit {
   showModal = false;
   showCreateListModal = false;
 
-drop(event: CdkDragDrop<any>) {
+  dropList(event: CdkDragDrop<any[]>) {
+    {
+      moveItemInArray(this.boardlistsProject, event.previousIndex, event.currentIndex);
+    }
+  }
+
+dropTasks(event: CdkDragDrop<any>) {
 
   if (event.previousContainer === event.container) {
     moveItemInArray(
       event.container.data, 
       event.previousIndex, 
       event.currentIndex);
-    // console.log("moveItemInArray", event.container.data);
+    console.log("moveItemInArray", event.container.data);
   } else {
-    transferArrayItem(
-      event.previousContainer.data,
-      event.container.data,
-      event.previousIndex,
-      event.currentIndex,
-    );
-    // console.log("transferArrayItem", event.container.data);
+    if (event.previousContainer.data && event.container.data) { // Ajoutez cette vérification
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+      console.log("transferArrayItem", event.container.data);
+    }
   }
   for (let i = 0; i < event.container.data.length; i++) {
     const task = event.container.data[i];
@@ -141,8 +149,7 @@ drop(event: CdkDragDrop<any>) {
     }
   }
 
-  onSubmitBoardlist(event: Event) {
-    event.preventDefault();
+  onSubmitBoardlist() {
 
     if (this.boardlistForm.invalid) {
       this.updateErrorName();
@@ -154,8 +161,9 @@ drop(event: CdkDragDrop<any>) {
       projectId: Number(this.projectId),
     };
     this.boardlistS.createBoardlist(boardlist).subscribe((newBoardlist) => {
-      console.log('', newBoardlist);
-      this.boardlistsProject.push(newBoardlist);
+      this.boardlistsProject = [...this.boardlistsProject, newBoardlist];
+      console.log('boardlistsProject', this.boardlistsProject); 
+      this.tasks[newBoardlist.id] = [];
     });
 
     this.boardlistForm.reset();
