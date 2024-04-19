@@ -1,40 +1,35 @@
-<form [formGroup]="connectionForm" (ngSubmit)="onSubmit()">
-  <div class="form-group">
-    <mat-form-field appearance="outline">
-      <mat-label>Enter your email</mat-label>
-      <input
-        matInput
-        placeholder="pat@example.com"
-        [formControl]="email"
-        (blur)="updateErrorMail()"
-        required
-      />
-      <mat-hint align="end">exemple : john&#64;doe.com</mat-hint>
-      @if (email.invalid) {
-      <mat-error>{{ errorMessage }}</mat-error>
-      }
-    </mat-form-field>
+<form [formGroup]="connectionForm" (ngSubmit)="onSubmit()" class="flex flex-col justify-start items-start p-0 px-12">
+  <div class="form-group flex flex-col justify-start items-start p-0 px-12">
+    <label class="text-white">Enter your email</label>
+    <input
+      placeholder="pat@example.com"
+      [formControl]="email"
+      (blur)="updateErrorMail()"
+      required
+      class="w-60 border-yellow-400 bg-white rounded-md px-3 py-2 text-black"
+    />
+    <p class="text-yellow-400">exemple : john&#64;doe.com</p>
+    @if (email.invalid) {
+    <p class="text-red-500">{{ errorMessage }}</p>
+    }
   </div>
-  <div class="form-group">
-    <mat-form-field appearance="outline">
-      <mat-label>Enter your password</mat-label>
-      <input
-        matInput
-        [type]="hide ? 'password' : 'text'"
-        [formControl]="password"
-      />
-      <button
-        mat-icon-button
-        matSuffix
-        (click)="hide = !hide"
-        [attr.aria-label]="'Hide password'"
-        [attr.aria-pressed]="hide"
-      >
-        <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
-      </button>
-    </mat-form-field>
+  <div class="form-group flex flex-col justify-start items-start p-0 px-12">
+    <label>Enter your password</label>
+    <input
+      [type]="hide ? 'password' : 'text'"
+      [formControl]="password"
+      class="w-60 border-yellow-400 bg-white rounded-md px-3 py-2 text-black"
+    />
+    <button
+      (click)="hide = !hide"
+      [attr.aria-label]="'Hide password'"
+      [attr.aria-pressed]="hide"
+      class="text-blue-500"
+    >
+      {{ hide ? "Hide" : "Show" }}
+    </button>
   </div>
-  <div class="buttongroup">
-    <button mat-raised-button type="submit" class="flat">Se connecter</button>
+  <div class="buttongroup flex flex-row justify-start items-start p-0 px-12">
+    <button type="submit" class="flat table-cell px-12 bg-yellow-400 py-2 rounded-md text-white">Se connecter</button>
   </div>
 </form>

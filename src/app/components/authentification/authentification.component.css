@@ -1,4 +1,4 @@
-button.flat {
+/* button.flat {
     display: table-cell;
     max-width: 600px;
     margin: 0 auto;
@@ -50,4 +50,4 @@ mat-hint {
 ::ng-deep .mdc-text-field {
     background-color: white;
     border-radius: 0.4rem;
-}
+} */
