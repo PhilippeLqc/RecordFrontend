@@ -1,34 +1,20 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormGroup,
-  FormBuilder,
-  FormControl,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { BoardlistService } from '../../Service/boardlist.service';
 import { ActivatedRoute } from '@angular/router';
 import { BoardListDto } from '../../model/boardListDto';
-import { from, map, merge, mergeMap, switchMap, tap } from 'rxjs';
+import { concatMap, forkJoin, from, map, merge, mergeMap, Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
 import { DragDropModule} from '@angular/cdk/drag-drop';
 import { TaskComponent } from "../task/task.component";
 import { TaskService } from '../../Service/task.service';
 import { TaskDto } from '../../model/taskDto';
-import {
-  CdkDragDrop,
-  moveItemInArray,
-  transferArrayItem,
-  CdkDrag,
-  CdkDropList,
-} from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../../lib/modal/modal.component';
 import { TaskUpdateComponent } from "../task-update/task-update.component";
+import { TaskDetailsComponent } from '../task-details/task-details.component';
+import { UserService } from '../../Service/user.service';
 
 @Component({
     selector: 'app-boardlist',
@@ -38,12 +24,10 @@ import { TaskUpdateComponent } from "../task-update/task-update.component";
     imports: [
         ModalComponent,
         TaskComponent,
+        TaskDetailsComponent,
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
         DragDropModule,
         CdkDrag,
         CdkDropList,
@@ -67,6 +51,8 @@ export class BoardlistComponent implements OnInit {
   showModal = false;
   showCreateListModal = false;
   showBoardlistMenu!: Number;
+  userNames: { [taskId: number]: string[] } = {};
+  isLoading = false
 
   selectedTaskData!: TaskDto; // Remplacez Task par le type de vos tâches
 
@@ -77,8 +63,8 @@ export class BoardlistComponent implements OnInit {
     }
   }
 
-dropTasks(event: CdkDragDrop<any>) {
-
+  dropTasks(event: CdkDragDrop<any>) {
+    this.isLoading = true;
   if (event.previousContainer === event.container) {
     moveItemInArray(
       event.container.data, 
@@ -96,19 +82,23 @@ dropTasks(event: CdkDragDrop<any>) {
       console.log("transferArrayItem", event.container.data);
     }
   }
-  for (let i = 0; i < event.container.data.length; i++) {
-    const task = event.container.data[i];
-    task.position = i;
-    task.boardlistId = Number(event.container.id);
-
-      this.taskService.updateTask(task).subscribe();
-
-  }
+  
+  from(event.container.data).pipe(
+    concatMap((task, i) => {
+      const updatedTask = task as TaskDto;
+      updatedTask.position = i;
+      updatedTask.boardlistId = Number(event.container.id);
+      return this.taskService.updateTaskDragAndDrop(updatedTask);
+    })
+  ).subscribe({
+    complete: () => this.isLoading = false
+  });
 }
 
   // Constructor
   constructor(
     public boardlistS: BoardlistService,
+    private userService: UserService,
     private taskService: TaskService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute
@@ -123,50 +113,71 @@ dropTasks(event: CdkDragDrop<any>) {
   // OnInit
   
   ngOnInit(): void {
-    merge(
-      this.taskService.currentTask$.pipe(
-        tap(task => {
-          const tasksForBoardlist = this.tasks[task.boardlistId] || [];
-          const taskIndex = tasksForBoardlist.findIndex(t => t.taskId === task.taskId);
-          if (taskIndex > -1) {
-            // Task already exists, update it
-            tasksForBoardlist[taskIndex] = task;
-          } else {
-            // Task does not exist, add it
-            this.tasks[task.boardlistId] = [...tasksForBoardlist, task];
-          }
-        })
-      ),
-      this.boardlistS.allBoardlistsOfProject$.pipe(
-        tap(boardlists => {
-          this.boardlistsProject = boardlists;
-        })
-      )
-    ).subscribe();
-    
     const projectId = Number(this.route.snapshot.paramMap.get('projectId'));
     this.boardlistS.getBoardlistsByProjectId(projectId).pipe(
-      switchMap(boardlists => {
-        this.boardlistsProject = boardlists;
-        return from(boardlists);
-      }),
-      mergeMap(boardlist => 
-        this.taskService.getTasksByBoardlistId(boardlist.id).pipe(
-          tap(tasks => console.log('tasks for boardlist', boardlist.id, tasks)),
-          map(tasks => ({ boardlist, tasks: tasks.sort((a, b) => a.position - b.position) }))
-        )
-      )
-    ).subscribe(({ boardlist, tasks }) => {
-      this.tasks[boardlist.id] = tasks;
+      mergeMap(boardlists => {
+        this.boardlistsProject = boardlists as BoardListDto[];
+        // Create an array of Observables
+        const observables = boardlists.map(boardlist => 
+          this.taskService.getTasksByBoardlistId(boardlist.id).pipe(
+            map(tasks => {
+              const sortedTasks = tasks[boardlist.id] ? tasks[boardlist.id].sort((a, b) => a.position - b.position) : [];
+              return { boardlist, tasks: sortedTasks };
+            })
+          )
+        );
+        // Combine all Observables into one
+        return forkJoin(observables);
+      })
+    ).subscribe(results => {
+      // results is an array of the results of each Observable
+      results.forEach(({ boardlist, tasks }) => {
+        this.tasks[boardlist.id] = tasks;
+      });
+      this.getTaskUserNames();
     });
     
+    this.taskService.TaskSubject.subscribe(updatedTasks => {
+      updatedTasks.forEach(task => {
+        if (!this.tasks[task.boardlistId]) {
+          this.tasks[task.boardlistId] = [];
+        }
+        const index = this.tasks[task.boardlistId].findIndex(t => t.taskId === task.taskId);
+        if (index !== -1) {
+          this.tasks[task.boardlistId][index] = task;
+        } else {
+          this.tasks[task.boardlistId].push(task);
+        }
+      });
+      this.getTaskUserNames();
+    });
+
     this.boardlistForm = this.formBuilder.group({
       boardlistName: ['', Validators.required]
     });
+
+    this.getTaskUserNames();
   }
 
+  getTaskUserNames(): void {
+    for (const boardlistId in this.tasks) {
+      for (const task of this.tasks[boardlistId]) {
+        this.userService.getUserName(task.listUserId).subscribe(userNames => {
+          userNames.forEach(userName => {
+            if (!this.userNames[task.taskId]) {
+              this.userNames[task.taskId] = [];
+            }
+            if (!this.userNames[task.taskId].includes(userName)) {
+              this.userNames[task.taskId].push(userName);
+            }
+          });
+        });
+      }
+    }
+    console.log('userNames', this.userNames);
+  }
   // Method Form Boardlist
-
+  
   updateErrorName(): void {
     if (this.nameBoardlist.hasError('required')) {
       console.log('You must enter a name');
@@ -193,6 +204,17 @@ dropTasks(event: CdkDragDrop<any>) {
     this.boardlistForm.reset();
   }
 
+  onTaskUpdated(updatedTask: TaskDto) {
+    const tasksForBoardlist = this.tasks[updatedTask.boardlistId];
+    if (tasksForBoardlist) {
+      const index = tasksForBoardlist.findIndex(task => task.taskId === updatedTask.taskId);
+      if (index !== -1) {
+        // Replace the task in the tasks array
+        tasksForBoardlist[index] = updatedTask;
+      }
+    }
+  }
+
   // Modal
 
   openModal(boardlistId: number): void {
@@ -209,12 +231,6 @@ dropTasks(event: CdkDragDrop<any>) {
     this.showCreateListModal = !this.showCreateListModal;
   }
 
-  // openUpdateModal(taskId: number): void {
-  //   this.showUpdate = true;
-  //   this.selectedTask = taskId;
-  //   this.showModal = true;
-  // }
-
   openUpdateModal(taskId: number, boardListId: number): void {
     this.showModal = true;
     this.showUpdate = true;
@@ -223,7 +239,6 @@ dropTasks(event: CdkDragDrop<any>) {
       this.selectedTaskData = task;
     }
   }
-
 
   // Edit or Delete Boardlist
 
@@ -240,7 +255,6 @@ dropTasks(event: CdkDragDrop<any>) {
   deleteBoardlist(boardlistId: Number) {
     this.boardlistS.deleteBoardlist(boardlistId);
   }
-
 
   // Boardlist menu
 

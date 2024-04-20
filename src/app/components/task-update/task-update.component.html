@@ -1,73 +1,90 @@
 <div>
   <form [formGroup]="taskForm" (ngSubmit)="onSubmitUpdateTask()">
-
     <!-- Task Name  -->
-    <div class="form-group">
-      <mat-form-field appearance="outline">
-        <mat-label>Enter the task name</mat-label>
-        <input matInput placeholder="Name of task" formControlName="title" required [(ngModel)]="taskData.title" />
-      </mat-form-field>
+    <div class="mb-6">
+      <label for="title" class="block mb-2 text-sm font-medium text-[#B2B3BD]"
+        >Titre</label
+      >
+      <input
+        placeholder="Titre de la tâche"
+        formControlName="title"
+        type="text"
+        id="title"
+        class="bg-gray-50 border border-gray-300 text-[#B2B3BD] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      />
     </div>
 
     <!-- Task Description  -->
-    <div class="form-group">
-      <mat-form-field appearance="outline">
-        <mat-label>Enter the task description</mat-label>
-        <input matInput placeholder="Description of task" formControlName="description"
-          [(ngModel)]="taskData.description" />
-      </mat-form-field>
+    <div class="mb-6">
+      <label
+        for="description"
+        class="block mb-2 text-sm font-medium text-[#B2B3BD]"
+        >Description</label
+      >
+      <textarea
+        id="description"
+        formControlName="description"
+        rows="4"
+        class="block p-2.5 w-[600px] text-sm text-[#B2B3BD] bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="Description"
+      ></textarea>
     </div>
 
-    <!-- Task Position  -->
-    <!-- TODO : Get the length of task list of this boardlist -->
-    <div class="form-group">
-      <label for="position" class="block text-sm font-medium text-gray-700">Task Position</label>
-      <select id="position" name="position"
-        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-        <option selected value="default">{{ taskData.status }}</option>
+    <!-- Task Date  -->
+    <div>
+      <label for="date" class="block text-sm font-medium text-[#B2B3BD]">
+        Ends at
+      </label>
+      <input
+        formControlName="expirationDate"
+        type="date"
+        id="date"
+        name="date"
+        class="block p-2.5 text-sm text-[#B2B3BD] bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      />
+    </div>
+
+    <!-- Task Status  -->
+    <div class="max-w-sm">
+      <label for="status" class="block mb-2 text-sm font-medium text-[#B2B3BD]">
+        Status de la tâche
+      </label>
+      <select
+        formControlName="status"
+        id="status"
+        class="bg-gray-50 border border-gray-300 text-[#B2B3BD] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      >
         @for (status of statusList; track status) {
         <option [value]="status">{{ status }}</option>
         }
       </select>
     </div>
 
-    <!-- Task Date  -->
-    <div class="form-group">
-      <label for="date" class="block text-sm font-medium text-gray-700">
-        Ends at
-      </label>
-      <input formControlName="expirationDate" type="date" id="date" name="date" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >
-    </div>
-
-    <!-- Task Status  -->
-    <div class="form-group">
-      <mat-form-field appearance="outline">
-        <mat-label>Enter task status</mat-label>
-        <mat-select formControlName="status"
-        (selectionChange)="onStatusChange($event.value)">
-          @for (status of statusList; track status) {
-          <mat-option [value]="status">{{ status }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-    </div>
-
     <!-- Task Hierarchy  -->
-    <div class="form-group">
-      <mat-form-field appearance="outline">
-        <mat-label>Enter task importance</mat-label>
-        <mat-select formControlName="hierarchy">
-          @for (hierarchy of hierarchyList; track hierarchy) {
-          <mat-option [value]="hierarchy">{{ hierarchy }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+    <div class="max-w-sm">
+      <label
+        for="hierarchy"
+        class="block mb-2 text-sm font-medium text-[#B2B3BD]"
+      >
+        Importance de la tâche
+      </label>
+      <select
+        formControlName="hierarchy"
+        id="hierarchy"
+        class="bg-gray-50 border border-gray-300 text-[#B2B3BD] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      >
+        @for (hierarchy of hierarchyList; track hierarchy) {
+        <option [value]="hierarchy">{{ hierarchy }}</option>
+        }
+      </select>
     </div>
-
     <!-- Submit Button  -->
-    <div class="buttongroup">
-      <button mat-raised-button type="submit" class="flat">
-        Update this task
+    <div class="text-right">
+      <button
+        type="submit"
+        class="py-2.5 px-5 me-2 mb-2 mt-4 text-sm font-medium text-gray-900 focus:outline-none bg-[#889AB5] rounded-lg border border-[#B2B3BD] hover:bg-gray-100"
+      >
+        Update
       </button>
     </div>
   </form>

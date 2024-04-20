@@ -1,0 +1,45 @@
+<div
+  class="rounded-lg border p-2 px-4 w-64 flex flex-col justify-between bg-[#172448] border-[#5F606A] text-[#D5E2FF]"
+>
+  <div class="flex flex-col justify-between">
+    <h1 class="max-w-full overflow-hidden text-overflow-ellipsis font-semibold">
+      {{ task.title }}
+    </h1>
+    <span
+      class="inline-block h-2 w-10 rounded-3xl mt-2"
+      [ngClass]="{
+        'bg-red-500': task.hierarchy === 'IMPORTANT',
+        'bg-orange-500': task.hierarchy === 'MOYENNE',
+        'bg-[#3F5CB0]': task.hierarchy === 'MINEURE'
+      }"
+    ></span>
+  </div>
+  <div class="flex items-center justify-between mt-4">
+    @for (userName of [getInitials]; track userName) { @if (userName.length < 3)
+    {
+    <p
+      [style.background-color]="getBackgroundColor(getInitials())"
+      class="w-9 h-9 flex items-center text-center justify-center rounded-full border border-[#5F606A] -ml-2"
+    >
+      {{ getInitials() }}
+    </p>
+    } @if (userName.length > 3) {
+    <p
+      class="w-9 h-9 flex items-center text-center justify-center bg-white text-black"
+    >
+      +{{ userName.length - 3 }}
+    </p>
+    } }
+    <div class="flex items-center">
+      <span
+        class="inline-block h-4 w-4 rounded-full mr-2"
+        [ngClass]="{
+          'bg-green-500': getDaysLeft() > 3,
+          'bg-orange-500': getDaysLeft() <= 3 && getDaysLeft() > 1,
+          'bg-red-500': getDaysLeft() <= 1
+        }"
+      ></span>
+      <p class="mb-0">{{ getDaysLeftPositive() }}</p>
+    </div>
+  </div>
+</div>

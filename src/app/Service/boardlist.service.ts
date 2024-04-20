@@ -10,8 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 export class BoardlistService {
   boardlistServiceUrl = 'http://localhost:8081/api/boardlist';
   currentBoardlist?: BoardListDto;
-  private allBoardlistsOfProjectSubject: BehaviorSubject<BoardListDto[]> =
-    new BehaviorSubject<BoardListDto[]>([]);
+  private allBoardlistsOfProjectSubject: BehaviorSubject<BoardListDto[]> = new BehaviorSubject<BoardListDto[]>([]);
   allBoardlistsOfProject$ = this.allBoardlistsOfProjectSubject.asObservable();
 
   constructor(private http: HttpClient, private route: ActivatedRoute) {}

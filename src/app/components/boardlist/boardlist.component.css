@@ -1,32 +1,25 @@
-.boardlist-container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: nowrap;
-  }
-  
-  .boardlist {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 200px;
-    margin: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-  }
-  
-  .task {
-    margin: 10px 0;
-  }
+.overflow-auto::-webkit-scrollbar {
+  /* width: 1px; /* Largeur de la barre de défilement */
+  height: 5px;
+  width: 5px;
+}
 
-  .boardlist-main {
-    display: flex;
-  }
+.overflow-auto::-webkit-scrollbar-track {
+  background: none; /* Couleur de la piste de la barre de défilement */
+  border-radius: 10px; /* Bords arrondis de la piste */
+}
 
-.boardlist-title{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
+.overflow-auto::-webkit-scrollbar-thumb {
+  background: none; /* Couleur de la barre de défilement */
+  border-radius: 10px; /* Bords arrondis de la barre de défilement */
+}
+
+.overflow-auto::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Couleur de la barre de défilement au survol */
+}
+
+.overflow-auto {
+  height: calc(100% - 60px - 40px);
+  overflow-y: auto;
+  overflow-x: auto;
 }
