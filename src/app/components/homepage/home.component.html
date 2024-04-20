@@ -1,21 +1,19 @@
-<div class="main">
-  <img src="../assets/images/RECORD.png" alt="logo" />
-  <div class="component">
+<div class="flex flex-row justify-evenly items-center h-screen bg-[#383632]">
+  <img src="../assets/images/RECORD.png" alt="logo" class="w-1/2" />
+  <div class="flex flex-col justify-center items-center bg-[#484233] py-48 h-40 rounded border border-[#655735] text-white">
     <app-authentification [hidden]="hidden"></app-authentification>
     <app-register [hidden]="!hidden"></app-register>
-    <nav>
+    <nav class="flex flex-row justify-center items-center py-4">
       <button
-        mat-raised-button
         type="submit"
-        class="flat"
+        class="w-32 mx-4 cursor-pointer bg-white text-black font-normal py-2 px-4 rounded hover:bg-gray-200"
         (click)="showLogin()"
       >
         Login
       </button>
       <button
-        mat-raised-button
         type="submit"
-        class="flat"
+        class="w-32 mx-4 cursor-pointer bg-white text-black font-normal py-2 px-4 rounded hover:bg-gray-200"
         (click)="showRegister()"
       >
         Register
