@@ -8,9 +8,9 @@ module.exports = {
         riseHomePage: 'rise 2s ease-in-out',
         slideInRightHomePage: 'slideInRight 2s ease-in-out',
 
-        drop: 'drop 1s ease-in-out',
-        slideInRight: 'slideInRight 1s ease-in-out',
-        slideInLeft: 'slideInLeft 1s ease-in-out',
+        drop: 'drop 0.5s ease-in-out',
+        slideInRight: 'slideInRight 0.5s ease-in-out',
+        slideInLeft: 'slideInLeft 0.5s ease-in-out',
       },
       keyframes: {
         drop: {

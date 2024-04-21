@@ -10,7 +10,7 @@
             <p>{{ project.title }}</p>
           </mat-card-content>
           <mat-card-actions class="mt-auto flex justify-start">
-            <button (click)="gotoProject(project)" class="bg-[#889AB5] hover:bg-blue-700 text-white font-bold py-2 px-4 mb-2 ml-2 rounded w-4/6">
+            <button (click)="gotoProject(project)" class="bg-[#889AB5] hover:bg-[#34445B] text-white font-bold py-2 px-4 mb-2 ml-2 rounded w-4/6">
               Go to project
             </button>
           </mat-card-actions>
@@ -28,14 +28,14 @@
 
   <div class="m-16">
     <div>Archived</div>
-    <div class="flex flex-row justify-start space-x-5">
-      <div *ngFor="let project of userProjects" class="card animate-slideInLeft">
-        <mat-card>
+    <div class="flex flex-row justify-start space-x-5 h-48 gap-8">
+      <div *ngFor="let project of userProjects" class="card animate-slideInLeft w-64 h-48">
+        <mat-card class="flex flex-col justify-between w-64 h-44">
           <mat-card-content>
             <p>{{ project.title }}</p>
           </mat-card-content>
-          <mat-card-actions>
-            <button (click)="gotoProject(project)" class="bg-[#889AB5] hover:bg-[#34445B] text-white font-bold py-2 px-4 rounded">
+          <mat-card-actions class="mt-auto flex justify-start">
+            <button (click)="gotoProject(project)" class="bg-[#889AB5] hover:bg-[#34445B] text-white font-bold py-2 px-4 mb-2 ml-2 rounded w-4/6">
               Go to project
             </button>
           </mat-card-actions>
