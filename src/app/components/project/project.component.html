@@ -1,19 +1,43 @@
 <div class="h-screen flex flex-col justify-between">
   <app-header></app-header>
-  <button (click)="openModal()">Créer un projet</button>
 
-  <div class="card-container">
-    <div *ngFor="let project of userProjects" class="card">
+  <div>
+    <div>Active</div>
+    <div class="card-container" style="display: flex; flex-direction: row; justify-content: flex-start; gap: 20px;">
+      <div *ngFor="let project of userProjects" class="card">
+        <mat-card>
+          <mat-card-content>
+            <p>{{ project.title }}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button (click)="gotoProject(project)">Go to project</button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
       <mat-card>
         <mat-card-content>
-          <p>{{ project.title }}</p>
+          <button (click)="openModal()">+</button>
         </mat-card-content>
-        <mat-card-actions>
-          <button (click)="gotoProject(project)">Go to project</button>
-        </mat-card-actions>
       </mat-card>
     </div>
   </div>
+
+  <div>
+    <div>Archived</div>
+    <div class="card-container" style="display: flex; flex-direction: row; justify-content: flex-start; gap: 20px;">
+      <div *ngFor="let project of userProjects" class="card">
+        <mat-card>
+          <mat-card-content>
+            <p>{{ project.title }}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button (click)="gotoProject(project)">Go to project</button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
 
   <app-modal [show]="showModal" (closeEvent)="closeModal()">
     <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
