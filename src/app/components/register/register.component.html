@@ -1,48 +1,44 @@
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-  <div class="form-group">
-    <mat-form-field appearance="outline">
-      <mat-label>Enter your first name</mat-label>
-      <input matInput placeholder="John" formControlName="username" required />
-    </mat-form-field>
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="flex flex-col justify-start items-start p-0 px-12">
+  <div class="form-group flex flex-col justify-start items-start p-0 px-12">
+    <label class="text-white">Enter your first name</label>
+    <input
+      placeholder="John"
+      formControlName="username"
+      required
+      class="w-60 border-yellow-400 bg-white rounded-md px-3 py-2 text-black"
+    />
   </div>
-  <div class="form-group">
-    <mat-form-field appearance="outline">
-      <mat-label>Enter your email</mat-label>
-      <input
-        matInput
-        placeholder="pat@example.com"
-        formControlName="email"
-        (blur)="updateErrorMail()"
-        required
-      />
-      <mat-hint align="end">exemple : john&#64;doe.com</mat-hint>
-      @if (email.invalid) {
-      <mat-error>{{ errorMessage }}</mat-error>
-      }
-    </mat-form-field>
+  <div class="form-group flex flex-col justify-start items-start p-0 px-12">
+    <label class="text-white">Enter your email</label>
+    <input
+      placeholder="pat@example.com"
+      formControlName="email"
+      (blur)="updateErrorMail()"
+      required
+      class="w-60 border-yellow-400 bg-white rounded-md px-3 py-2 text-black"
+    />
+    <p class="text-yellow-400">Exemple : john&#64;doe.com</p>
+    @if (email.invalid) {
+    <p class="text-red-500">{{ errorMessage }}</p>
+    }
   </div>
-  <div class="form-group">
-    <mat-form-field appearance="outline">
-      <mat-label>Enter your password</mat-label>
-      <input
-        matInput
-        [type]="hide ? 'password' : 'text'"
-        formControlName="password"
-      />
-      <button
-        mat-icon-button
-        matSuffix
-        (click)="hide = !hide"
-        [attr.aria-label]="'Hide password'"
-        [attr.aria-pressed]="hide"
-      >
-        <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
-      </button>
-    </mat-form-field>
-  </div>
-  <div class="buttongroup">
-    <button mat-raised-button type="submit" class="flat">
-      Créer son compte
+  <div class="form-group flex flex-col justify-start items-start p-0 px-12">
+    <label class="text-white">Enter your password</label>
+    <input
+      [type]="hide ? 'password' : 'text'"
+      formControlName="password"
+      class="w-60 border-yellow-400 bg-white rounded-md px-3 py-2 text-black"
+    />
+    <button
+      (click)="hide = !hide"
+      [attr.aria-label]="'Hide password'"
+      [attr.aria-pressed]="hide"
+      class="text-yellow-400"
+    >
+      {{ hide ? "Hide" : "Show" }}
     </button>
+  </div>
+  <div class="buttongroup flex flex-row justify-start items-start p-0 px-12">
+    <button type="submit" class="flat table-cell px-12 bg-yellow-400 py-2 rounded-md text-white">Create Account</button>
   </div>
 </form>

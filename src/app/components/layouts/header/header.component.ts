@@ -64,4 +64,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   //   });
   // }
 
+  logout(){
+    localStorage.clear();
+    window.location.href = '/home';
+  }
+
 }
