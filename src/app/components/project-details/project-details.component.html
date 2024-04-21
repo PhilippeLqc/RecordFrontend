@@ -2,37 +2,37 @@
   <app-header></app-header>
   <!-- implements data from projectDetails -->
   <div class="overflow-auto scrollbar flex-grow">
-    <h1>{{ projectDetails?.title }}</h1>
+    <h1 class="text-5xl ml-3">{{ projectDetails?.title }}</h1>
     <p>{{ projectDetails?.description }}</p>
     <app-boardlist></app-boardlist>
-    <div class="fixed bottom-40 right-6 w-96 h-96">
-      @if (showChat) {
-      <app-chat></app-chat>
-      }
-      <button
-        type="button"
-        class="bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 rounded-full fixed bottom-24 right-5 w-12 h-12 flex items-center justify-center"
-        aria-label="View chat"
-        (click)="togleChat()"
+  </div>
+  <div class="fixed bottom-40 right-6 w-96 h-96">
+    @if (showChat) {
+    <app-chat></app-chat>
+    }
+    <button
+      type="button"
+      class="bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 rounded-full fixed bottom-24 right-5 w-12 h-12 flex items-center justify-center"
+      aria-label="View chat"
+      (click)="togleChat()"
+    >
+      <span class="absolute -inset-1.5"></span>
+      <span class="sr-only">View chat</span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#ffffff"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-message-circle"
       >
-        <span class="absolute -inset-1.5"></span>
-        <span class="sr-only">View chat</span>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="#ffffff"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-message-circle"
-        >
-          <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
-        </svg>
-      </button>
-    </div>
+        <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+      </svg>
+    </button>
   </div>
   <app-footer></app-footer>
 </div>

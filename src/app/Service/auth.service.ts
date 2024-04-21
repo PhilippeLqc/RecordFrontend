@@ -7,7 +7,6 @@ import { AuthResponseDto } from "../model/authResponseDto";
 import { UserRegisterDto } from "../model/userRegisterDto";
 import { ChatService } from "./chat.service";
 import { Router } from "@angular/router";
-import { role } from "../enumTypes/role";
 import { NotificationService } from "./notification.service";
 
 @Injectable({
@@ -34,8 +33,6 @@ export class AuthService {
     currentUser !: UserDto;
     private Securitytoken !: AuthResponseDto;
 
-
-
     // register user using UserDto
     register(user: UserRegisterDto) {
         return this.http.post<UserRegisterDto>(this.serviceURL + '/register', user).subscribe()
@@ -54,10 +51,6 @@ export class AuthService {
 
             // set connected to true
             this.connected = true;
-
-            // Connect to the chat
-            // this.chat.initConnection();
-            // this.notification.initNotificationConnection();
 
             // Get the user by email
             return this.http.get<UserDto>(this.userServiceURL + '/email/' + user.email);
