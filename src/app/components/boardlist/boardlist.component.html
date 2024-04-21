@@ -1,4 +1,4 @@
-<div class="flex animate-drop">
+<div class="flex">
   <button
     (click)="openCreateListModal()"
     [hidden]="showCreateListModal"
@@ -47,7 +47,7 @@
     >
       @for (boardlist of boardlistsProject; track boardlist) {
       <div
-        class="ml-4 mt-2 flex flex-col items-center space-y-3 w-72 p-2 border border-gray-300 rounded-2xl bg-[#111725] max-h-[750px] text-[#B2B3BD]"
+        class="ml-4 mt-2 flex flex-col items-center space-y-3 w-72 p-2 border border-gray-300 rounded-2xl bg-[#111725] max-h-[750px] text-[#B2B3BD]  animate-drop"
         cdkDrag
         cdkDropList
         [cdkDropListDisabled]="isLoading"
