@@ -1,55 +1,41 @@
-<button (click)="openModal()">Créer un projet</button>
+<div class="h-screen flex flex-col justify-between">
+  <app-header></app-header>
+  <button (click)="openModal()">Créer un projet</button>
 
-<div class="card-container">
-  <div *ngFor="let project of userProjects" class="card">
-    <mat-card>
-      <mat-card-content>
-        <p>{{ project.title }}</p>
-      </mat-card-content>
-      <mat-card-actions>
-        <button (click)="gotoProject(project)">Go to project</button>
-      </mat-card-actions>
-    </mat-card>
+  <div class="card-container">
+    <div *ngFor="let project of userProjects" class="card">
+      <mat-card>
+        <mat-card-content>
+          <p>{{ project.title }}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button (click)="gotoProject(project)">Go to project</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
   </div>
-</div>
 
-<app-modal [show]="showModal" (closeEvent)="closeModal()">
-  <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="title">Title</label>
-      <input
-        type="text"
-        id="title"
-        class="form-control"
-        formControlName="title"
-        required
-      />
-      <div
-        *ngIf="title.invalid && (title.dirty || title.touched)"
-        class="alert alert-danger"
-      >
-        <div *ngIf="title.errors?.['required']">
-          Le titre du projet est obligatoire.
+  <app-modal [show]="showModal" (closeEvent)="closeModal()">
+    <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" class="form-control" formControlName="title" required />
+        <div *ngIf="title.invalid && (title.dirty || title.touched)" class="alert alert-danger">
+          <div *ngIf="title.errors?.['required']">
+            Le titre du projet est obligatoire.
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="form-group">
-      <label for="description">Description</label>
-      <textarea
-        id="description"
-        class="form-control"
-        formControlName="description"
-      ></textarea>
-    </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" class="form-control" formControlName="description"></textarea>
+      </div>
 
-    <button
-      type="submit"
-      class="btn btn-primary"
-      [disabled]="!projectForm.valid"
-      (click)="closeModal()"
-    >
-      Create Project
-    </button>
-  </form>
-</app-modal>
+      <button type="submit" class="btn btn-primary" [disabled]="!projectForm.valid" (click)="closeModal()">
+        Create Project
+      </button>
+    </form>
+  </app-modal>
+  <app-footer></app-footer>
+</div>

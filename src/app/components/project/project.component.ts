@@ -13,21 +13,23 @@ import {MatCardModule} from '@angular/material/card';
 import { Router } from '@angular/router';
 import { ProjectDto } from '../../model/projectDto';
 import { ModalComponent } from '../../lib/modal/modal.component';
+import { HeaderComponent } from "../layouts/header/header.component";
+import { FooterComponent } from "../layouts/footer/footer.component";
 
 @Component({
-  selector: 'app-project',
-  standalone: true,
-  imports: [ModalComponent,
-    FormsModule,
-    CommonModule, 
-    ReactiveFormsModule, 
-    MatFormFieldModule, 
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatCardModule],
-  templateUrl: './project.component.html',
-  styleUrl: './project.component.css'
+    selector: 'app-project',
+    standalone: true,
+    templateUrl: './project.component.html',
+    styleUrl: './project.component.css',
+    imports: [ModalComponent,
+        FormsModule,
+        CommonModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatCardModule, HeaderComponent, FooterComponent]
 })
 export class ProjectComponent implements OnInit{
   
