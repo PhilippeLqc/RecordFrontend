@@ -3,20 +3,24 @@
 
   <div>
     <div>Active</div>
-    <div class="card-container" style="display: flex; flex-direction: row; justify-content: flex-start; gap: 20px;">
+    <div class="flex flex-row justify-start space-x-5">
       <div *ngFor="let project of userProjects" class="card">
         <mat-card>
           <mat-card-content>
             <p>{{ project.title }}</p>
           </mat-card-content>
           <mat-card-actions>
-            <button (click)="gotoProject(project)">Go to project</button>
+            <button (click)="gotoProject(project)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              Go to project
+            </button>
           </mat-card-actions>
         </mat-card>
       </div>
       <mat-card>
         <mat-card-content>
-          <button (click)="openModal()">+</button>
+          <button (click)="openModal()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            +
+          </button>
         </mat-card-content>
       </mat-card>
     </div>
@@ -24,39 +28,40 @@
 
   <div>
     <div>Archived</div>
-    <div class="card-container" style="display: flex; flex-direction: row; justify-content: flex-start; gap: 20px;">
+    <div class="flex flex-row justify-start space-x-5">
       <div *ngFor="let project of userProjects" class="card">
         <mat-card>
           <mat-card-content>
             <p>{{ project.title }}</p>
           </mat-card-content>
           <mat-card-actions>
-            <button (click)="gotoProject(project)">Go to project</button>
+            <button (click)="gotoProject(project)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              Go to project
+            </button>
           </mat-card-actions>
         </mat-card>
       </div>
     </div>
   </div>
 
-
   <app-modal [show]="showModal" (closeEvent)="closeModal()">
-    <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" class="space-y-4">
       <div class="form-group">
-        <label for="title">Title</label>
-        <input type="text" id="title" class="form-control" formControlName="title" required />
+        <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+        <input type="text" id="title" class="form-control mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" formControlName="title" required />
         <div *ngIf="title.invalid && (title.dirty || title.touched)" class="alert alert-danger">
-          <div *ngIf="title.errors?.['required']">
+          <div *ngIf="title.errors?.['required']" class="text-red-500 text-xs mt-2">
             Le titre du projet est obligatoire.
           </div>
         </div>
       </div>
 
       <div class="form-group">
-        <label for="description">Description</label>
-        <textarea id="description" class="form-control" formControlName="description"></textarea>
+        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+        <textarea id="description" class="form-control mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" formControlName="description"></textarea>
       </div>
 
-      <button type="submit" class="btn btn-primary" [disabled]="!projectForm.valid" (click)="closeModal()">
+      <button type="submit" class="btn btn-primary" [disabled]="!projectForm.valid" (click)="closeModal()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
         Create Project
       </button>
     </form>
