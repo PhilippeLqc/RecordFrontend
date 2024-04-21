@@ -1,21 +1,22 @@
-<div class="flex flex-row justify-evenly items-center h-screen bg-[#383632]">
-  <img src="../assets/images/RECORD.png" alt="logo" class="w-1/2" />
-  <div class="flex flex-col justify-center items-center bg-[#484233] py-48 h-40 rounded border border-[#655735] text-white">
+<div class="flex flex-row justify-evenly items-center h-screen bg-gray-800">
+  <div class="w-1/2 flex flex-col gap-10">
+    <img class="animate-drop" src="../assets/images/RECORD.png" alt="logo" />
+    <img class="h-36 w-auto animate-rise" src="../../../../assets/logo/Logo-Record.svg" alt="Logo-Record" />
+  </div>
+
+  <div
+    class="flex flex-col justify-center items-center bg-gray-900 py-48 h-40 rounded-lg border border-gray-900 text-white animate-slideInRight">
     <app-authentification [hidden]="hidden"></app-authentification>
     <app-register [hidden]="!hidden"></app-register>
     <nav class="flex flex-row justify-center items-center py-4">
-      <button
-        type="submit"
+      <button type="submit"
         class="w-32 mx-4 cursor-pointer bg-white text-black font-normal py-2 px-4 rounded hover:bg-gray-200"
-        (click)="showLogin()"
-      >
+        (click)="showLogin()">
         Login
       </button>
-      <button
-        type="submit"
+      <button type="submit"
         class="w-32 mx-4 cursor-pointer bg-white text-black font-normal py-2 px-4 rounded hover:bg-gray-200"
-        (click)="showRegister()"
-      >
+        (click)="showRegister()">
         Register
       </button>
     </nav>
