@@ -5,7 +5,13 @@ import { ProjectService } from '../../../Service/project.service';
 import { LucideAngularModule } from 'lucide-angular';
 import { RouterModule } from '@angular/router';
 import { ProjectInvitationDto } from '../../../model/projectInvitationDto';
+import { tap } from 'rxjs';
 
+interface projectNotification {
+  id: number,
+  projectId: number,
+  title : string
+}
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -13,6 +19,7 @@ import { ProjectInvitationDto } from '../../../model/projectInvitationDto';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
+
 export class HeaderComponent implements OnInit, OnDestroy {
 
   userId = JSON.parse(localStorage.getItem('currentUser')!).id;
@@ -20,7 +27,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   showNotification = false;
   showInvite = false;
   notificationList: ProjectInvitationDto[] = [];
-  projectNames: string[] = [];
+  projectNotifications: projectNotification[] = [];
 
   constructor(private notification: NotificationService, private project: ProjectService) { }
 
@@ -44,22 +51,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
   getProjectName() {
     //for each projectId in notificationList, get the project name
     this.notificationList.forEach((notification) => {
-      console.log('Notification', notification);
       this.project.getProjectNameByInvitationId(notification.id).subscribe((project) => {
-        console.log('Project name', project);
-        const projectName = project.title;
-        if (!this.projectNames.includes(projectName)) {
-          this.projectNames = [...this.projectNames, projectName];
-        }
+        const projectNotification: projectNotification = {
+          ...notification,
+          title: project.title
+        };
+      // Check if projectNotification with the same id already exists in projectNotifications
+      if (!this.projectNotifications.some((check) => check.id === projectNotification.id)) {
+        this.projectNotifications.push(projectNotification);
+      }
       });
     });
   }
 
-  // acceptInvitation(projectId: number) {
-  //   this.project.acceptProjectInvitation(projectId).subscribe((response) => {
-  //     console.log('Project invitation accepted', response);
-  //   });
-  // }
+  acceptInvitation(projectId: number, invitationId: number) {
+    console.log('Accepting invitation', projectId, invitationId);
+    return this.project.acceptProjectInvitation(projectId, invitationId)
+  }
 
   // rejectInvitation(projectId: number) {
   //   this.project.rejectProjectInvitation(projectId).subscribe((response) => {

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ProjectDto } from '../model/projectDto';
 import { Status } from '../enumTypes/status';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 import { AuthService } from './auth.service';
 import { Project } from '../model/project';
 import { ProjectInvitationDto } from '../model/projectInvitationDto';
@@ -97,9 +97,10 @@ export class ProjectService {
     return this.http.post<ProjectInvitationDto>(this.projectServiceUrl + '/invite/' + projectId, { email: email }, { headers });
   }
 
-  acceptInvitation(projectId: number) {
-    this.http.put<ProjectInvitationDto>(this.projectServiceUrl + '/accept-invitation/' + projectId, {});
-  }
+  acceptProjectInvitation(projectId: number, invitationId: number) {
+    console.log('acceptProjectInvitation', projectId, invitationId);
+    return this.http.put<ProjectInvitationDto>(this.projectServiceUrl + '/accept-invitation/' + projectId, invitationId).subscribe();
+}
 
   changeCurrentProject(project: ProjectDto) {
     console.log('changeCurrentProject', project);
@@ -109,10 +110,15 @@ export class ProjectService {
 
   //get users by project id
   getUsersByProjectId(projectId: number): Observable<UserDto[]> {
-    return this.http.get<UserDto[]>(this.projectServiceUrl + '/users/project/' + projectId);
+    return this.http.get<UserDto[]>(this.projectServiceUrl + '/users/project/' + projectId, {});
   }
 
   getProjectNameByInvitationId(invitationId: number): Observable<{title: string}> {
+    // if response 404 OK, return null, else return response
+    if (invitationId === 0) {
+      return of({ title: '' });
+    }
+
     return this.http.get<{title: string}>(this.projectServiceUrl + '/projectName/' + invitationId);
   }
 
