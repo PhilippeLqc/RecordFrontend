@@ -34,8 +34,9 @@ export class ProjectService {
       .post<ProjectDto>(this.projectServiceUrl + '/create', project)
       .pipe(
         tap((response) => {
-          this.currentProject = response;
-          this.userProjectsSubject.next(this.userProjects);
+        this.currentProject = response;
+        this.userProjects = [...this.userProjects, response];
+        this.userProjectsSubject.next(this.userProjects);
         })
       );
   }

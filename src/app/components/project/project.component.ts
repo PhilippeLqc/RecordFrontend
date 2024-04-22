@@ -82,11 +82,7 @@ export class ProjectComponent implements OnInit{
       boardlistIds: [],
       userIds: []
     }
-    console.log(project);
-    
-    this.project.createProject(project).subscribe((newProject) => {
-      this.userProjects.next([...this.userProjects.getValue(), newProject]);
-    });
+    this.project.createProject(project).subscribe();
   }
 
 
@@ -114,27 +110,12 @@ export class ProjectComponent implements OnInit{
     this.selectedProject = projectId;
     this.showModal = true;
     console.log(`Updating project ${this.selectedProject}`);
-    
   }
 
-  // deleteProject(projectId: number): void {
-  //   console.log(`Enter Deleting project ${projectId}`);
-  //   this.selectedProject = projectId;
-  //   console.log(`mid Deleting project ${projectId}`);
-  //   this.project.createProject(project).subscribe((newProject) => {
-  //     this.userProjects.next([...this.userProjects.getValue(), newProject]);
-  //   });
-  //   this.projectS.deleteProjectById(projectId);
-  //   console.log(`end Deleting project ${projectId}`);
-
-  // }
   deleteProject(projectId: number): void {
-    console.log(`Enter Deleting project ${projectId}`);
     this.selectedProject = projectId;
-    console.log(`mid Deleting project ${projectId}`);
     this.projectS.deleteProjectById(projectId).subscribe(() => {
-      console.log(`end Deleting project ${projectId}`);
-    });
+      this.userProjects.next(this.userProjects.getValue().filter(project => project.id !== projectId));});
   }
 
 
