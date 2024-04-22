@@ -1,9 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { BehaviorSubject } from 'rxjs';
 import { TaskService } from '../../Service/task.service';
 import { TaskDto } from '../../model/taskDto';
@@ -18,10 +14,6 @@ import { UserDto } from '../../model/userDto';
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSelectModule,
   ],
   templateUrl: './task-update.component.html',
   styleUrl: './task-update.component.css',
@@ -73,14 +65,10 @@ export class TaskUpdateComponent implements OnInit {
         hierarchy: this.taskData.hierarchy,
       });
     }
-
-    this.projectService.currentProject$.subscribe((project) => {
-      // console.log('Current project', project);
-      this.getUserByPRojectId(project.id);
-    });
+    this.getUserByProjectId(this.projectService.currentProject.id);
   }
 
-  getUserByPRojectId(projectId: number) {
+  getUserByProjectId(projectId: number) {
     return this.projectService.getUsersByProjectId(projectId).subscribe((response) => {
       this.UserByProjectId = response;
       console.log('Users by project', this.UserByProjectId);
