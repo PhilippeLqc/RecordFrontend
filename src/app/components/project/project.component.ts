@@ -15,6 +15,7 @@ import { ProjectDto } from '../../model/projectDto';
 import { ModalComponent } from '../../lib/modal/modal.component';
 import { HeaderComponent } from "../layouts/header/header.component";
 import { FooterComponent } from "../layouts/footer/footer.component";
+import { ProjectUpdateComponent } from "../project-update/project-update.component";
 
 @Component({
     selector: 'app-project',
@@ -29,7 +30,7 @@ import { FooterComponent } from "../layouts/footer/footer.component";
         MatInputModule,
         MatButtonModule,
         MatIconModule,
-        MatCardModule, HeaderComponent, FooterComponent]
+        MatCardModule, HeaderComponent, FooterComponent, ProjectUpdateComponent]
 })
 export class ProjectComponent implements OnInit{
   
@@ -108,6 +109,7 @@ export class ProjectComponent implements OnInit{
 
   updateProject(projectId: number): void {
     this.selectedProject = projectId;
+    this.showUpdate = true;
     this.showModal = true;
     this.selectedProject = -1;
     console.log(`Updating project ${this.selectedProject}`);
