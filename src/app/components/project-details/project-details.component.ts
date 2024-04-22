@@ -41,8 +41,9 @@ export class ProjectDetailsComponent implements OnInit{
 
   ngOnInit(): void {
     const projectId = this.route.snapshot.paramMap.get('projectId');
+    const userId = JSON.parse(localStorage.getItem('currentUser')!).id;
     if (projectId !== null) {
-      this.project.getProjectById(Number(projectId)).subscribe((response) => {
+      this.project.getProjectById(Number(projectId), userId).subscribe((response) => {
         this.projectDetails = response;
       });
     }

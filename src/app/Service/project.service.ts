@@ -42,9 +42,9 @@ export class ProjectService {
   }
 
   //get all projects by user id
-  getProjectsByUserId(): Observable<ProjectDto[]> {
+  getProjectsByUserId(userId: number): Observable<ProjectDto[]> {
     return this.http
-      .get<ProjectDto[]>(this.projectServiceUrl + '/allProjects')
+      .get<ProjectDto[]>(this.projectServiceUrl + '/allProjects/' + userId)
       .pipe(
         tap((response) => {
           this.userProjects = response;
@@ -69,9 +69,9 @@ export class ProjectService {
   }
 
   //get project by id
-  getProjectById(projectId: number): Observable<ProjectDto> {
+  getProjectById(projectId: number, userId: number): Observable<ProjectDto> {
     return this.http
-      .get<ProjectDto>(this.projectServiceUrl + '/' + projectId)
+      .post<ProjectDto>(this.projectServiceUrl + '/' + projectId, userId)
       .pipe(
         tap((response) => {
           this.currentProject = response;
@@ -97,6 +97,10 @@ export class ProjectService {
     return this.http.post<ProjectInvitationDto>(this.projectServiceUrl + '/invite/' + projectId, { email: email }, { headers });
   }
 
+  acceptInvitation(projectId: number) {
+    this.http.put<ProjectInvitationDto>(this.projectServiceUrl + '/accept-invitation/' + projectId, {});
+  }
+
   changeCurrentProject(project: ProjectDto) {
     console.log('changeCurrentProject', project);
     this.currentProject = project;
@@ -106,6 +110,10 @@ export class ProjectService {
   //get users by project id
   getUsersByProjectId(projectId: number): Observable<UserDto[]> {
     return this.http.get<UserDto[]>(this.projectServiceUrl + '/users/project/' + projectId);
+  }
+
+  getProjectNameByInvitationId(invitationId: number): Observable<{title: string}> {
+    return this.http.get<{title: string}>(this.projectServiceUrl + '/projectName/' + invitationId);
   }
 
 }
