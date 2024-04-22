@@ -2,19 +2,18 @@
   <app-header></app-header>
 
   <div class="m-16">
-    <div>Active</div>
+    <div class="text-2xl mt-2 mb-4">Active</div>
     <div class="flex flex-row justify-start space-x-5 gap-8">
       <div *ngFor="let project of userProjects" class="card animate-slideInLeft w-64 h-32 relative bg-white shadow-lg rounded-lg">
         <button (click)="toggleMenu(project.id)" class="absolute top-2 right-2 bg-transparent text-[#889AB5] hover:text-[#34445B] font-bold py-2 px-4 mb-2 ml-2 rounded">
           &#8942;
         </button>
-        <div class="flex flex-col justify-between w-64 h-44 p-4">
+        <div class="flex flex-col justify-between w-64 h-44 p-4" (click)="gotoProject(project); $event.stopPropagation()">
           <div>
             <p>{{ project.title }}</p>
           </div>
           <div *ngIf="this.selectedProject == project.id" (click)="closeMenu()" class="absolute top-10 right-2 w-48 rounded-md shadow-lg bg-white z-10">
             <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-              <button (click)="gotoProject(project); $event.stopPropagation()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Go to project</button>
               <button (click)="updateProject(project.id); $event.stopPropagation()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Update project</button>
               <button (click)="deleteProject(project.id); $event.stopPropagation()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Delete project</button>
             </div>
@@ -32,19 +31,18 @@
   </div>
 
   <div class="m-16">
-    <div>Archived</div>
+    <div class="text-2xl mt-2 mb-4">Archived</div>
     <div class="flex flex-row justify-start space-x-5 h-48 gap-8">
       <div *ngFor="let project of userProjects" class="card animate-slideInLeft w-64 h-32 relative bg-white shadow-lg rounded-lg">
         <button (click)="toggleMenu(project.id)" class="absolute top-2 right-2 bg-transparent text-[#889AB5] hover:text-[#34445B] font-bold py-2 px-4 mb-2 ml-2 rounded">
           &#8942;
         </button>
-        <div class="flex flex-col justify-between w-64 h-44 p-4">
+        <div class="flex flex-col justify-between w-64 h-44 p-4" (click)="gotoProject(project); $event.stopPropagation()">
           <div>
             <p>{{ project.title }}</p>
           </div>
           <div *ngIf="this.selectedProject == project.id" (click)="closeMenu()" class="absolute top-10 right-2 w-48 rounded-md shadow-lg bg-white z-10">
             <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-              <button (click)="gotoProject(project); $event.stopPropagation()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Go to project</button>
               <button (click)="updateProject(project.id); $event.stopPropagation()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Update project</button>
               <button (click)="deleteProject(project.id); $event.stopPropagation()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Delete project</button>
             </div>
