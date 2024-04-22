@@ -81,7 +81,7 @@ export class ProjectService {
   }
 
   //update current project
-  updateCurrentProject(project: Project): Observable<Project> {
+  updateCurrentProject(project: ProjectDto): Observable<Project> {
     const ProjectId = this.currentProject.id;
     return this.http
       .put<Project>(this.projectServiceUrl + '/update/' + ProjectId, project)
