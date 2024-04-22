@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { merge } from 'rxjs';
+import { BehaviorSubject, map, merge } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Status } from '../../enumTypes/status';
 import { CommonModule } from '@angular/common';
@@ -33,13 +33,14 @@ import { FooterComponent } from "../layouts/footer/footer.component";
 })
 export class ProjectComponent implements OnInit{
   
-  userProjects: ProjectDto[] = [];
+  userProjects = new BehaviorSubject<ProjectDto[]>([]);
   title = new FormControl('', Validators.required);
   errorMessage = '';
   showModal = false;
   selectedProject!: number | null;
-  activeProjects !: ProjectDto[];
-  archivedProjects !: ProjectDto[];
+  activeProjects = this.userProjects.pipe(map(projects => projects.filter(project => project.status === 'ACTIVE')));
+  archivedProjects = this.userProjects.pipe(map(projects => projects.filter(project => project.status === 'ARCHIVED')));
+  
 
   constructor(
     private project: ProjectService,
@@ -52,16 +53,16 @@ export class ProjectComponent implements OnInit{
 
   ngOnInit(): void {
     this.project.getProjectsByUserId().subscribe((userProject) => {
-      this.userProjects  = userProject;
-      this.filterProjects();
+      this.userProjects.next(userProject);
+      // this.filterProjects();
     });
 
   }
 
-  filterProjects() {
-    this.activeProjects = this.userProjects.filter(project => project.status === 'ACTIVE');
-    this.archivedProjects = this.userProjects.filter(project => project.status === 'ARCHIVED');
-  }
+  // filterProjects() {
+  //   this.activeProjects = this.userProjects.filter(project => project.status === 'ACTIVE');
+  //   this.archivedProjects = this.userProjects.filter(project => project.status === 'ARCHIVED');
+  // }
 
 
   public projectForm = this.formBuilder.group({
@@ -88,7 +89,7 @@ export class ProjectComponent implements OnInit{
     console.log(project);
     
     this.project.createProject(project).subscribe((newProject) => {
-      this.userProjects = [...this.userProjects, newProject];
+      this.userProjects.next([...this.userProjects.getValue(), newProject]);
     });
   }
 

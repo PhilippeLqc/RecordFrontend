@@ -4,7 +4,7 @@
   <div class="m-16">
     <div class="text-2xl mt-2 mb-4">Active</div>
     <div class="flex flex-row justify-start space-x-5 gap-8">
-      <div *ngFor="let project of activeProjects" class="card animate-slideInLeft w-64 h-32 relative bg-white shadow-lg rounded-lg">
+      <div *ngFor="let project of activeProjects | async" class="card animate-slideInLeft w-64 h-32 relative bg-white shadow-lg rounded-lg">
         <button (click)="toggleMenu(project.id)" class="absolute top-2 right-2 bg-transparent text-[#889AB5] hover:text-[#34445B] font-bold py-2 px-4 mb-2 ml-2 rounded">
           &#8942;
         </button>
@@ -33,7 +33,7 @@
   <div class="m-16">
     <div class="text-2xl mt-2 mb-4">Archived</div>
     <div class="flex flex-row justify-start space-x-5 h-48 gap-8">
-      <div *ngFor="let project of archivedProjects" class="card animate-slideInLeft w-64 h-32 relative bg-white shadow-lg rounded-lg">
+    <div *ngFor="let project of archivedProjects | async" class="card animate-slideInLeft w-64 h-32 relative bg-white shadow-lg rounded-lg">
         <button (click)="toggleMenu(project.id)" class="absolute top-2 right-2 bg-transparent text-[#889AB5] hover:text-[#34445B] font-bold py-2 px-4 mb-2 ml-2 rounded">
           &#8942;
         </button>
