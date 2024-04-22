@@ -37,6 +37,7 @@ export class ProjectComponent implements OnInit{
   title = new FormControl('', Validators.required);
   errorMessage = '';
   showModal = false;
+  selectedProject!: number;
 
   constructor(
     private project: ProjectService,
@@ -85,6 +86,18 @@ export class ProjectComponent implements OnInit{
   gotoProject(projectId: ProjectDto): void {
     this.project.changeCurrentProject(projectId);
     this.router.navigate(['/project', projectId.id]);
+  }
+
+  updateProject(projectId: number): void {
+    this.selectedProject = projectId;
+    console.log(`Updating project ${this.selectedProject}`);
+    
+  }
+
+  deleteProject(projectId: number): void {
+    // Ici, vous pouvez ajouter la logique pour supprimer le projet
+    this.selectedProject = projectId;
+    console.log(`Deleting project ${this.selectedProject}`);
   }
 
   openModal(): void {
