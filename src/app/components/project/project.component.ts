@@ -16,6 +16,7 @@ import { ModalComponent } from '../../lib/modal/modal.component';
 import { HeaderComponent } from "../layouts/header/header.component";
 import { FooterComponent } from "../layouts/footer/footer.component";
 import { ProjectUpdateComponent } from "../project-update/project-update.component";
+import { ProjectDetailsComponent } from '../project-details/project-details.component';
 
 @Component({
     selector: 'app-project',
@@ -36,18 +37,22 @@ export class ProjectComponent implements OnInit{
   
   userProjects = new BehaviorSubject<ProjectDto[]>([]);
   title = new FormControl('', Validators.required);
+
   errorMessage: string = '';
-  showModal: boolean = false;
   selectedProject!: number | null;
+  selectedProjectData!: ProjectDto;
+  listAllProjectsUsers!: ProjectDto[];
+  
   activeProjects = this.userProjects.pipe(map(projects => projects.filter(project => project.status === 'ACTIVE')));
   archivedProjects = this.userProjects.pipe(map(projects => projects.filter(project => project.status === 'ARCHIVED')));
+  
+  showModal: boolean = false;
   showUpdate: boolean = false;
 
   constructor(
-    private project: ProjectService,
+    private projectS: ProjectService,
     private formBuilder: FormBuilder,
-    private router: Router,
-    public projectS: ProjectService) {
+    private router: Router) {
       merge(this.title.statusChanges, this.title.valueChanges)
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.updateErrorTitle());
@@ -55,8 +60,9 @@ export class ProjectComponent implements OnInit{
 
   ngOnInit(): void {
     const userId = JSON.parse(localStorage.getItem('currentUser')!).id;
-    this.project.getProjectsByUserId(userId).subscribe((userProject) => {
-      this.project.userProjects$.subscribe((userProjects) => {
+    this.projectS.getProjectsByUserId(userId).subscribe((userProject) => {
+      this.listAllProjectsUsers = userProject;
+      this.projectS.userProjects$.subscribe((userProjects) => {
         this.userProjects.next(userProjects);
       });
     });
@@ -83,7 +89,7 @@ export class ProjectComponent implements OnInit{
       boardlistIds: [],
       userIds: []
     }
-    this.project.createProject(project).subscribe();
+    this.projectS.createProject(project).subscribe();
   }
 
 
@@ -103,7 +109,7 @@ export class ProjectComponent implements OnInit{
   }
 
   gotoProject(projectId: ProjectDto): void {
-    this.project.changeCurrentProject(projectId);
+    this.projectS.changeCurrentProject(projectId);
     this.router.navigate(['/project', projectId.id]);
   }
 
@@ -111,8 +117,12 @@ export class ProjectComponent implements OnInit{
     this.selectedProject = projectId;
     this.showUpdate = true;
     this.showModal = true;
-    this.selectedProject = -1;
-    console.log(`Updating project ${this.selectedProject}`);
+
+    // const project = this.userProjects.(t => t.taskId === taskId);
+
+
+
+    this.selectedProject = -1; // TODO : send to project to update
   }
 
   deleteProject(projectId: number): void {
