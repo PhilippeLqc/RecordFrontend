@@ -1,1 +1,91 @@
-<p>project-update works!</p>
+<div>
+    <form [formGroup]="projectFrom" (ngSubmit)="onSubmitUpdateProject()">
+      <!-- Project Name  -->
+      <div class="mb-6">
+        <label for="title" class="block mb-2 text-sm font-medium text-[#B2B3BD]"
+          >Titre</label
+        >
+        <input
+          placeholder="Titre du project"
+          formControlName="title"
+          type="text"
+          id="title"
+          class="bg-gray-50 border border-gray-300 text-[#B2B3BD] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+      </div>
+  
+      <!-- Project Description  -->
+      <div class="mb-6">
+        <label
+          for="description"
+          class="block mb-2 text-sm font-medium text-[#B2B3BD]"
+          >Description</label
+        >
+        <textarea
+          id="description"
+          formControlName="description"
+          rows="4"
+          class="block p-2.5 w-[600px] text-sm text-[#B2B3BD] bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Description"
+        ></textarea>
+      </div>
+  
+      <!-- Project Status  -->
+      <div class="max-w-sm">
+        <label for="status" class="block mb-2 text-sm font-medium text-[#B2B3BD]">
+          Status de la tâche
+        </label>
+        <select
+          formControlName="status"
+          id="status"
+          class="bg-gray-50 border border-gray-300 text-[#B2B3BD] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        >
+          @for (status of statusList; track status) {
+          <option [value]="status">{{ status }}</option>
+          }
+        </select>
+      </div>
+  
+      <!-- Project Hierarchy  -->
+      <div class="max-w-sm">
+        <label
+          for="hierarchy"
+          class="block mb-2 text-sm font-medium text-[#B2B3BD]"
+        >
+          Importance de la tâche
+        </label>
+        <select
+          formControlName="hierarchy"
+          id="hierarchy"
+          class="bg-gray-50 border border-gray-300 text-[#B2B3BD] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        >
+          @for (hierarchy of hierarchyList; track hierarchy) {
+          <option [value]="hierarchy">{{ hierarchy }}</option>
+          }
+        </select>
+      </div>
+  
+      <!-- Project Assignee  -->
+      <div class="max-w-sm">
+        <select
+          formControlName="listUserId"
+          id="listUserId"
+          class="bg-gray-50 border border-gray-300 text-[#B2B3BD] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        >
+          @for (user of UserByProjectId; track user) {
+          <option [value]="listUserId">{{ user.username }}</option>
+          }
+        </select>
+      </div>
+      <!-- Submit Button  -->
+      <div class="text-right">
+        <button
+          type="submit"
+          class="py-2.5 px-5 me-2 mb-2 mt-4 text-sm font-medium text-gray-900 focus:outline-none bg-[#889AB5] rounded-lg border border-[#B2B3BD] hover:bg-gray-100"
+        >
+          Update
+        </button>
+      </div>
+    </form>
+  </div>
+  

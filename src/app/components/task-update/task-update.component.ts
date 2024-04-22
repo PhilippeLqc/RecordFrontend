@@ -66,13 +66,10 @@ export class TaskUpdateComponent implements OnInit {
       });
     }
 
-    this.projectService.currentProject$.subscribe((project) => {
-      // console.log('Current project', project);
-      this.getUserByPRojectId(project.id);
-    });
+    this.getUserByProjectId(this.projectService.currentProject.id);
   }
 
-  getUserByPRojectId(projectId: number) {
+  getUserByProjectId(projectId: number) {
     return this.projectService.getUsersByProjectId(projectId).subscribe((response) => {
       this.UserByProjectId = response;
       console.log('Users by project', this.UserByProjectId);
