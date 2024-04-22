@@ -35,8 +35,9 @@ export class ProjectService {
       .post<ProjectDto>(this.projectServiceUrl + '/create', project)
       .pipe(
         tap((response) => {
-          this.currentProject = response;
-          this.userProjectsSubject.next(this.userProjects);
+        this.currentProject = response;
+        this.userProjects = [...this.userProjects, response];
+        this.userProjectsSubject.next(this.userProjects);
         })
       );
   }
@@ -89,6 +90,20 @@ export class ProjectService {
           this.currentProject = response;
         })
       );
+  }
+
+
+  //delete project by id
+  // deleteProjectById(projectId: number): Observable<Project> {
+  //   return this.http.delete<Project>(this.projectServiceUrl + '/delete/' + projectId);
+  // }
+  deleteProjectById(projectId: number): Observable<void> {
+    return this.http.delete<void>(`${this.projectServiceUrl}/delete/${projectId}`).pipe(
+      tap(() => {
+        this.userProjects = this.userProjects.filter(project => project.id !== projectId);
+        this.userProjectsSubject.next(this.userProjects);
+      })
+    );
   }
 
   // invite user to project by ProjectId and searching by mail
