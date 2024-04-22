@@ -38,6 +38,8 @@ export class ProjectComponent implements OnInit{
   errorMessage = '';
   showModal = false;
   selectedProject!: number | null;
+  activeProjects !: ProjectDto[];
+  archivedProjects !: ProjectDto[];
 
   constructor(
     private project: ProjectService,
@@ -51,7 +53,14 @@ export class ProjectComponent implements OnInit{
   ngOnInit(): void {
     this.project.getProjectsByUserId().subscribe((userProject) => {
       this.userProjects  = userProject;
+      this.filterProjects();
     });
+
+  }
+
+  filterProjects() {
+    this.activeProjects = this.userProjects.filter(project => project.status === 'ACTIVE');
+    this.archivedProjects = this.userProjects.filter(project => project.status === 'ARCHIVED');
   }
 
 
