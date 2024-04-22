@@ -6,6 +6,7 @@ import { LucideAngularModule } from 'lucide-angular';
 import { RouterModule } from '@angular/router';
 import { ProjectInvitationDto } from '../../../model/projectInvitationDto';
 import { tap } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 interface projectNotification {
   id: number,
@@ -15,7 +16,7 @@ interface projectNotification {
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [NotificationComponent, LucideAngularModule, RouterModule],
+  imports: [NotificationComponent, LucideAngularModule, RouterModule, CommonModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
@@ -42,6 +43,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.notificationList = notification;
       this.getProjectName();
     });
+
+    console.log('PROJECTNOTIFICATION', this.projectNotifications);
   }
 
   ngOnDestroy(): void {
@@ -66,14 +69,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   acceptInvitation(projectId: number, invitationId: number) {
     console.log('Accepting invitation', projectId, invitationId);
+    this.projectNotifications = this.projectNotifications.filter((notification) => notification.id !== invitationId);
     return this.project.acceptProjectInvitation(projectId, invitationId)
   }
 
-  // rejectInvitation(projectId: number) {
-  //   this.project.rejectProjectInvitation(projectId).subscribe((response) => {
-  //     console.log('Project invitation rejected', response);
-  //   });
-  // }
+  rejectInvitation(invitationId: number) {
+    console.log('Rejecting invitation', invitationId);
+    this.projectNotifications = this.projectNotifications.filter((notification) => notification.id !== invitationId);
+    return this.project.rejectProjectInvitation(invitationId)
+  }
 
   logout(){
     localStorage.clear();
