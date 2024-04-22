@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule, Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
+import { FormsModule, ReactiveFormsModule, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ProjectService } from '../../Service/project.service';
 import { ProjectDto } from '../../model/projectDto';
 import { Status } from '../../enumTypes/status';
@@ -60,7 +59,7 @@ export class ProjectUpdateComponent implements OnInit {
 
 
     this.projectService.updateCurrentProject(updatedProject).subscribe(() => {
-      // Emit the updated task
+      // Emit the updated project
       this.projectUpdated.emit(updatedProject);
       this.closeModal();
     });
