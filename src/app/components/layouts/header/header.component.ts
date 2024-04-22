@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { NotificationComponent } from '../../notification/notification.component';
 import { NotificationService } from '../../../Service/notification.service';
 import { ProjectService } from '../../../Service/project.service';
@@ -6,6 +6,7 @@ import { LucideAngularModule } from 'lucide-angular';
 import { RouterModule } from '@angular/router';
 import { ProjectInvitationDto } from '../../../model/projectInvitationDto';
 import { tap } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 interface projectNotification {
   id: number,
@@ -15,7 +16,7 @@ interface projectNotification {
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [NotificationComponent, LucideAngularModule, RouterModule],
+  imports: [NotificationComponent, LucideAngularModule, RouterModule, CommonModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
@@ -29,7 +30,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   notificationList: ProjectInvitationDto[] = [];
   projectNotifications: projectNotification[] = [];
 
-  constructor(private notification: NotificationService, private project: ProjectService) { }
+  constructor(private elementRef: ElementRef, private notification: NotificationService, private project: ProjectService) { }
 
   ngOnInit(): void {
     this.notification.joinNotificationRoom(`${this.userId}`);
@@ -42,6 +43,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.notificationList = notification;
       this.getProjectName();
     });
+
+    console.log('PROJECTNOTIFICATION', this.projectNotifications);
   }
 
   ngOnDestroy(): void {
@@ -66,14 +69,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   acceptInvitation(projectId: number, invitationId: number) {
     console.log('Accepting invitation', projectId, invitationId);
+    this.projectNotifications = this.projectNotifications.filter((notification) => notification.id !== invitationId);
     return this.project.acceptProjectInvitation(projectId, invitationId)
   }
 
-  // rejectInvitation(projectId: number) {
-  //   this.project.rejectProjectInvitation(projectId).subscribe((response) => {
-  //     console.log('Project invitation rejected', response);
-  //   });
-  // }
+  rejectInvitation(invitationId: number) {
+    console.log('Rejecting invitation', invitationId);
+    this.projectNotifications = this.projectNotifications.filter((notification) => notification.id !== invitationId);
+    return this.project.rejectProjectInvitation(invitationId)
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.showUserMenu = false;
+      this.showNotification = false;
+      this.showInvite = false;
+    }
+  }
 
   logout(){
     localStorage.clear();

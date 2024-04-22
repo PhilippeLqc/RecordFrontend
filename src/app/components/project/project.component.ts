@@ -93,16 +93,16 @@ export class ProjectComponent implements OnInit{
     this.projectS.createProject(project).subscribe();
   }
 
-  onProjectUpdated(updatedProject: ProjectDto) {
-    const tasksForBoardlist = this.tasks[updatedProject.id];
-    if (tasksForBoardlist) {
-      const index = tasksForBoardlist.findIndex(task => task.taskId === updatedProject.id);
-      if (index !== -1) {
-        // Replace the task in the tasks array
-        tasksForBoardlist[index] = updatedTask;
-      }
-    }
-  }
+  // onProjectUpdated(updatedProject: ProjectDto) {
+  //   const tasksForBoardlist = this.tasks[updatedProject.id];
+  //   if (tasksForBoardlist) {
+  //     const index = tasksForBoardlist.findIndex(task => task.taskId === updatedProject.id);
+  //     if (index !== -1) {
+  //       // Replace the task in the tasks array
+  //       tasksForBoardlist[index] = updatedTask;
+  //     }
+  //   }
+  // }
 
 
   // Project menu actions

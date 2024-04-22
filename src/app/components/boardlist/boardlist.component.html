@@ -40,15 +40,30 @@
           + créer une tâche
         </button>
         @if (!showUpdate) {
-        <app-modal [show]="showModal" (closeEvent)="closeModal()" (mousedown)="$event.stopPropagation()">
-          <app-task [boardlistId]="selectedBoardlistId" [tasks]="tasks[selectedBoardlistId]"
-            (taskCreated)="closeModal()"></app-task>
+        <app-modal
+          [show]="showModal"
+          (closeEvent)="closeModal()"
+          (mousedown)="$event.stopPropagation()"
+        >
+          <app-task
+            [boardlistId]="selectedBoardlistId"
+            [tasks]="tasks[selectedBoardlistId]"
+            (taskCreated)="closeModal()"
+          ></app-task>
         </app-modal>
         } @if (showUpdate) {
-        <app-modal [show]="showModal" (closeEvent)="closeModal()" (mousedown)="$event.stopPropagation()">
-          <app-task-update [boardlistId]="selectedBoardlistId" [taskData]="selectedTaskData"
-            [taskIdFromBoardlist]="selectedTask" (taskCreated)="closeModal()"
-            (taskUpdated)="onTaskUpdated($event)"></app-task-update>
+        <app-modal
+          [show]="showModal"
+          (closeEvent)="closeModal()"
+          (mousedown)="$event.stopPropagation()"
+        >
+          <app-task-update
+            [boardlistId]="selectedBoardlistId"
+            [taskData]="selectedTaskData"
+            [taskIdFromBoardlist]="selectedTask"
+            (taskCreated)="closeModal()"
+            (taskUpdated)="onTaskUpdated($event)"
+          ></app-task-update>
         </app-modal>
         }
       </div>

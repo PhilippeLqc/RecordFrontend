@@ -114,8 +114,17 @@ export class ProjectService {
 
   acceptProjectInvitation(projectId: number, invitationId: number) {
     console.log('acceptProjectInvitation', projectId, invitationId);
-    return this.http.put<ProjectInvitationDto>(this.projectServiceUrl + '/accept-invitation/' + projectId, invitationId).subscribe();
-}
+    return this.http.put<ProjectInvitationDto>(this.projectServiceUrl + '/accept-invitation/' + projectId, invitationId).subscribe(() => {
+      console.log('Project invitation accepted');
+    });
+  }
+
+  rejectProjectInvitation(invitationId: number) {
+    console.log('rejectProjectInvitation', invitationId);
+    return this.http.delete<ProjectInvitationDto>(this.projectServiceUrl + '/decline-invitation/' + invitationId).subscribe(() => {
+      console.log('Project invitation rejected');
+    });
+  }
 
   changeCurrentProject(project: ProjectDto) {
     console.log('changeCurrentProject', project);
