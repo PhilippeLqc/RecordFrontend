@@ -54,7 +54,6 @@ export class ProjectComponent implements OnInit{
 
   ngOnInit(): void {
     this.project.getProjectsByUserId().subscribe((userProject) => {
-      this.userProjects.next(userProject);
       this.project.userProjects$.subscribe((userProjects) => {
         this.userProjects.next(userProjects);
       });
@@ -109,6 +108,7 @@ export class ProjectComponent implements OnInit{
   updateProject(projectId: number): void {
     this.selectedProject = projectId;
     this.showModal = true;
+    this.selectedProject = -1;
     console.log(`Updating project ${this.selectedProject}`);
   }
 
