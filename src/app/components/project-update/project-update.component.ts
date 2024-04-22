@@ -18,6 +18,7 @@ export class ProjectUpdateComponent implements OnInit {
   @Output() projectCreated = new EventEmitter<void>();
   @Output() projectUpdated = new EventEmitter<ProjectDto>();
   @Input() projectData!: ProjectDto;
+  @Input() selectedProjectId!: number;
 
 
   public projectFrom!: FormGroup;
@@ -46,9 +47,7 @@ export class ProjectUpdateComponent implements OnInit {
 
 
   onSubmitUpdateProject() {
-
     let status: Status = Status[this.projectFrom.controls['status'].value as keyof typeof Status];
-
 
     let updatedProject: ProjectDto = {
       id: this.projectData.id,

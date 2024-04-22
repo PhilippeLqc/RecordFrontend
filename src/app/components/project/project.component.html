@@ -15,7 +15,7 @@
           <div>
             <p>{{ project.title }}</p>
           </div>
-          <div *ngIf="this.selectedProject == project.id" (click)="closeMenu()"
+          <div *ngIf="this.selectedProjectId == project.id" (click)="closeMenu()"
             class="absolute top-10 right-2 w-48 rounded-md shadow-lg bg-white z-10">
             <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
               <button (click)="updateProject(project.id); $event.stopPropagation()"
@@ -52,7 +52,7 @@
           <div>
             <p>{{ project.title }}</p>
           </div>
-          <div *ngIf="this.selectedProject == project.id" (click)="closeMenu()"
+          <div *ngIf="this.selectedProjectId == project.id" (click)="closeMenu()"
             class="absolute top-10 right-2 w-48 rounded-md shadow-lg bg-white z-10">
             <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
               <button (click)="updateProject(project.id); $event.stopPropagation()"
@@ -96,8 +96,9 @@
   } @if (showUpdate) {
   <app-modal [show]="showModal" (closeEvent)="closeModal()" (mousedown)="$event.stopPropagation()">
     <app-project-update
-    
-    
+    [selectedProjectId]="selectedProjectId"
+    [projectData]="projectData"
+    (projectCreated)="closeModal()"
     ></app-project-update>
   </app-modal>
   }

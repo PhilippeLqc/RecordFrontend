@@ -39,10 +39,11 @@ export class ProjectComponent implements OnInit{
   title = new FormControl('', Validators.required);
 
   errorMessage: string = '';
-  selectedProject!: number | null;
-  selectedProjectData!: ProjectDto;
+  selectedProjectId!: number;
+  selectedProjectData!: ProjectDto[];
+  projectData!: ProjectDto;
   listAllProjectsUsers!: ProjectDto[];
-  
+
   activeProjects = this.userProjects.pipe(map(projects => projects.filter(project => project.status === 'ACTIVE')));
   archivedProjects = this.userProjects.pipe(map(projects => projects.filter(project => project.status === 'ARCHIVED')));
   
@@ -96,15 +97,15 @@ export class ProjectComponent implements OnInit{
   // Project menu actions
 
   toggleMenu(projectId: number): void {
-    if (this.selectedProject === projectId) {
-      this.selectedProject = null;
+    if (this.selectedProjectId === projectId) {
+      this.selectedProjectId = -1;
     } else {
-      this.selectedProject = projectId;
+      this.selectedProjectId = projectId;
     }
   }
   
   closeMenu(): void {
-    this.selectedProject = null;
+    this.selectedProjectId = -1;
     this.showUpdate = false;
   }
 
@@ -114,19 +115,18 @@ export class ProjectComponent implements OnInit{
   }
 
   updateProject(projectId: number): void {
-    this.selectedProject = projectId;
+    this.selectedProjectId = projectId;
     this.showUpdate = true;
     this.showModal = true;
-
-    // const project = this.userProjects.(t => t.taskId === taskId);
-
-
-
-    this.selectedProject = -1; // TODO : send to project to update
+    // this.projectToUpdate = this.listAllProjectsUsers.filter(project => project.id === projectId);
+    const projectToUpdate = this.listAllProjectsUsers.find(project => project.id === projectId);
+    if(projectToUpdate) {
+      this.projectData = projectToUpdate;
+    }
   }
 
   deleteProject(projectId: number): void {
-    this.selectedProject = projectId;
+    this.selectedProjectId = projectId;
     this.projectS.deleteProjectById(projectId).subscribe(() => {
       this.userProjects.next(this.userProjects.getValue().filter(project => project.id !== projectId));});
   }

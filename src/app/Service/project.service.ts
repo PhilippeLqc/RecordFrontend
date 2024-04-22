@@ -82,12 +82,12 @@ export class ProjectService {
 
   //update current project
   updateCurrentProject(project: ProjectDto): Observable<Project> {
-    const ProjectId = this.currentProject.id;
     return this.http
-      .put<Project>(this.projectServiceUrl + '/update/' + ProjectId, project)
+      .put<Project>(this.projectServiceUrl + '/update/' + project.id, project)
       .pipe(
         tap((response) => {
           this.currentProject = response;
+          console.log("end update");
         })
       );
   }
