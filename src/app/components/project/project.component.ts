@@ -65,7 +65,6 @@ export class ProjectComponent implements OnInit{
   }
 
   onSubmit(): void {
-    console.log('onSubmit was called');
     let project = {
       id: 0,
       title: this.projectForm.value.title!,
@@ -87,12 +86,10 @@ export class ProjectComponent implements OnInit{
   }
 
   openModal(): void {
-    console.log('openModal was called');
     this.showModal = true;
   }
 
   closeModal(): void {
-    console.log('closeModal was called');
     this.showModal = false;
   }
 }

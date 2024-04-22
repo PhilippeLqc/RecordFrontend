@@ -39,12 +39,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.getProjectName();
     });
     this.notification.notifications$.subscribe((notification) => {
-      console.log('Notification received', notification);
       this.notificationList = notification;
       this.getProjectName();
     });
-
-    console.log('PROJECTNOTIFICATION', this.projectNotifications);
   }
 
   ngOnDestroy(): void {
@@ -68,13 +65,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   acceptInvitation(projectId: number, invitationId: number) {
-    console.log('Accepting invitation', projectId, invitationId);
     this.projectNotifications = this.projectNotifications.filter((notification) => notification.id !== invitationId);
     return this.project.acceptProjectInvitation(projectId, invitationId)
   }
 
   rejectInvitation(invitationId: number) {
-    console.log('Rejecting invitation', invitationId);
     this.projectNotifications = this.projectNotifications.filter((notification) => notification.id !== invitationId);
     return this.project.rejectProjectInvitation(invitationId)
   }

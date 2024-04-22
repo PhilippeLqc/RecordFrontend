@@ -1,8 +1,6 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import {  Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TaskDto } from '../../model/taskDto';
 import { CommonModule } from '@angular/common';
-import { TaskService } from '../../Service/task.service';
-import { map, Observable } from 'rxjs';
 import moment from 'moment';
 
 @Component({
@@ -65,28 +63,30 @@ getInitials() {
     return userNamesgetInitial.map((name) => {
       const words = name.split(' ');
       if (words.length === 1) {
-        return words[0].substring(0, 2);
+        return words[0].substring(0, 2).toUpperCase();
       } else {
-        return words[0].charAt(0) + words[1].charAt(0);
+        return words[0].charAt(0) + words[1].charAt(0).toUpperCase();
       }
-    }).join('').toUpperCase();
+    });
   }
-  return ""; 
+  return []; 
 }
 
-getBackgroundColor(initials: string): string {
-  let hash = 0;
-  for (let i = 0; i < initials.length; i++) {
-    hash = initials.charCodeAt(i) + ((hash << 5) - hash);
-  }
+getBackgroundColors(): string[] {
+  const initials = this.getInitials();
+  return initials.map((initial) => {
+    let hash = 0;
+    for (let i = 0; i < initial.length; i++) {
+      hash = initial.charCodeAt(i) + ((hash << 5) - hash);
+    }
 
-  let color = '#';
-  for (let i = 0; i < 3; i++) {
-    const value = (hash >> (i * 8)) & 0xFF;
-    color += ('00' + value.toString(16)).substr(-2);
-  }
-
-  return color;
+    let color = '#';
+    for (let i = 0; i < 3; i++) {
+      const value = (hash >> (i * 8)) & 0xFF;
+      color += ('00' + value.toString(16)).substr(-2);
+    }
+    return color;
+  });
 }
 
 }

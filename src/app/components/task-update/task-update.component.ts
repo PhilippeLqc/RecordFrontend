@@ -7,6 +7,8 @@ import { Status } from '../../enumTypes/status';
 import { Hierarchy } from '../../enumTypes/hierarchy';
 import { ProjectService } from '../../Service/project.service';
 import { UserDto } from '../../model/userDto';
+import { StatusTask } from '../../enumTypes/statusTask';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-task-update',
@@ -14,6 +16,7 @@ import { UserDto } from '../../model/userDto';
   imports: [
     FormsModule,
     ReactiveFormsModule,
+    CommonModule
   ],
   templateUrl: './task-update.component.html',
   styleUrl: './task-update.component.css',
@@ -33,12 +36,14 @@ export class TaskUpdateComponent implements OnInit {
   
   tasks$ = this.tasksSubject.asObservable();
   taskName = new FormControl('', Validators.required);
-  statusList: string[] = Object.values(Status);
+  statusList: string[] = Object.values(StatusTask);
   hierarchyList: string[] = Object.values(Hierarchy);
   userId = JSON.parse(localStorage.getItem('currentUser')!).id;
   listUserId!: number[]
   position!: number;
   UserByProjectId: UserDto[] = [];
+  selectedUsers: number[] = [];  
+  dropdown: boolean = false;
 
   constructor(private task: TaskService, private projectService: ProjectService, private formBuilder: FormBuilder) { }
 
@@ -55,7 +60,7 @@ export class TaskUpdateComponent implements OnInit {
     });
 
     if (this.taskData) {
-      this.taskForm.setValue({
+      this.taskForm.patchValue({
         taskId: this.taskData.taskId,
         title: this.taskData.title,
         description: this.taskData.description,
@@ -68,11 +73,31 @@ export class TaskUpdateComponent implements OnInit {
     this.getUserByProjectId(this.projectService.currentProject.id);
   }
 
+  toggleDropdown() {
+    this.dropdown = !this.dropdown;
+  }
+
   getUserByProjectId(projectId: number) {
     return this.projectService.getUsersByProjectId(projectId).subscribe((response) => {
       this.UserByProjectId = response;
-      console.log('Users by project', this.UserByProjectId);
     });
+  }
+
+  onUserSelectionChange(event: Event, userId: number) {
+    const checkboxElement = event.target as HTMLInputElement;
+  
+    if (checkboxElement.checked) {
+      // Si la checkbox est cochée, ajouter l'ID de l'utilisateur à selectedUsers
+      this.selectedUsers.push(userId);
+    } else {
+      // Si la checkbox est décochée, supprimer l'ID de l'utilisateur de selectedUsers
+      const index = this.selectedUsers.indexOf(userId);
+      if (index !== -1) {
+        this.selectedUsers.splice(index, 1);
+      }
+    }
+  
+    console.log('selectedUsers', this.selectedUsers);
   }
 
   onSubmitUpdateTask() {
@@ -82,7 +107,7 @@ export class TaskUpdateComponent implements OnInit {
       dateValue = new Date(expirationDateControl.value);
     }
 
-    let status: Status = Status[this.taskForm.controls['status'].value as keyof typeof Status];
+    let status: StatusTask = StatusTask[this.taskForm.controls['status'].value as keyof typeof StatusTask];
     let hierarchy: Hierarchy = Hierarchy[this.taskForm.controls['hierarchy'].value as keyof typeof Hierarchy];
 
     let updatedTask: TaskDto = {
@@ -93,8 +118,7 @@ export class TaskUpdateComponent implements OnInit {
       expirationDate: dateValue,
       status: status,
       hierarchy: hierarchy,
-      // listUserId: this.taskForm.controls['listUserId'].value,
-      listUserId: this.taskData.listUserId,
+      listUserId: this.selectedUsers,
       boardlistId: this.taskData.boardlistId,
     };
 
