@@ -37,7 +37,7 @@ export class ProjectComponent implements OnInit{
   title = new FormControl('', Validators.required);
   errorMessage = '';
   showModal = false;
-  selectedProject!: number;
+  selectedProject!: number | null;
 
   constructor(
     private project: ProjectService,
@@ -81,6 +81,19 @@ export class ProjectComponent implements OnInit{
     this.project.createProject(project).subscribe((newProject) => {
       this.userProjects = [...this.userProjects, newProject];
     });
+  }
+
+
+  toggleMenu(projectId: number): void {
+    if (this.selectedProject === projectId) {
+      this.selectedProject = null;
+    } else {
+      this.selectedProject = projectId;
+    }
+  }
+  
+  closeMenu(): void {
+    this.selectedProject = null;
   }
 
   gotoProject(projectId: ProjectDto): void {

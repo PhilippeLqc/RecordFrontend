@@ -3,27 +3,25 @@
 
   <div class="m-16">
     <div>Active</div>
-    <div class="flex flex-row justify-start space-x-5 h-48 gap-8">
-      <div *ngFor="let project of userProjects" class="card animate-slideInLeft w-64 h-48">
-        <div class="flex flex-col justify-between w-64 h-44">
+    <div class="flex flex-row justify-start space-x-5 gap-8">
+      <div *ngFor="let project of userProjects" class="card animate-slideInLeft w-64 h-32 relative bg-white shadow-lg rounded-lg">
+        <button (click)="toggleMenu(project.id)" class="absolute top-2 right-2 bg-transparent text-[#889AB5] hover:text-[#34445B] font-bold py-2 px-4 mb-2 ml-2 rounded">
+          &#8942;
+        </button>
+        <div class="flex flex-col justify-between w-64 h-44 p-4">
           <div>
             <p>{{ project.title }}</p>
           </div>
-          <div class="mt-auto flex justify-start relative">
-            <button (click)="this.selectedProject = project.id" class="bg-[#889AB5] hover:bg-[#34445B] text-white font-bold py-2 px-4 mb-2 ml-2 rounded w-4/6">
-              Options
-            </button>
-            <div *ngIf="this.selectedProject == project.id" class="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white z-10">
-              <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                <button (click)="gotoProject(project)" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Go to project</button>
-                <button (click)="updateProject(project.id)" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Update project</button>
-                <button (click)="deleteProject(project.id)" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Delete project</button>
-              </div>
+          <div *ngIf="this.selectedProject == project.id" (click)="closeMenu()" class="absolute top-10 right-2 w-48 rounded-md shadow-lg bg-white z-10">
+            <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+              <button (click)="gotoProject(project); $event.stopPropagation()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Go to project</button>
+              <button (click)="updateProject(project.id); $event.stopPropagation()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Update project</button>
+              <button (click)="deleteProject(project.id); $event.stopPropagation()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Delete project</button>
             </div>
           </div>
         </div>
       </div>
-      <div class="animate-slideInLeft w-64 h-44 flex items-center justify-center mt-1">
+      <div class="card animate-slideInLeft w-64 h-32 relative bg-white shadow-lg rounded-lg flex items-center justify-center">
         <div class="h-full w-full flex items-center justify-center p-4">
           <button (click)="openModal()" class="bg-[#889AB5] hover:bg-[#34445B] text-white font-bold rounded-lg w-full h-full flex items-center justify-center text-6xl">
             +
@@ -36,17 +34,22 @@
   <div class="m-16">
     <div>Archived</div>
     <div class="flex flex-row justify-start space-x-5 h-48 gap-8">
-      <div *ngFor="let project of userProjects" class="card animate-slideInLeft w-64 h-48">
-        <mat-card class="flex flex-col justify-between w-64 h-44">
-          <mat-card-content>
+      <div *ngFor="let project of userProjects" class="card animate-slideInLeft w-64 h-32 relative bg-white shadow-lg rounded-lg">
+        <button (click)="toggleMenu(project.id)" class="absolute top-2 right-2 bg-transparent text-[#889AB5] hover:text-[#34445B] font-bold py-2 px-4 mb-2 ml-2 rounded">
+          &#8942;
+        </button>
+        <div class="flex flex-col justify-between w-64 h-44 p-4">
+          <div>
             <p>{{ project.title }}</p>
-          </mat-card-content>
-          <mat-card-actions class="mt-auto flex justify-start">
-            <button (click)="gotoProject(project)" class="bg-[#889AB5] hover:bg-[#34445B] text-white font-bold py-2 px-4 mb-2 ml-2 rounded w-4/6">
-              Go to project
-            </button>
-          </mat-card-actions>
-        </mat-card>
+          </div>
+          <div *ngIf="this.selectedProject == project.id" (click)="closeMenu()" class="absolute top-10 right-2 w-48 rounded-md shadow-lg bg-white z-10">
+            <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+              <button (click)="gotoProject(project); $event.stopPropagation()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Go to project</button>
+              <button (click)="updateProject(project.id); $event.stopPropagation()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Update project</button>
+              <button (click)="deleteProject(project.id); $event.stopPropagation()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Delete project</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
