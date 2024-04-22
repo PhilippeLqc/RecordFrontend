@@ -9,6 +9,8 @@ import { TaskService } from '../../Service/task.service';
 import { TaskDto } from '../../model/taskDto';
 import { Status } from '../../enumTypes/status';
 import { Hierarchy } from '../../enumTypes/hierarchy';
+import { ProjectService } from '../../Service/project.service';
+import { UserDto } from '../../model/userDto';
 
 @Component({
   selector: 'app-task-update',
@@ -42,16 +44,20 @@ export class TaskUpdateComponent implements OnInit {
   statusList: string[] = Object.values(Status);
   hierarchyList: string[] = Object.values(Hierarchy);
   userId = JSON.parse(localStorage.getItem('currentUser')!).id;
+  listUserId!: number[]
   position!: number;
+  UserByProjectId: UserDto[] = [];
 
-  constructor(private task: TaskService, private formBuilder: FormBuilder) { }
+  constructor(private task: TaskService, private projectService: ProjectService, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
+    this.listUserId = this.taskData.listUserId;
     this.taskForm = this.formBuilder.group({
       taskId: ['', Validators.required],
       title: ['', Validators.required],
       description: [''],
       expirationDate: ['', Validators.required],
+      listUserId: [''],
       status: [''],
       hierarchy: [''],
     });
@@ -63,9 +69,22 @@ export class TaskUpdateComponent implements OnInit {
         description: this.taskData.description,
         expirationDate: this.taskData.expirationDate,
         status: this.taskData.status,
+        listUserId: this.taskData.listUserId,
         hierarchy: this.taskData.hierarchy,
       });
     }
+
+    this.projectService.currentProject$.subscribe((project) => {
+      // console.log('Current project', project);
+      this.getUserByPRojectId(project.id);
+    });
+  }
+
+  getUserByPRojectId(projectId: number) {
+    return this.projectService.getUsersByProjectId(projectId).subscribe((response) => {
+      this.UserByProjectId = response;
+      console.log('Users by project', this.UserByProjectId);
+    });
   }
 
   onSubmitUpdateTask() {
@@ -86,7 +105,8 @@ export class TaskUpdateComponent implements OnInit {
       expirationDate: dateValue,
       status: status,
       hierarchy: hierarchy,
-      listUserId: [this.userId],
+      // listUserId: this.taskForm.controls['listUserId'].value,
+      listUserId: this.taskData.listUserId,
       boardlistId: this.taskData.boardlistId,
     };
 

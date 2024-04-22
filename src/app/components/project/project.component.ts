@@ -46,7 +46,8 @@ export class ProjectComponent implements OnInit{
      }
 
   ngOnInit(): void {
-    this.project.getProjectsByUserId().subscribe((userProject) => {
+    const userId = JSON.parse(localStorage.getItem('currentUser')!).id;
+    this.project.getProjectsByUserId(userId).subscribe((userProject) => {
       this.userProjects  = userProject;
     });
   }

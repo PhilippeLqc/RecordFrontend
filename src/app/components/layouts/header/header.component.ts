@@ -44,9 +44,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   getProjectName() {
     //for each projectId in notificationList, get the project name
     this.notificationList.forEach((notification) => {
-      this.project.getProjectById(notification.projectId).subscribe((project) => {
-        if (!this.projectNames.includes(project.title)) {
-          this.projectNames = [...this.projectNames, project.title];
+      console.log('Notification', notification);
+      this.project.getProjectNameByInvitationId(notification.id).subscribe((project) => {
+        console.log('Project name', project);
+        const projectName = project.title;
+        if (!this.projectNames.includes(projectName)) {
+          this.projectNames = [...this.projectNames, projectName];
         }
       });
     });
