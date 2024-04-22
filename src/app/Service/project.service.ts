@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { AuthService } from './auth.service';
 import { Project } from '../model/project';
 import { ProjectInvitationDto } from '../model/projectInvitationDto';
+import { UserDto } from '../model/userDto';
 
 @Injectable({
   providedIn: 'root',
@@ -100,6 +101,11 @@ export class ProjectService {
     console.log('changeCurrentProject', project);
     this.currentProject = project;
     this.currentProjectSubject.next(project);
+  }
+
+  //get users by project id
+  getUsersByProjectId(projectId: number): Observable<UserDto[]> {
+    return this.http.get<UserDto[]>(this.projectServiceUrl + '/users/project/' + projectId);
   }
 
 }
