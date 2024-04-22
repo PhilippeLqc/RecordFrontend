@@ -35,17 +35,18 @@ export class ProjectComponent implements OnInit{
   
   userProjects = new BehaviorSubject<ProjectDto[]>([]);
   title = new FormControl('', Validators.required);
-  errorMessage = '';
-  showModal = false;
+  errorMessage: string = '';
+  showModal: boolean = false;
   selectedProject!: number | null;
   activeProjects = this.userProjects.pipe(map(projects => projects.filter(project => project.status === 'ACTIVE')));
   archivedProjects = this.userProjects.pipe(map(projects => projects.filter(project => project.status === 'ARCHIVED')));
-  
+  showUpdate: boolean = false;
 
   constructor(
     private project: ProjectService,
     private formBuilder: FormBuilder,
-    private router: Router) {
+    private router: Router,
+    public projectS: ProjectService) {
       merge(this.title.statusChanges, this.title.valueChanges)
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.updateErrorTitle());
@@ -54,16 +55,11 @@ export class ProjectComponent implements OnInit{
   ngOnInit(): void {
     this.project.getProjectsByUserId().subscribe((userProject) => {
       this.userProjects.next(userProject);
-      // this.filterProjects();
+      this.project.userProjects$.subscribe((userProjects) => {
+        this.userProjects.next(userProjects);
+      });
     });
-
   }
-
-  // filterProjects() {
-  //   this.activeProjects = this.userProjects.filter(project => project.status === 'ACTIVE');
-  //   this.archivedProjects = this.userProjects.filter(project => project.status === 'ARCHIVED');
-  // }
-
 
   public projectForm = this.formBuilder.group({
     title: [''],
@@ -94,6 +90,8 @@ export class ProjectComponent implements OnInit{
   }
 
 
+  // Project menu actions
+
   toggleMenu(projectId: number): void {
     if (this.selectedProject === projectId) {
       this.selectedProject = null;
@@ -104,6 +102,7 @@ export class ProjectComponent implements OnInit{
   
   closeMenu(): void {
     this.selectedProject = null;
+    this.showUpdate = false;
   }
 
   gotoProject(projectId: ProjectDto): void {
@@ -113,15 +112,33 @@ export class ProjectComponent implements OnInit{
 
   updateProject(projectId: number): void {
     this.selectedProject = projectId;
+    this.showModal = true;
     console.log(`Updating project ${this.selectedProject}`);
     
   }
 
+  // deleteProject(projectId: number): void {
+  //   console.log(`Enter Deleting project ${projectId}`);
+  //   this.selectedProject = projectId;
+  //   console.log(`mid Deleting project ${projectId}`);
+  //   this.project.createProject(project).subscribe((newProject) => {
+  //     this.userProjects.next([...this.userProjects.getValue(), newProject]);
+  //   });
+  //   this.projectS.deleteProjectById(projectId);
+  //   console.log(`end Deleting project ${projectId}`);
+
+  // }
   deleteProject(projectId: number): void {
-    // Ici, vous pouvez ajouter la logique pour supprimer le projet
+    console.log(`Enter Deleting project ${projectId}`);
     this.selectedProject = projectId;
-    console.log(`Deleting project ${this.selectedProject}`);
+    console.log(`mid Deleting project ${projectId}`);
+    this.projectS.deleteProjectById(projectId).subscribe(() => {
+      console.log(`end Deleting project ${projectId}`);
+    });
   }
+
+
+  // Modal
 
   openModal(): void {
     console.log('openModal was called');

@@ -90,6 +90,20 @@ export class ProjectService {
       );
   }
 
+
+  //delete project by id
+  // deleteProjectById(projectId: number): Observable<Project> {
+  //   return this.http.delete<Project>(this.projectServiceUrl + '/delete/' + projectId);
+  // }
+  deleteProjectById(projectId: number): Observable<void> {
+    return this.http.delete<void>(`${this.projectServiceUrl}/delete/${projectId}`).pipe(
+      tap(() => {
+        this.userProjects = this.userProjects.filter(project => project.id !== projectId);
+        this.userProjectsSubject.next(this.userProjects);
+      })
+    );
+  }
+
   // invite user to project by ProjectId and searching by mail
   inviteUserToProject(email: string, projectId: number): Observable<ProjectInvitationDto> {
     const headers = { 'Content-Type': 'application/json' };
