@@ -44,10 +44,12 @@ export class TaskUpdateComponent implements OnInit {
   UserByProjectId: UserDto[] = [];
   selectedUsers: number[] = [];  
   dropdown: boolean = false;
+  statusTask = StatusTask;
 
   constructor(private task: TaskService, private projectService: ProjectService, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
+    console.log('taskDatastatus', this.taskData.status);
     this.listUserId = this.taskData.listUserId;
     this.taskForm = this.formBuilder.group({
       taskId: ['', Validators.required],
@@ -65,7 +67,7 @@ export class TaskUpdateComponent implements OnInit {
         title: this.taskData.title,
         description: this.taskData.description,
         expirationDate: this.taskData.expirationDate,
-        status: this.taskData.status,
+        status: this.getStatusValue(this.taskData.status),
         listUserId: this.taskData.listUserId,
         hierarchy: this.taskData.hierarchy,
       });
@@ -75,6 +77,11 @@ export class TaskUpdateComponent implements OnInit {
 
   toggleDropdown() {
     this.dropdown = !this.dropdown;
+  }
+
+  getStatusValue(key: string): string {
+
+    return this.statusTask[key as keyof typeof StatusTask];
   }
 
   getUserByProjectId(projectId: number) {
@@ -96,8 +103,6 @@ export class TaskUpdateComponent implements OnInit {
         this.selectedUsers.splice(index, 1);
       }
     }
-  
-    console.log('selectedUsers', this.selectedUsers);
   }
 
   onSubmitUpdateTask() {
@@ -107,7 +112,9 @@ export class TaskUpdateComponent implements OnInit {
       dateValue = new Date(expirationDateControl.value);
     }
 
-    let status: StatusTask = StatusTask[this.taskForm.controls['status'].value as keyof typeof StatusTask];
+    let statusValue = this.taskForm.controls['status'].value;
+    let statusKey = Object.keys(StatusTask).find(key => StatusTask[key as keyof typeof StatusTask] === statusValue);
+    console.log('status', statusKey);
     let hierarchy: Hierarchy = Hierarchy[this.taskForm.controls['hierarchy'].value as keyof typeof Hierarchy];
 
     let updatedTask: TaskDto = {
@@ -116,7 +123,7 @@ export class TaskUpdateComponent implements OnInit {
       description: this.taskForm.controls['description'].value || '',
       position: this.taskData.position,
       expirationDate: dateValue,
-      status: status,
+      status: statusKey as unknown as StatusTask,
       hierarchy: hierarchy,
       listUserId: this.selectedUsers,
       boardlistId: this.taskData.boardlistId,

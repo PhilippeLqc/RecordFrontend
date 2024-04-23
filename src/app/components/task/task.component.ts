@@ -85,13 +85,17 @@ export class TaskComponent implements OnInit{
     const taskName = this.taskForm.controls['title'].value;
     const taskDescription = this.taskForm.controls['description'].value;
 
+    let statusValue = this.taskForm.controls['status'].value;
+    let statusKey = Object.keys(StatusTask).find(key => StatusTask[key as keyof typeof StatusTask] === statusValue);
+    console.log('status', statusKey);
+    
     let newTask: TaskDto = {
       taskId: 0,
       title: taskName!,
       description: taskDescription || '',
       position: 0,
       expirationDate: new Date(),
-      status: StatusTask.TODO,
+      status: statusKey as unknown as StatusTask,
       hierarchy: Hierarchy.MOYENNE,
       listUserId: this.selectedUsers,
       boardlistId: this.boardlistId,
