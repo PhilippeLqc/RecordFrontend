@@ -270,7 +270,8 @@ export class BoardlistComponent implements OnInit {
 
   
   deleteFromBoardlistMenu(boardlistId: Number) {
-    this.deleteBoardlist(boardlistId)
+    this.deleteBoardlist(boardlistId);
+    this.boardlistsProject = this.boardlistsProject.filter(boardlist => boardlist.id !== boardlistId);
     this.showBoardlistMenu = -1;
   }
 }
