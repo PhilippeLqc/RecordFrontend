@@ -1,0 +1,140 @@
+<div class="h-screen flex flex-col justify-between">
+  <app-header></app-header>
+
+  <!-- password controlform -->
+  <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
+    <div class="mb-6 mx-auto w-1/2">
+      <label
+        for="password"
+        class="block mb-2 text-2xl font-medium text-gray-900"
+        >Password</label
+      >
+      <input
+        formControlName="password"
+        type="password"
+        id="password"
+        class="bg-gray-50 border border-[#5F606A] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+        placeholder="•••••••••"
+        required
+      />
+    </div>
+    <div class="mb-6 mx-auto w-1/2">
+      <label
+        for="confirm_password"
+        class="block mb-2 text-2xl font-medium text-gray-900"
+        >Confirm password</label
+      >
+      <input
+        formControlName="confirmPassword"
+        type="password"
+        id="confirm_password"
+        class="bg-gray-50 border border-[#5F606A] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+        placeholder="•••••••••"
+        required
+      />
+    </div>
+    <div class="flex justify-center">
+      <button
+        type="button"
+        class="py-2.5 px-32 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
+      >
+        Annuler
+      </button>
+      <button
+        type="submit"
+        class="py-2.5 px-32 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
+      >
+        Accepter
+      </button>
+    </div>
+  </form>
+
+  <!-- email form control -->
+  <form [formGroup]="emailForm" (ngSubmit)="updateEmail()">
+    <div class="mb-6 mx-auto w-1/2">
+      <label
+        for="changeemail"
+        class="block mb-2 text-2xl font-medium text-gray-900"
+        >Modifier l'Email</label
+      >
+      <div class="relative mb-6">
+        <div
+          class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none"
+        >
+          <svg
+            class="w-4 h-4 text-gray-500 dark:text-gray-400"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 20 16"
+          >
+            <path
+              d="m10.036 8.278 9.258-7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z"
+            />
+            <path
+              d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z"
+            />
+          </svg>
+        </div>
+        <input
+          formControlName="changeemail"
+          id="changeemail"
+          class="pl-10 bg-gray-50 border border-[#5F606A] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          placeholder="john@doe.com"
+        />
+      </div>
+    </div>
+    <div class="mb-6 mx-auto w-1/2">
+      <label
+        for="confirmEmail"
+        class="block mb-2 text-2xl font-medium text-gray-900"
+        >Confirmer l'Email</label
+      >
+      <div class="relative mb-6">
+        <div
+          class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none"
+        >
+          <svg
+            class="w-4 h-4 text-gray-500 dark:text-gray-400"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 20 16"
+          >
+            <path
+              d="m10.036 8.278 9.258-7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z"
+            />
+            <path
+              d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z"
+            />
+          </svg>
+        </div>
+        <input
+          formControlName="confirmEmail"
+          id="confirmEmail"
+          class="pl-10 bg-gray-50 border border-[#5F606A] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          placeholder="john@doe.com"
+        />
+      </div>
+    </div>
+    <div class="flex justify-center">
+      <button
+        type="button"
+        class="py-2.5 px-32 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
+      >
+        Annuler
+      </button>
+      <button
+        type="submit"
+        class="py-2.5 px-32 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
+      >
+        Accepter
+      </button>
+    </div>
+  </form>
+  <app-modal [show]="showModal" (closeEvent)="closeModal()">
+    <h1 class="text-white">modal show</h1>
+    <button (click)="closeModal()" class="text-black bg-white">ACCEPTER</button>
+  </app-modal>
+  <app-footer></app-footer>
+</div>

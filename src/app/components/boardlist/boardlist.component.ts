@@ -52,7 +52,8 @@ export class BoardlistComponent implements OnInit {
   showCreateListModal = false;
   showBoardlistMenu!: Number;
   userNames: { [taskId: number]: string[] } = {};
-  isLoading = false
+  isLoading = false;
+  showModalDeleteBoardlist: boolean = false;
 
   selectedTaskData!: TaskDto; // Remplacez Task par le type de vos tâches
 
@@ -156,6 +157,8 @@ export class BoardlistComponent implements OnInit {
       boardlistName: ['', Validators.required]
     });
 
+    
+
     this.getTaskUserNames();
   }
 
@@ -225,10 +228,13 @@ export class BoardlistComponent implements OnInit {
   closeModal(): void {
     this.showModal = false;
     this.showUpdate = false;
+    this.showModalDeleteBoardlist = !this.showModalDeleteBoardlist;
+    this.showBoardlistMenu = -1
   }
 
   openCreateListModal(): void {
     this.showCreateListModal = !this.showCreateListModal;
+    console.log('showCreateListModal', this.showCreateListModal);
   }
 
   openUpdateModal(taskId: number, boardListId: number): void {
@@ -269,8 +275,16 @@ export class BoardlistComponent implements OnInit {
 
   
   deleteFromBoardlistMenu(boardlistId: Number) {
-    this.deleteBoardlist(boardlistId)
+    this.deleteBoardlist(boardlistId);
+    this.boardlistsProject = this.boardlistsProject.filter(boardlist => boardlist.id !== boardlistId);
     this.showBoardlistMenu = -1;
+  }
+
+
+  onTaskDeleted(taskId: number) {
+    for (const boardlistId in this.tasks) {
+      this.tasks[boardlistId] = this.tasks[boardlistId].filter(task => task.taskId !== taskId);
+    }
   }
 }
 
