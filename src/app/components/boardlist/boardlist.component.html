@@ -47,20 +47,24 @@
             </button>
             <div class="absolute bg-white border rounded shadow p-2 mt-2">
               <button (click)="editFromBoardlistMenu(boardlist.id)">Edit</button>
-              <button (click)="deleteFromBoardlistMenu(boardlist.id)">Delete</button>
-              <button (click)="showModalDeleteBoardlist = !showModalDeleteBoardlist">Delete popover</button>
+              <button (click)="showModalDeleteBoardlist = !showModalDeleteBoardlist">Delete</button>
 
+
+              <!-- Modal to confirm delete Boardlist -->
 
               <app-modal [show]="showModalDeleteBoardlist" (closeEvent)="closeModal()" (mousedown)="$event.stopPropagation()">
                 <div *ngIf="showModalDeleteBoardlist"
-                  class="absolute bg-white border rounded shadow p-2 mt-2">
+                  class="absolute top-1/4 bg-gray-50 border border-gray-300 text-[#B2B3BD] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-10 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                   <p>Are you sure you want to delete this boardlist?</p>
-                  <button (click)="deleteFromBoardlistMenu(boardlist.id); showModalDeleteBoardlist = !showModalDeleteBoardlist"
-                    class="bg-red-500 text-white rounded px-2 py-1 mr-2">Yes</button>
-                  <button (click)="showModalDeleteBoardlist = !showModalDeleteBoardlist; showBoardlistMenu = -1" class="bg-gray-300 rounded px-2 py-1">No</button>
+                  <div class="flex justify-end">
+                    <button (click)="deleteFromBoardlistMenu(boardlist.id); showModalDeleteBoardlist = !showModalDeleteBoardlist"
+                      class="bg-red-500 text-white rounded px-2 py-1 mr-2">Yes</button>
+                    <button (click)="showModalDeleteBoardlist = !showModalDeleteBoardlist; showBoardlistMenu = -1" class="bg-gray-300 rounded px-2 py-1">No</button>
+                  </div>
                 </div>
               </app-modal>
 
+              <!--  -->
 
 
             </div>

@@ -226,6 +226,8 @@ export class BoardlistComponent implements OnInit {
   closeModal(): void {
     this.showModal = false;
     this.showUpdate = false;
+    this.showModalDeleteBoardlist = !this.showModalDeleteBoardlist;
+    this.showBoardlistMenu = -1
   }
 
   openCreateListModal(): void {
