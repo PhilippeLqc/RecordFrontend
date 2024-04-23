@@ -52,7 +52,8 @@ export class BoardlistComponent implements OnInit {
   showCreateListModal = false;
   showBoardlistMenu!: Number;
   userNames: { [taskId: number]: string[] } = {};
-  isLoading = false
+  isLoading = false;
+  showModalDeleteBoardlist: boolean = false;
 
   selectedTaskData!: TaskDto; // Remplacez Task par le type de vos tâches
 
