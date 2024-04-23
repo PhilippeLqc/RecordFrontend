@@ -43,8 +43,6 @@ export class NotificationService {
         currentNotifications.push(notificationContent);
         this.notificationSubject.next(currentNotifications);
 
-        // console.log('Notification received', notificationContent);
-        // console.log('Notifications', currentNotifications);
       });
     });
   }

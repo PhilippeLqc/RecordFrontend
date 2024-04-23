@@ -15,21 +15,24 @@
     ></span>
   </div>
   <div class="flex items-center justify-between mt-4">
-    @for (userName of [getInitials]; track userName) { @if (userName.length < 3)
-    {
-    <p
-      [style.background-color]="getBackgroundColor(getInitials())"
-      class="w-9 h-9 flex items-center text-center justify-center rounded-full border border-[#5F606A] -ml-2"
-    >
-      {{ getInitials() }}
-    </p>
-    } @if (userName.length > 3) {
-    <p
-      class="w-9 h-9 flex items-center text-center justify-center bg-white text-black"
-    >
-      +{{ userName.length - 3 }}
-    </p>
-    } }
+    <div class="flex space-x-1">
+      @for (initial of getInitials(); track initial; let i = $index) { @if
+      (getInitials.length < 3) {
+      <p
+        [style.background-color]="getBackgroundColors()[i]"
+        class="w-7 h-7 flex items-center text-center text-[13px] justify-center rounded-full border border-[#5F606A]"
+      >
+        {{ initial }}
+      </p>
+      } @else if (getInitials.length > 3) {
+      <p
+        class="w-9 h-9 flex items-center text-center justify-center bg-white text-black"
+      >
+        +{{ getInitials.length - 3 }}
+      </p>
+      } }
+    </div>
+
     <div class="flex items-center">
       <span
         class="inline-block h-4 w-4 rounded-full mr-2"

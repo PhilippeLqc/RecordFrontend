@@ -1,5 +1,5 @@
 import { Hierarchy } from "../enumTypes/hierarchy";
-import { Status } from "../enumTypes/status";
+import { StatusTask } from "../enumTypes/statusTask";
 
 export interface TaskDto {
     taskId: number;
@@ -7,7 +7,7 @@ export interface TaskDto {
     description: string;
     position: number;
     expirationDate: Date;
-    status: Status;
+    status: StatusTask;
     hierarchy: Hierarchy;
     listUserId: number[];
     boardlistId: number;
