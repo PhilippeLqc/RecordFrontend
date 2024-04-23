@@ -104,6 +104,7 @@ export class TaskComponent implements OnInit{
       const currentTasks = this.tasksSubject.getValue();
       this.tasksSubject.next([...currentTasks, newTaskResponse]);
     });
+    this.closeModal();
   }
 
   getUserByProjectId(projectId: number) {
