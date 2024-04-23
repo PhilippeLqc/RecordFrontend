@@ -5,7 +5,6 @@ import { ProjectDetailsComponent } from './components/project-details/project-de
 import { ProfileComponent } from './components/profile/profile.component';
 import { Page403Component } from './pages/page-403/page-403.component';
 import { Page404Component } from './pages/page-404/page-404.component';
-
 import { AuthGuard } from './security/guard';
 
 export const routes: Routes = [
@@ -17,5 +16,5 @@ export const routes: Routes = [
     {path: '404', component: Page404Component},
     {path: '', redirectTo: '/home', pathMatch: 'full'},
     {path: '**', redirectTo: '/404'}
-
+    {path: '', redirectTo: '/home', pathMatch: 'full'}
 ];
