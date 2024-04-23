@@ -48,7 +48,6 @@ export class NotificationComponent implements OnInit{
     if (getUser$ === undefined) {
       inviteUser$.subscribe({
         next: (response) => {
-          console.log('no account', response);
           this.snackBar.open(`Cet email n'a pas de compte. Un email a été envoyé pour créer un compte.`, 'Close', { duration: 4000, });
         },
         error: error => {
@@ -62,7 +61,6 @@ export class NotificationComponent implements OnInit{
     // if getUser$ got a response, send the invitation to the project
     forkJoin([inviteUser$, getUser$]).subscribe({
       next: ([inviteResponse, user]) => {
-        console.log('Invitation sent successfully', inviteResponse);
         this.notificationService.sendNotification(user.id, projectInvitation);
         this.snackBar.open('Invitation au projet envoyé !', 'Close', { duration: 4000, });
       },
