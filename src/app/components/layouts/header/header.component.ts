@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { NotificationComponent } from '../../notification/notification.component';
 import { NotificationService } from '../../../Service/notification.service';
 import { ProjectService } from '../../../Service/project.service';
@@ -30,7 +30,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   notificationList: ProjectInvitationDto[] = [];
   projectNotifications: projectNotification[] = [];
 
-  constructor(private notification: NotificationService, private project: ProjectService) { }
+  constructor(private elementRef: ElementRef, private notification: NotificationService, private project: ProjectService) { }
 
   ngOnInit(): void {
     this.notification.joinNotificationRoom(`${this.userId}`);
@@ -77,6 +77,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
     console.log('Rejecting invitation', invitationId);
     this.projectNotifications = this.projectNotifications.filter((notification) => notification.id !== invitationId);
     return this.project.rejectProjectInvitation(invitationId)
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.showUserMenu = false;
+      this.showNotification = false;
+      this.showInvite = false;
+    }
   }
 
   logout(){

@@ -15,6 +15,8 @@ import { ProjectDto } from '../../model/projectDto';
 import { ModalComponent } from '../../lib/modal/modal.component';
 import { HeaderComponent } from "../layouts/header/header.component";
 import { FooterComponent } from "../layouts/footer/footer.component";
+import { ProjectUpdateComponent } from "../project-update/project-update.component";
+import { ProjectDetailsComponent } from '../project-details/project-details.component';
 
 @Component({
     selector: 'app-project',
@@ -29,24 +31,29 @@ import { FooterComponent } from "../layouts/footer/footer.component";
         MatInputModule,
         MatButtonModule,
         MatIconModule,
-        MatCardModule, HeaderComponent, FooterComponent]
+        MatCardModule, HeaderComponent, FooterComponent, ProjectUpdateComponent]
 })
 export class ProjectComponent implements OnInit{
   
   userProjects = new BehaviorSubject<ProjectDto[]>([]);
   title = new FormControl('', Validators.required);
+
   errorMessage: string = '';
-  showModal: boolean = false;
-  selectedProject!: number | null;
+  selectedProjectId!: number;
+  selectedProjectData!: ProjectDto[];
+  projectData!: ProjectDto;
+  listAllProjectsUsers!: ProjectDto[];
+
   activeProjects = this.userProjects.pipe(map(projects => projects.filter(project => project.status === 'ACTIVE')));
   archivedProjects = this.userProjects.pipe(map(projects => projects.filter(project => project.status === 'ARCHIVED')));
+  
+  showModal: boolean = false;
   showUpdate: boolean = false;
 
   constructor(
-    private project: ProjectService,
+    private projectS: ProjectService,
     private formBuilder: FormBuilder,
-    private router: Router,
-    public projectS: ProjectService) {
+    private router: Router) {
       merge(this.title.statusChanges, this.title.valueChanges)
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.updateErrorTitle());
@@ -54,8 +61,9 @@ export class ProjectComponent implements OnInit{
 
   ngOnInit(): void {
     const userId = JSON.parse(localStorage.getItem('currentUser')!).id;
-    this.project.getProjectsByUserId(userId).subscribe((userProject) => {
-      this.project.userProjects$.subscribe((userProjects) => {
+    this.projectS.getProjectsByUserId(userId).subscribe((userProject) => {
+      this.listAllProjectsUsers = userProject;
+      this.projectS.userProjects$.subscribe((userProjects) => {
         this.userProjects.next(userProjects);
       });
     });
@@ -82,39 +90,54 @@ export class ProjectComponent implements OnInit{
       boardlistIds: [],
       userIds: []
     }
-    this.project.createProject(project).subscribe();
+    this.projectS.createProject(project).subscribe();
   }
+
+  // onProjectUpdated(updatedProject: ProjectDto) {
+  //   const tasksForBoardlist = this.tasks[updatedProject.id];
+  //   if (tasksForBoardlist) {
+  //     const index = tasksForBoardlist.findIndex(task => task.taskId === updatedProject.id);
+  //     if (index !== -1) {
+  //       // Replace the task in the tasks array
+  //       tasksForBoardlist[index] = updatedTask;
+  //     }
+  //   }
+  // }
 
 
   // Project menu actions
 
   toggleMenu(projectId: number): void {
-    if (this.selectedProject === projectId) {
-      this.selectedProject = null;
+    if (this.selectedProjectId === projectId) {
+      this.selectedProjectId = -1;
     } else {
-      this.selectedProject = projectId;
+      this.selectedProjectId = projectId;
     }
   }
   
   closeMenu(): void {
-    this.selectedProject = null;
+    this.selectedProjectId = -1;
     this.showUpdate = false;
   }
 
   gotoProject(projectId: ProjectDto): void {
-    this.project.changeCurrentProject(projectId);
+    this.projectS.changeCurrentProject(projectId);
     this.router.navigate(['/project', projectId.id]);
   }
 
   updateProject(projectId: number): void {
-    this.selectedProject = projectId;
+    this.selectedProjectId = projectId;
+    this.showUpdate = true;
     this.showModal = true;
-    this.selectedProject = -1;
-    console.log(`Updating project ${this.selectedProject}`);
+    // this.projectToUpdate = this.listAllProjectsUsers.filter(project => project.id === projectId);
+    const projectToUpdate = this.listAllProjectsUsers.find(project => project.id === projectId);
+    if(projectToUpdate) {
+      this.projectData = projectToUpdate;
+    }
   }
 
   deleteProject(projectId: number): void {
-    this.selectedProject = projectId;
+    this.selectedProjectId = projectId;
     this.projectS.deleteProjectById(projectId).subscribe(() => {
       this.userProjects.next(this.userProjects.getValue().filter(project => project.id !== projectId));});
   }

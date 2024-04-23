@@ -1,85 +1,42 @@
 <div class="flex">
-  <button
-    (click)="openCreateListModal()"
-    [hidden]="showCreateListModal"
-    class="fixed top-0 right-0 mt-24 mr-4 py-2.5 px-5 me-2 mb-2 text-base font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-  >
+  <button (click)="openCreateListModal()" [hidden]="showCreateListModal"
+    class="fixed top-0 right-0 mt-24 mr-4 py-2.5 px-5 me-2 mb-2 text-base font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
     + Créer une nouvelle liste
   </button>
-  <form
-    [formGroup]="boardlistForm"
-    (ngSubmit)="onSubmitBoardlist()"
-    [hidden]="!showCreateListModal"
-  >
+  <form [formGroup]="boardlistForm" (ngSubmit)="onSubmitBoardlist()" [hidden]="!showCreateListModal">
     <div class="mb-6">
-      <label
-        for="project-title"
-        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >Entrez le titre de votre nouvelle liste</label
-      >
-      <input
-        placeholder="Name of Boardlist"
-        formControlName="boardlistName"
-        required
-        type="text"
-        id="project-title"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-      />
+      <label for="project-title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Entrez le titre de
+        votre nouvelle liste</label>
+      <input placeholder="Name of Boardlist" formControlName="boardlistName" required type="text" id="project-title"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
     </div>
     <div>
-      <button
-        type="submit"
-        (click)="openCreateListModal()"
-        class="py-2.5 px-5 me-2 mb-2 mt-4 text-sm font-medium text-gray-900 focus:outline-none bg-[#889AB5] rounded-lg border border-[#B2B3BD] hover:bg-gray-100"
-      >
+      <button type="submit" (click)="openCreateListModal()"
+        class="py-2.5 px-5 me-2 mb-2 mt-4 text-sm font-medium text-gray-900 focus:outline-none bg-[#889AB5] rounded-lg border border-[#B2B3BD] hover:bg-gray-100">
         Créer une liste
       </button>
     </div>
   </form>
-  <div
-    cdkDropList
-    cdkDropListOrientation="horizontal"
-    (cdkDropListDropped)="dropList($event)"
-  >
-    <div
-      class="flex justify-between items-start flex-nowrap text-[#EEEEF0]"
-      cdkDropListGroup
-    >
+  <div cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropList($event)">
+    <div class="flex justify-between items-start flex-nowrap text-[#EEEEF0]" cdkDropListGroup>
       @for (boardlist of boardlistsProject; track boardlist) {
       <div
         class="ml-4 mt-2 flex flex-col items-center space-y-3 w-72 p-2 border border-gray-300 rounded-2xl bg-[#111725] max-h-[750px] text-[#B2B3BD]  animate-drop"
-        cdkDrag
-        cdkDropList
-        [cdkDropListDisabled]="isLoading"
-        [id]="boardlist.id.toString()"
-        [cdkDropListData]="tasks[boardlist.id]"
-        (cdkDropListDropped)="dropTasks($event)"
-      >
-        <h1
-          class="flex justify-center items-center gap-2 font-semibold text-2xl"
-        >
+        cdkDrag cdkDropList [cdkDropListDisabled]="isLoading" [id]="boardlist.id.toString()"
+        [cdkDropListData]="tasks[boardlist.id]" (cdkDropListDropped)="dropTasks($event)">
+        <h1 class="flex justify-center items-center gap-2 font-semibold text-2xl">
           {{ boardlist.name }}
         </h1>
 
         <div class="overflow-auto max-h-[750px]">
           @for ( task of tasks[boardlist.id]; track task) {
-          <div
-            class="m-2"
-            cdkDrag
-            (click)="openUpdateModal(task.taskId, task.boardlistId)"
-          >
-            <app-task-details
-              [task]="task"
-              [userNames]="userNames"
-              class="hover:cursor-pointer"
-            ></app-task-details>
+          <div class="m-2" cdkDrag (click)="openUpdateModal(task.taskId, task.boardlistId)">
+            <app-task-details [task]="task" [userNames]="userNames" class="hover:cursor-pointer"></app-task-details>
           </div>
           }
         </div>
-        <button
-          (click)="openModal(boardlist.id)"
-          class="text-center flex justify-center items-center font-semibold text-lg"
-        >
+        <button (click)="openModal(boardlist.id)"
+          class="text-center flex justify-center items-center font-semibold text-lg">
           + créer une tâche
         </button>
         @if (!showUpdate) {
