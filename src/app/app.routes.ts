@@ -19,6 +19,6 @@ export const routes: Routes = [
 
     {path: '', redirectTo: '/home', pathMatch: 'full'},
     {path: '**', redirectTo: '/404'},
-    {path: '**', redirectTo: '/404'}
+    {path: '**', redirectTo: '/404'},
     {path: '', redirectTo: '/home', pathMatch: 'full'}
 ];
