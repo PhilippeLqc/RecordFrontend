@@ -30,4 +30,12 @@ export class UserService {
         return this.http.post<string[]>(this.userServiceURL + '/username/', UserId);
     }
 
+    changePassword(userId: number, password: string): Observable<UserDto> {
+        return this.http.put<UserDto>(this.userServiceURL + '/updatePassword/' + userId, password);
+    }
+
+    changeEmail(userId: number, email: string): Observable<UserDto> {
+        return this.http.put<UserDto>(this.userServiceURL + '/updateEmail/' + userId, email);
+    }
+
 }
