@@ -192,7 +192,6 @@
               aria-expanded="false"
               aria-haspopup="true"
               (click)="showUserMenu = !showUserMenu"
-              (blur)="showUserMenu = !showUserMenu"
             >
               <span class="absolute -inset-1.5"></span>
               <span class="sr-only">Open user menu</span>
@@ -213,7 +212,7 @@
           >
             <!-- Active: "bg-gray-100", Not Active: "" -->
             <a
-              href="#"
+              routerLink="/profile"
               class="block px-4 py-2 text-sm text-gray-700"
               role="menuitem"
               tabindex="-1"
