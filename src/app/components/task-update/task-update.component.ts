@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, output } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { TaskService } from '../../Service/task.service';
@@ -30,26 +30,29 @@ export class TaskUpdateComponent implements OnInit {
 
   @Output() taskCreated = new EventEmitter<void>();
   @Output() taskUpdated = new EventEmitter<TaskDto>();
+  @Output() taskDeleted = new EventEmitter<number>();
 
   private tasksSubject: BehaviorSubject<TaskDto[]> = new BehaviorSubject<TaskDto[]>([]);
   public taskForm!: FormGroup;
   
-  tasks$ = this.tasksSubject.asObservable();
+
   taskName = new FormControl('', Validators.required);
+
   statusList: string[] = Object.values(StatusTask);
   hierarchyList: string[] = Object.values(Hierarchy);
   userId = JSON.parse(localStorage.getItem('currentUser')!).id;
+
   listUserId!: number[]
   position!: number;
   UserByProjectId: UserDto[] = [];
-  selectedUsers: number[] = [];  
+  selectedUsers: number[] = []; 
+
   dropdown: boolean = false;
   statusTask = StatusTask;
 
-  constructor(private task: TaskService, private projectService: ProjectService, private formBuilder: FormBuilder) { }
+  constructor(private taskService: TaskService, private projectService: ProjectService, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-    console.log('taskDatastatus', this.taskData.status);
     this.listUserId = this.taskData.listUserId;
     this.taskForm = this.formBuilder.group({
       taskId: ['', Validators.required],
@@ -73,6 +76,9 @@ export class TaskUpdateComponent implements OnInit {
       });
     }
     this.getUserByProjectId(this.projectService.currentProject.id);
+    this.taskService.task$.subscribe(tasks => {
+      this.tasks = tasks;
+    });
   }
 
   toggleDropdown() {
@@ -114,7 +120,6 @@ export class TaskUpdateComponent implements OnInit {
 
     let statusValue = this.taskForm.controls['status'].value;
     let statusKey = Object.keys(StatusTask).find(key => StatusTask[key as keyof typeof StatusTask] === statusValue);
-    console.log('status', statusKey);
     let hierarchy: Hierarchy = Hierarchy[this.taskForm.controls['hierarchy'].value as keyof typeof Hierarchy];
 
     let updatedTask: TaskDto = {
@@ -129,11 +134,17 @@ export class TaskUpdateComponent implements OnInit {
       boardlistId: this.taskData.boardlistId,
     };
 
-    this.task.updateTask(updatedTask).subscribe(() => {
+    this.taskService.updateTask(updatedTask).subscribe(() => {
       // Emit the updated task
       this.taskUpdated.emit(updatedTask);
       this.closeModal();
     });
+  }
+
+  deleteTask() {
+    this.taskService.deleteTask(this.taskData.taskId);
+
+    this.closeModal();
   }
 
   closeModal(): void {
