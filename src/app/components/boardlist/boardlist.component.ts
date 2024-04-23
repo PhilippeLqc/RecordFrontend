@@ -229,6 +229,7 @@ export class BoardlistComponent implements OnInit {
 
   openCreateListModal(): void {
     this.showCreateListModal = !this.showCreateListModal;
+    console.log('showCreateListModal', this.showCreateListModal);
   }
 
   openUpdateModal(taskId: number, boardListId: number): void {

@@ -24,9 +24,34 @@
         class="ml-4 mt-2 flex flex-col items-center space-y-3 w-72 p-2 border border-gray-300 rounded-2xl bg-[#111725] max-h-[750px] text-[#B2B3BD]  animate-drop"
         cdkDrag cdkDropList [cdkDropListDisabled]="isLoading" [id]="boardlist.id.toString()"
         [cdkDropListData]="tasks[boardlist.id]" (cdkDropListDropped)="dropTasks($event)">
-        <h1 class="flex justify-center items-center gap-2 font-semibold text-2xl">
-          {{ boardlist.name }}
-        </h1>
+        <div class="boardlist-title flex justify-center items-center gap-2 font-semibold text-2xl">
+          @if (boardlistIdFormName != boardlist.id) {
+          <h2 (click)="showBoardlistNameFormFn(boardlist.id)">{{ boardlist.name }}</h2>
+          }
+          @if (boardlistIdFormName == boardlist.id) {
+          <input #boardlistNameInput [value]="boardlist.name"
+            (blur)="updateBoardlistName(boardlist, boardlistNameInput.value, boardlist.id)"
+            (keyup.enter)="updateBoardlistName(boardlist, boardlistNameInput.value, boardlist.id)" autofocus />
+          }
+          <div class="relative">
+            @if (showBoardlistMenu != boardlist.id) {
+            <button (click)="showEditBoardlistMenu(boardlist.id)"
+            class="absolute top-2 right-2 bg-transparent text-[#889AB5] hover:text-[#34445B] font-bold py-2 px-4 mb-2 ml-2 rounded">
+            &#8942;
+          </button>
+            }
+            @if (showBoardlistMenu == boardlist.id) {
+              <button (click)="showBoardlistMenu = -1"
+              class="absolute top-2 right-2 bg-transparent text-[#889AB5] hover:text-[#34445B] font-bold py-2 px-4 mb-2 ml-2 rounded">
+              &#8942;
+            </button>
+              <div class="absolute bg-white border rounded shadow p-2 mt-2">
+                <button (click)="editFromBoardlistMenu(boardlist.id)">Edit</button>
+                <button (click)="deleteFromBoardlistMenu(boardlist.id)">Delete</button>
+              </div>
+            }
+          </div>
+        </div>
 
         <div class="overflow-auto max-h-[750px]">
           @for ( task of tasks[boardlist.id]; track task) {
