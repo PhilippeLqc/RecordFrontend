@@ -4,4 +4,6 @@ export interface MessageDtoCustom {
     projectId: number;
     userId: number;
     message_side: string;
+    userNickName: string;
+    date: Date;
 }

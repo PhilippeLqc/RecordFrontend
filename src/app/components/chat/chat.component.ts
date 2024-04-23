@@ -6,7 +6,8 @@ import { MessageDto } from '../../model/messageDto';
 import { ProjectDto } from '../../model/projectDto';
 import { ProjectService } from '../../Service/project.service';
 import { MessageDtoCustom } from '../../model/MessageDtoCustom';
-import { Subject, takeUntil } from 'rxjs';
+import { forkJoin, map, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { UserService } from '../../Service/user.service';
 
 @Component({
   selector: 'app-chat',
@@ -30,7 +31,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   constructor(
   private chatService: ChatService,  
   private project: ProjectService,
-  private chat: ChatService) { }
+  private userService: UserService) { }
     
     ngOnInit(): void {
       this.project.currentProject$.subscribe((project) => {
@@ -59,24 +60,52 @@ export class ChatComponent implements OnInit, OnDestroy {
   
   listenerMessages() {
     this.chatService.getMessages()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((messages: MessageDto[]) => {
-        this.messageList = messages.map((message: any) => ({
-          ...message,
-          message_side: message.sender === Number(this.userId) ? 'sender': 'receiver'
-        }));
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((messages: any[]) =>
+          forkJoin(
+            messages.map(message =>
+              message.sender === Number(this.userId)
+                ? of({
+                    ...message,
+                    userNickName: 'Moi',
+                    message_side: 'sender',
+                  })
+                : this.userService.getUserName([message.sender]).pipe(
+                    map(name => ({
+                      ...message,
+                      userNickName: name[0],
+                      message_side: 'receiver',
+                    }))
+                  )
+            )
+          )
+        )
+      )
+      .subscribe((messages: any[]) => {
+        this.messageList = messages.reverse();
       });
   }
   
   archiveMessages() {
     this.chatService.getHistory(`${this.currentProject.id}`)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((messages: MessageDto[]) => {
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((messages: MessageDto[]) => {
+          const userNames$ = messages.map(message =>
+            this.userService.getUserName([message.userId]).pipe(
+              map(name => ({ ...message, userNickName: name[0] }))
+            )
+          );
+          return forkJoin(userNames$);
+        })
+      )
+      .subscribe((messages: any[]) => {
         console.log('archivemessage', messages)
-        this.historyMessages = messages.map((message: any) => ({
+        this.historyMessages = messages.map(message => ({
           ...message,
-          message_side: message.userId === Number(this.userId) ? 'sender': 'receiver'
-        }));
+          message_side: message.userId === Number(this.userId) ? 'sender' : 'receiver',
+        })).reverse();
       });
   }
 
