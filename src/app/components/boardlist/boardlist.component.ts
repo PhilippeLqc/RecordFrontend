@@ -157,6 +157,8 @@ export class BoardlistComponent implements OnInit {
       boardlistName: ['', Validators.required]
     });
 
+    
+
     this.getTaskUserNames();
   }
 
@@ -276,6 +278,13 @@ export class BoardlistComponent implements OnInit {
     this.deleteBoardlist(boardlistId);
     this.boardlistsProject = this.boardlistsProject.filter(boardlist => boardlist.id !== boardlistId);
     this.showBoardlistMenu = -1;
+  }
+
+
+  onTaskDeleted(taskId: number) {
+    for (const boardlistId in this.tasks) {
+      this.tasks[boardlistId] = this.tasks[boardlistId].filter(task => task.taskId !== taskId);
+    }
   }
 }
 

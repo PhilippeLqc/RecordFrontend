@@ -52,6 +52,31 @@ export class TaskService {
       );
     }
 
+    deleteTask(taskId: number): void {
+      this.http
+        .delete<TaskDto[]>(`${this.taskUrl}/delete/${taskId}`)
+        .subscribe(() => {
+          this.TaskSubject.next(
+            this.TaskSubject.value.filter(
+              (task) => task.taskId !== taskId
+            )
+          );
+      });
+    }
+
+      // Delete boardlist
+  // deleteBoardlist(boardlistId: Number): void {
+  //   this.http
+  //     .delete<BoardListDto>(`${this.boardlistServiceUrl}/delete/${boardlistId}`)
+  //     .subscribe(() => {
+  //       this.allBoardlistsOfProjectSubject.next(
+  //         this.allBoardlistsOfProjectSubject.value.filter(
+  //           (boardlist) => boardlist.id !== boardlistId
+  //         )
+  //       );
+  //     });
+  // }
+
     getTasksByBoardlistId(boardlistId: number): Observable<{ [boardlistId: number]: TaskDto[] }> {
       return this.http.get<TaskDto[]>(`${this.taskUrl}/boardlist/${boardlistId}`).pipe(
         map(tasks => tasks.reduce((acc, task) => {

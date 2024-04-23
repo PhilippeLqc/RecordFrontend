@@ -94,7 +94,9 @@
         } @if (showUpdate) {
         <app-modal [show]="showModal" (closeEvent)="closeModal()" (mousedown)="$event.stopPropagation()">
           <app-task-update [boardlistId]="selectedBoardlistId" [taskData]="selectedTaskData"
-            [taskIdFromBoardlist]="selectedTask" (taskCreated)="closeModal()"
+            [taskIdFromBoardlist]="selectedTask"
+            (taskCreated)="closeModal()"
+            (taskDeleted)="onTaskDeleted($event)"
             (taskUpdated)="onTaskUpdated($event)"></app-task-update>
         </app-modal>
         }
