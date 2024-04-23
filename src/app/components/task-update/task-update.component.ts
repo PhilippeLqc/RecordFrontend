@@ -65,7 +65,6 @@ export class TaskUpdateComponent implements OnInit {
         hierarchy: this.taskData.hierarchy,
       });
     }
-
     this.getUserByProjectId(this.projectService.currentProject.id);
   }
 
