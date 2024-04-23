@@ -42,6 +42,7 @@ export class AuthService {
     login(user: LogsDto) {
         return this.http.post<AuthResponseDto>(this.serviceURL + '/login', user).pipe(
             catchError(error => {
+                this.router.navigate(['/500']);
                 return throwError(() => new Error('Error during login request', error));
               }),
           switchMap((responseLogin: AuthResponseDto) => {
@@ -70,8 +71,10 @@ export class AuthService {
           }),
           catchError((error) => {
             if (error.status === 403) {
+                this.router.navigate(['/500']);
                 return of ({ error : 'email ou mot de passe invalide' });
             } else {
+                this.router.navigate(['/500']);
                 return of ( { error : ' bug dans la matrice ' });
             }
             })
