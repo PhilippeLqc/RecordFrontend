@@ -135,6 +135,7 @@ export class ProjectComponent implements OnInit{
 
   openModal(): void {
     this.showModal = true;
+    this.selectedProjectId = -1;
   }
 
   closeModal(): void {
