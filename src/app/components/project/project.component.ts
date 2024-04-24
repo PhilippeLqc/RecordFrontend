@@ -49,6 +49,7 @@ export class ProjectComponent implements OnInit{
   
   showModal: boolean = false;
   showUpdate: boolean = false;
+  showModalDeleteProject: boolean = false;
 
   constructor(
     private projectS: ProjectService,
@@ -128,6 +129,11 @@ export class ProjectComponent implements OnInit{
     this.selectedProjectId = projectId;
     this.projectS.deleteProjectById(projectId).subscribe(() => {
       this.userProjects.next(this.userProjects.getValue().filter(project => project.id !== projectId));});
+  }
+
+  deleteFromProjectMenu(projectId: number) {
+    this.deleteProject(projectId);
+    this.selectedProjectId = -1;
   }
 
 
