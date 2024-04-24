@@ -5,12 +5,12 @@ import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient } from '@angular
 import { importProvidersFrom } from '@angular/core';
 import { AuthInterceptor } from './Http-interceptors/authInterceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { LucideAngularModule, Bell, MessageCircle } from 'lucide-angular';
+import { LucideAngularModule, Bell, MessageCircle, Wrench } from 'lucide-angular';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideRouter(routes), 
   provideHttpClient(),
   importProvidersFrom(HttpClientModule),
-  importProvidersFrom(LucideAngularModule.pick({Bell, MessageCircle})),
+  importProvidersFrom(LucideAngularModule.pick({Bell, MessageCircle, Wrench})),
 {provide : HTTP_INTERCEPTORS, useClass : AuthInterceptor, multi : true}, provideAnimationsAsync()]
 };

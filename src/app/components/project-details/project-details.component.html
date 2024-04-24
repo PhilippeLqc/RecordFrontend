@@ -1,9 +1,13 @@
-<div class="h-screen flex flex-col justify-between">
+<div
+  class="h-screen flex flex-col justify-between {{
+    projectDetails.backgroundStyle
+  }}"
+>
   <app-header></app-header>
   <!-- implements data from projectDetails -->
-  <div class="overflow-auto scrollbar flex-grow">
-    <h1 class="text-5xl ml-3">{{ projectDetails?.title }}</h1>
-    <p>{{ projectDetails?.description }}</p>
+  <div *ngIf="projectDetails" class="overflow-auto scrollbar flex-grow {">
+    <h1 class="text-5xl ml-3">{{ projectDetails.title }}</h1>
+    <p>{{ projectDetails.description }}</p>
     <app-boardlist></app-boardlist>
   </div>
   <div class="fixed bottom-40 right-6 w-96 h-96">

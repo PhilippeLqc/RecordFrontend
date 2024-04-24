@@ -24,6 +24,7 @@ interface projectNotification {
 export class HeaderComponent implements OnInit, OnDestroy {
 
   userId = JSON.parse(localStorage.getItem('currentUser')!).id;
+  userName = JSON.parse(localStorage.getItem('currentUser')!).username;
   showUserMenu = false;
   showNotification = false;
   showInvite = false;

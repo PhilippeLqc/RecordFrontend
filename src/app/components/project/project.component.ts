@@ -16,7 +16,6 @@ import { ModalComponent } from '../../lib/modal/modal.component';
 import { HeaderComponent } from "../layouts/header/header.component";
 import { FooterComponent } from "../layouts/footer/footer.component";
 import { ProjectUpdateComponent } from "../project-update/project-update.component";
-import { ProjectDetailsComponent } from '../project-details/project-details.component';
 
 @Component({
     selector: 'app-project',
@@ -43,6 +42,7 @@ export class ProjectComponent implements OnInit{
   selectedProjectData!: ProjectDto[];
   projectData!: ProjectDto;
   listAllProjectsUsers!: ProjectDto[];
+  styles = ['style1', 'style2', 'style3', 'style4', 'style5'];
 
   activeProjects = this.userProjects.pipe(map(projects => projects.filter(project => project.status === 'ACTIVE')));
   archivedProjects = this.userProjects.pipe(map(projects => projects.filter(project => project.status === 'ARCHIVED')));
@@ -59,16 +59,18 @@ export class ProjectComponent implements OnInit{
       .subscribe(() => this.updateErrorTitle());
      }
 
-  ngOnInit(): void {
-    const userId = JSON.parse(localStorage.getItem('currentUser')!).id;
-    this.projectS.getProjectsByUserId(userId).subscribe((userProject) => {
-      this.listAllProjectsUsers = userProject;
-      this.projectS.userProjects$.subscribe((userProjects) => {
-        this.userProjects.next(userProjects);
+     ngOnInit(): void {
+      const userId = JSON.parse(localStorage.getItem('currentUser')!).id;
+      console.log('UserID:', userId); // Ajoutez cette ligne pour afficher l'ID de l'utilisateur
+      this.projectS.getProjectsByUserId(userId).subscribe((userProject) => {
+        console.log('UserProject:', userProject); // Ajoutez cette ligne pour afficher les projets de l'utilisateur
+        this.listAllProjectsUsers = userProject;
+        this.projectS.userProjects$.subscribe((userProjects) => {
+          console.log('UserProjects:', userProjects); // Ajoutez cette ligne pour afficher les projets de l'utilisateur
+          this.userProjects.next(userProjects);
+        });
       });
-    });
-  }
-
+    }
   public projectForm = this.formBuilder.group({
     title: [''],
     description: [''],
@@ -80,11 +82,16 @@ export class ProjectComponent implements OnInit{
     }
   }
 
+  getRandomStyle() {
+    return this.styles[Math.floor(Math.random() * this.styles.length)];
+  }
+
   onSubmit(): void {
     let project = {
       id: 0,
       title: this.projectForm.value.title!,
       description: this.projectForm.value.description!,
+      backgroundStyle: this.getRandomStyle(),
       status: 'ACTIVE' as Status,
       boardlistIds: [],
       userIds: []

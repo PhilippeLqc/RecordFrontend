@@ -21,7 +21,7 @@ export class ProjectDetailsComponent implements OnInit{
   constructor(public project: ProjectService, private route: ActivatedRoute) {
   }
   
-  projectDetails?: ProjectDto;
+  projectDetails!: ProjectDto;
   showChat = false;
   dragging = false;
 
@@ -44,6 +44,7 @@ export class ProjectDetailsComponent implements OnInit{
     const userId = JSON.parse(localStorage.getItem('currentUser')!).id;
     if (projectId !== null) {
       this.project.getProjectById(Number(projectId), userId).subscribe((response) => {
+        console.log('projectdetails',response);
         this.projectDetails = response;
       });
     }
