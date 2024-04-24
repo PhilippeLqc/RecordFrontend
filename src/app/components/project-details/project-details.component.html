@@ -6,8 +6,11 @@
   <app-header></app-header>
   <!-- implements data from projectDetails -->
   <div *ngIf="projectDetails" class="overflow-auto scrollbar flex-grow {">
-    <h1 class="text-5xl ml-3">{{ projectDetails.title }}</h1>
-    <p>{{ projectDetails.description }}</p>
+    <div class="flex flex-row items-center text-">
+      <h1 class="text-5xl ml-3 mr-2">{{ projectDetails.title }} -</h1>
+      <p class="text-4xl">{{ projectDetails.description }}</p>
+    </div>
+
     <app-boardlist></app-boardlist>
   </div>
   <div class="fixed bottom-40 right-6 w-96 h-96">
