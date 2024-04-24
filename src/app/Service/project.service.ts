@@ -2,24 +2,17 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ProjectDto } from '../model/projectDto';
 import { Status } from '../enumTypes/status';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 import { AuthService } from './auth.service';
 import { Project } from '../model/project';
+import { ProjectInvitationDto } from '../model/projectInvitationDto';
+import { UserDto } from '../model/userDto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectService {
   constructor(private http: HttpClient, private auth: AuthService) {
-    this.currentProjectDto = {
-      id: 0,
-      title: '',
-      description: '',
-      status: '' as Status,
-      boardlistIds: [],
-      userIds: [],
-    };
-
     const storedProjects = localStorage.getItem('userProjects');
     if (storedProjects) {
       this.userProjects = JSON.parse(storedProjects);
@@ -30,8 +23,9 @@ export class ProjectService {
   projectServiceUrl = 'http://localhost:8081/api/project';
 
   private userProjectsSubject = new BehaviorSubject<ProjectDto[]>([]);
-  currentProjectDto: ProjectDto;
-  currentProject?: ProjectDto;
+  private currentProjectSubject = new BehaviorSubject<ProjectDto>({} as ProjectDto);
+  currentProject$ = this.currentProjectSubject.asObservable();
+  currentProject!: ProjectDto;
   userProjects$ = this.userProjectsSubject.asObservable();
   userProjects: ProjectDto[] = [];
 
@@ -41,19 +35,19 @@ export class ProjectService {
       .post<ProjectDto>(this.projectServiceUrl + '/create', project)
       .pipe(
         tap((response) => {
-          this.currentProject = response;
-          this.userProjectsSubject.next(this.userProjects);
+        this.currentProject = response;
+        this.userProjects = [...this.userProjects, response];
+        this.userProjectsSubject.next(this.userProjects);
         })
       );
   }
 
   //get all projects by user id
-  getProjectsByUserId(): Observable<ProjectDto[]> {
+  getProjectsByUserId(userId: number): Observable<ProjectDto[]> {
     return this.http
-      .get<ProjectDto[]>(this.projectServiceUrl + '/allProjects')
+      .get<ProjectDto[]>(this.projectServiceUrl + '/allProjects/' + userId)
       .pipe(
         tap((response) => {
-          console.log('REPONSE DATA DE GETPROJECTBYUSERID', response);
           this.userProjects = response;
           this.userProjectsSubject.next(this.userProjects);
         })
@@ -76,9 +70,9 @@ export class ProjectService {
   }
 
   //get project by id
-  getProjectById(projectId: number): Observable<ProjectDto> {
+  getProjectById(projectId: number, userId: number): Observable<ProjectDto> {
     return this.http
-      .get<ProjectDto>(this.projectServiceUrl + '/' + projectId)
+      .post<ProjectDto>(this.projectServiceUrl + '/' + projectId, userId)
       .pipe(
         tap((response) => {
           this.currentProject = response;
@@ -87,25 +81,67 @@ export class ProjectService {
   }
 
   //update current project
-  updateCurrentProject(project: Project): Observable<Project> {
-    const ProjectId = this.currentProjectDto.id;
+  updateCurrentProject(project: ProjectDto): Observable<Project> {
     return this.http
-      .put<Project>(this.projectServiceUrl + '/update/' + ProjectId, project)
+      .put<Project>(this.projectServiceUrl + '/update/' + project.id, project)
       .pipe(
         tap((response) => {
           this.currentProject = response;
+          console.log("end update");
         })
       );
   }
 
-  // invite user to project by ProjectId and searching by mail
-  inviteUserToProject(email: string, projectId: number): Observable<Project> {
-    return this.http
-      .post<Project>(this.projectServiceUrl + '/invite/' + projectId, email)
-      .pipe(
-        tap((response) => {
-          this.currentProject = response;
-        })
-      );
+
+  //delete project by id
+  // deleteProjectById(projectId: number): Observable<Project> {
+  //   return this.http.delete<Project>(this.projectServiceUrl + '/delete/' + projectId);
+  // }
+  deleteProjectById(projectId: number): Observable<void> {
+    return this.http.delete<void>(`${this.projectServiceUrl}/delete/${projectId}`).pipe(
+      tap(() => {
+        this.userProjects = this.userProjects.filter(project => project.id !== projectId);
+        this.userProjectsSubject.next(this.userProjects);
+      })
+    );
   }
+
+  // invite user to project by ProjectId and searching by mail
+  inviteUserToProject(email: string, projectId: number): Observable<ProjectInvitationDto> {
+    const headers = { 'Content-Type': 'application/json' };
+    return this.http.post<ProjectInvitationDto>(this.projectServiceUrl + '/invite/' + projectId, { email: email }, { headers });
+  }
+
+  acceptProjectInvitation(projectId: number, invitationId: number) {
+    return this.http.put<ProjectInvitationDto>(this.projectServiceUrl + '/accept-invitation/' + projectId, invitationId).subscribe(() => {
+      console.log('Project invitation accepted');
+    });
+  }
+
+  rejectProjectInvitation(invitationId: number) {
+    return this.http.delete<ProjectInvitationDto>(this.projectServiceUrl + '/decline-invitation/' + invitationId).subscribe(() => {
+      console.log('Project invitation rejected');
+    });
+  }
+
+  changeCurrentProject(project: ProjectDto) {
+    // console.log('changeCurrentProject', project);
+    this.currentProject = project;
+    this.currentProjectSubject.next(project);
+  }
+
+  //get users by project id
+  getUsersByProjectId(projectId: number): Observable<UserDto[]> {
+    return this.http.get<UserDto[]>(this.projectServiceUrl + '/users/project/' + projectId, {});
+  }
+
+  getProjectNameByInvitationId(invitationId: number): Observable<{title: string}> {
+    // if response 404 OK, return null, else return response
+    if (invitationId === 0) {
+      return of({ title: '' });
+    }
+
+    return this.http.get<{title: string}>(this.projectServiceUrl + '/projectName/' + invitationId);
+  }
+
 }

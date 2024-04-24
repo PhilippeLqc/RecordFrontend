@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { merge } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { role } from '../../enumTypes/role';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-register',
@@ -24,19 +25,21 @@ import { role } from '../../enumTypes/role';
 })
 export class RegisterComponent {
 
+  username = new FormControl("", Validators.required);
+  email = new FormControl("", [Validators.required, Validators.email]);
+  password = new FormControl("", Validators.required);
+  errorMessage = '';
+  hide = true;
+
 constructor(
   public auth : AuthService,
-  public formBuilder : FormBuilder) { 
+  public formBuilder : FormBuilder, private snackbar: MatSnackBar) { 
+
     merge(this.email.statusChanges, this.email.valueChanges)
     .pipe(takeUntilDestroyed())
     .subscribe(() => this.updateErrorMail());
   }
 
-username = new FormControl("", Validators.required);
-email = new FormControl("", [Validators.required, Validators.email]);
-password = new FormControl("", Validators.required);
-errorMessage = '';
-hide = true;
 
 updateErrorMail() {
   if (this.email.hasError('required')) {
@@ -55,6 +58,7 @@ public registerForm = this.formBuilder.group({
 });
 
 onSubmit() {
+  
   let user : UserRegisterDto = {
     username: this.registerForm.value.username!,
     email: this.registerForm.value.email!,
@@ -66,6 +70,9 @@ onSubmit() {
   }
 
   this.auth.register(user);
+  this.snackbar.open('Un email vous a été envoyé pour validez votre compte', 'Close', {
+    duration: 10000,
+  });
 }
 
 }

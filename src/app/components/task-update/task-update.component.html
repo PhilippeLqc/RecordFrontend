@@ -1,0 +1,183 @@
+<div class="relative">
+  <form [formGroup]="taskForm" (ngSubmit)="onSubmitUpdateTask()">
+    <!-- Task Name  -->
+    <div class="mb-3">
+      <label for="title" class="block mb-2 text-sm font-medium text-[#B2B3BD]"
+        >Titre</label
+      >
+      <input
+        placeholder="Titre de la tâche"
+        formControlName="title"
+        type="text"
+        id="title"
+        class="bg-gray-50 border border-gray-300 text-[#B2B3BD] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      />
+    </div>
+
+    <!-- Task Status -->
+    <div class="flex flex-row">
+      <div>
+        <span
+          class="px-2 py-1 text-sm text-white rounded"
+          [ngClass]="{
+            'bg-red-500': taskForm.controls['status'].value === 'A FAIRE',
+            'bg-green-500': taskForm.controls['status'].value === 'EN COURS',
+            'bg-blue-500': taskForm.controls['status'].value === 'FAIT'
+          }"
+        >
+          {{ taskForm.get("status")?.value }}
+        </span>
+      </div>
+
+      <!-- Task Hierarchy -->
+      <div class="ml-2">
+        <span
+          class="px-2 py-1 text-sm text-white rounded"
+          [ngClass]="{
+            'bg-red-500': taskForm.controls['hierarchy'].value === 'IMPORTANT',
+            'bg-yellow-500': taskForm.controls['hierarchy'].value === 'MOYENNE',
+            'bg-green-500': taskForm.controls['hierarchy'].value === 'MINEURE'
+          }"
+        >
+          {{ taskForm.controls["hierarchy"].value }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Task Description  -->
+    <div class="mb-6">
+      <label
+        for="description"
+        class="block mb-2 text-sm font-medium text-[#B2B3BD]"
+        >Description</label
+      >
+      <textarea
+        id="description"
+        formControlName="description"
+        rows="4"
+        class="block p-2.5 w-[600px] text-sm text-[#B2B3BD] bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="Description"
+      ></textarea>
+    </div>
+
+    <div class="flex flex-row">
+      <!-- Task Date  -->
+      <div>
+        <label for="date" class="block text-sm font-medium text-[#B2B3BD]">
+          Ends at
+        </label>
+        <input
+          formControlName="expirationDate"
+          type="date"
+          id="date"
+          name="date"
+          class="block p-2.5 text-sm text-[#B2B3BD] bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+      </div>
+
+      <!-- Task Assignee  -->
+      <div>
+        <label
+          for="listUserId"
+          class="ml-2 block text-sm font-medium text-[#B2B3BD]"
+          >Assignement</label
+        >
+        <button
+          id="dropdownSearchButton"
+          data-dropdown-toggle="dropdownSearch"
+          class="items-center ml-2 inline-flex p-2.5 text-sm text-[#B2B3BD] bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          type="button"
+          (click)="toggleDropdown()"
+        >
+          Collègues du projet
+          <svg
+            class="w-2.5 h-2.5 ms-2.5"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 6"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 4 4 4-4"
+            />
+          </svg>
+        </button>
+        <div class="max-w-sm mt-2" [hidden]="!dropdown">
+          <ul
+            aria-labelledby="dropdownSearchButton"
+            class="w-36 px-2 text-sm font-medium text-[#B2B3BD] bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          >
+            @for ( user of UserByProjectId; track user) {
+            <li
+              class="flex items-center w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600"
+            >
+              <input
+                (change)="onUserSelectionChange($event, user.id)"
+                id="listUserId"
+                type="checkbox"
+                [value]="user.id"
+                class="w-4 h-10 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+              />
+              <label
+                for="listUserId"
+                class="w-full py-1 ms-2 text-sm font-medium text-[#B2B3BD] dark:text-gray-300"
+              >
+                {{ user.username }}</label
+              >
+            </li>
+            }
+          </ul>
+        </div>
+      </div>
+
+      <!-- Task Status  -->
+      <div class="max-w-sm mx-2">
+        <label for="status" class="block text-sm font-medium text-[#B2B3BD]">
+          Status de la tâche
+        </label>
+        <select
+          formControlName="status"
+          id="status"
+          class="block p-3 text-sm text-[#B2B3BD] bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        >
+          @for (status of statusList; track status) {
+          <option [value]="status">{{ status }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Task Hierarchy  -->
+      <div class="max-w-sm">
+        <label for="hierarchy" class="block text-sm font-medium text-[#B2B3BD]">
+          Importance de la tâche
+        </label>
+        <select
+          formControlName="hierarchy"
+          id="hierarchy"
+          class="block p-3 text-sm text-[#B2B3BD] bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        >
+          @for (hierarchy of hierarchyList; track hierarchy) {
+          <option [value]="hierarchy">{{ hierarchy }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <!-- Submit Button  -->
+    <div class="absolute bottom-[-270px] right-[-20px] mb-4 mr-4 mt-auto">
+      <button
+        type="submit"
+        class="py-2.5 px-5 me-2 mb-2 mt-4 text-sm font-medium text-gray-900 focus:outline-none bg-[#889AB5] rounded-lg border border-[#B2B3BD] hover:bg-gray-100"
+      >
+        Update
+      </button>
+
+    </div>
+  </form>
+  <button
+  (click)="deleteTask()">Delete</button>
+</div>
