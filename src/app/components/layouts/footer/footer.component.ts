@@ -13,6 +13,8 @@ import {MatIconModule} from '@angular/material/icon';
 })
 export class FooterComponent implements OnInit, OnDestroy {
 
+
+
   currentProjectId!: number;
 
   constructor(private chat: ChatService, private project: ProjectService) { }
@@ -20,7 +22,9 @@ export class FooterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.project.currentProject$.subscribe((project) => {this.currentProjectId = project.id});
     this.chat.initConnection();
+    
   }
+
 
   ngOnDestroy(): void {
     this.chat.closeConnection(this.currentProjectId);

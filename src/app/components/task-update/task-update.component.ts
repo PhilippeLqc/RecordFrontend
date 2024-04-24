@@ -32,7 +32,6 @@ export class TaskUpdateComponent implements OnInit {
   @Output() taskUpdated = new EventEmitter<TaskDto>();
   @Output() taskDeleted = new EventEmitter<number>();
 
-  private tasksSubject: BehaviorSubject<TaskDto[]> = new BehaviorSubject<TaskDto[]>([]);
   public taskForm!: FormGroup;
   
 
