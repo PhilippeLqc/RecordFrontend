@@ -142,9 +142,10 @@ export class TaskUpdateComponent implements OnInit {
   }
 
   deleteTask() {
-    this.taskService.deleteTask(this.taskData.taskId);
-
-    this.closeModal();
+    this.taskService.deleteTask(this.taskData.taskId).subscribe(() => {
+      this.taskDeleted.emit(this.taskData.taskId);
+      this.closeModal();
+    });
   }
 
   closeModal(): void {

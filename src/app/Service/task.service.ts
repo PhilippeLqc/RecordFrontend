@@ -52,16 +52,18 @@ export class TaskService {
       );
     }
 
-    deleteTask(taskId: number): void {
-      this.http
-        .delete<TaskDto[]>(`${this.taskUrl}/delete/${taskId}`)
-        .subscribe(() => {
-          this.TaskSubject.next(
-            this.TaskSubject.value.filter(
-              (task) => task.taskId !== taskId
-            )
-          );
-      });
+    deleteTask(taskId: number): Observable<void> {
+      return this.http
+        .delete<void>(`${this.taskUrl}/delete/${taskId}`)
+        .pipe(
+          tap(() => {
+            this.TaskSubject.next(
+              this.TaskSubject.value.filter(
+                (task) => task.taskId !== taskId
+              )
+            );
+          })
+        );
     }
 
       // Delete boardlist

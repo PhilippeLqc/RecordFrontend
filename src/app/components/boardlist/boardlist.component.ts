@@ -239,6 +239,7 @@ export class BoardlistComponent implements OnInit {
 
   openUpdateModal(taskId: number, boardListId: number): void {
     this.showModal = true;
+    this.selectedBoardlistId = boardListId;
     this.showUpdate = true;
     const task = this.tasks[boardListId].find(t => t.taskId === taskId);
     if (task) {
@@ -282,9 +283,20 @@ export class BoardlistComponent implements OnInit {
 
 
   onTaskDeleted(taskId: number) {
-    for (const boardlistId in this.tasks) {
-      this.tasks[boardlistId] = this.tasks[boardlistId].filter(task => task.taskId !== taskId);
-    }
+    // Supprimer la tâche de la liste des tâches
+    const updatedTasks = this.tasks[this.selectedBoardlistId].filter(task => task.taskId !== taskId);
+  
+    // Mettre à jour this.tasks avec les tâches mises à jour
+    this.tasks[this.selectedBoardlistId] = updatedTasks;
+  
+  // Créer une liste de toutes les tâches pour toutes les boardlistId
+  const allTasks = [];
+  for (let taskList of Object.values(this.tasks)) {
+    allTasks.push(...taskList);
+  }
+  
+    // Mettre à jour TaskSubject avec la liste complète des tâches
+    this.taskService.TaskSubject.next(allTasks);
   }
 }
 

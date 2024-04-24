@@ -52,6 +52,7 @@ export class ProjectUpdateComponent implements OnInit {
       id: this.projectData.id,
       title: this.projectFrom.controls['title'].value!,
       description: this.projectFrom.controls['description'].value || '',
+      backgroundStyle: this.projectData.backgroundStyle,
       status: status,
       boardlistIds: this.projectData.boardlistIds,
       userIds: this.projectData.userIds,
