@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { merge } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { role } from '../../enumTypes/role';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-register',
@@ -32,7 +33,7 @@ export class RegisterComponent {
 
 constructor(
   public auth : AuthService,
-  public formBuilder : FormBuilder) { 
+  public formBuilder : FormBuilder, private snackbar: MatSnackBar) { 
 
     merge(this.email.statusChanges, this.email.valueChanges)
     .pipe(takeUntilDestroyed())
@@ -69,6 +70,9 @@ onSubmit() {
   }
 
   this.auth.register(user);
+  this.snackbar.open('Un email vous a été envoyé pour validez votre compte', 'Close', {
+    duration: 10000,
+  });
 }
 
 }
