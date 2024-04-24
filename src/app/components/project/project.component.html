@@ -3,7 +3,7 @@
 
   <div class="m-16">
     <div class="text-2xl mt-2 mb-4">Active</div>
-    <div class="flex flex-row justify-start space-x-5 gap-8">
+    <div class="flex flex-row flex-wrap justify-start space-x-5 gap-8">
       <div
         *ngFor="let project of activeProjects | async"
         class="card animate-slideInLeft w-64 h-32 relative shadow-lg rounded-lg {{
