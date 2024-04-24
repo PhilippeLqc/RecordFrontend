@@ -7,6 +7,8 @@ import { RouterModule } from '@angular/router';
 import { ProjectInvitationDto } from '../../../model/projectInvitationDto';
 import { tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { UserDto } from '../../../model/userDto';
+import { TaskService } from '../../../Service/task.service';
 
 interface projectNotification {
   id: number,
@@ -28,8 +30,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   showUserMenu = false;
   showNotification = false;
   showInvite = false;
+  showTeam = false;
   notificationList: ProjectInvitationDto[] = [];
   projectNotifications: projectNotification[] = [];
+  UserByProjectId: UserDto[] = [];
 
   constructor(private elementRef: ElementRef, private notification: NotificationService, private project: ProjectService) { }
 
@@ -42,6 +46,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.notification.notifications$.subscribe((notification) => {
       this.notificationList = notification;
       this.getProjectName();
+    });
+
+    this.getUserByProjectId(this.project.currentProject.id);
+  }
+
+  
+  getUserByProjectId(projectId: number) {
+    return this.project.getUsersByProjectId(projectId).subscribe((response) => {
+      this.UserByProjectId = response;
     });
   }
 
